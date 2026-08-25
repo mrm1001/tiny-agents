@@ -1,0 +1,28 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { COMPONENTS } from '../data/architecture';
+import { STATUS_LABEL } from '../data/progress';
+import { href } from '../lib/href';
+import { inlineCode } from '../lib/inline-code';
+
+interface Props {
+  lesson: CollectionEntry<'lessons'>;
+  showTakeaway?: boolean;
+}
+
+const { lesson, showTakeaway = true } = Astro.props;
+const { n, title, component, status, takeaway } = lesson.data;
+const comp = COMPONENTS.find((c) => c.id === component)!;
+---
+
+<li>
+  <a class="lesson-row" href={href(`/lessons/${lesson.id}/`)}>
+    <span class="n">{String(n).padStart(2, '0')}</span>
+    <span class="title">{title}</span>
+    <span class="tags">
+      <span class="comp">{comp.label}</span>
+      <span class={`chip st-${status}`}>{STATUS_LABEL[status]}</span>
+    </span>
+    {showTakeaway && <span class="takeaway" set:html={inlineCode(takeaway)} />}
+  </a>
+</li>

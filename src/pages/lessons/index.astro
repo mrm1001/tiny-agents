@@ -1,0 +1,33 @@
+---
+import Base from '../../layouts/Base.astro';
+import LessonRow from '../../components/LessonRow.astro';
+import { getProgress } from '../../data/progress';
+import { href } from '../../lib/href';
+
+const progress = await getProgress();
+const { totals } = progress;
+---
+
+<Base title="Curriculum — Tiny Agents" section="learn">
+  <section class="hero">
+    <p class="eyebrow">Learn</p>
+    <h1>The curriculum</h1>
+    <p class="lede">
+      All {totals.lessons} lessons, in order, with the takeaway each one is written against. The{' '}
+      <a href={href('/')}>architecture diagram</a> shows the same progress as a picture.
+    </p>
+  </section>
+
+  {
+    progress.parts.map((group) => (
+      <div class="part">
+        <h3>Part {group.part}</h3>
+        <ul class="lesson-list">
+          {group.lessons.map((lesson) => (
+            <LessonRow lesson={lesson} />
+          ))}
+        </ul>
+      </div>
+    ))
+  }
+</Base>

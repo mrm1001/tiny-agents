@@ -1,0 +1,75 @@
+---
+import '../styles/global.css';
+import { href } from '../lib/href';
+
+interface Props {
+  title: string;
+  description?: string;
+  /** Which nav item to mark as current. */
+  section?: 'home' | 'learn';
+}
+
+const {
+  title,
+  description = 'Learn how AI agents work by progressively building a small coding agent, in 36 five-minute lessons.',
+  section,
+} = Astro.props;
+
+const nav = [
+  { label: 'Learn', url: href('/lessons/'), key: 'learn' as const },
+  { label: 'Build', soon: true },
+  { label: 'Measure', soon: true },
+  { label: 'Journey', soon: true },
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href={href('/favicon.svg')} />
+    <meta name="color-scheme" content="dark" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    {Astro.site && <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />}
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrap">
+        <a class="brand" href={href('/')} aria-current={section === 'home' ? 'page' : undefined}
+          >tiny&#8209;agents</a
+        >
+        <nav class="nav" aria-label="Sections">
+          {
+            nav.map((item) =>
+              item.soon ? (
+                <span class="soon" aria-disabled="true">{item.label}</span>
+              ) : (
+                <a href={item.url} aria-current={section === item.key ? 'page' : undefined}>
+                  {item.label}
+                </a>
+              )
+            )
+          }
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="wrap">
+        <slot />
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        Built in public while learning &middot;
+        <a href="https://github.com/mrm1001/tiny-agents">source on GitHub</a>
+      </div>
+    </footer>
+  </body>
+</html>

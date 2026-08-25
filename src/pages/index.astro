@@ -1,17 +1,108 @@
 ---
+import Base from '../layouts/Base.astro';
+import ArchitectureDiagram from '../components/ArchitectureDiagram';
+import LessonRow from '../components/LessonRow.astro';
+import { COMPONENTS } from '../data/architecture';
+import { getProgress, statusMap, STATUS_LABEL } from '../data/progress';
 
+const progress = await getProgress();
+const statuses = statusMap(progress);
+const { totals } = progress;
+
+// Slim, serialisable payload for the island — no content-collection internals.
+const lessons = progress.lessons.map((l) => ({
+  n: l.data.n,
+  slug: l.id,
+  title: l.data.title,
+  status: l.data.status,
+  component: l.data.component,
+}));
+
+const pct = (n: number) => `${(n / totals.lessons) * 100}%`;
+const inProgress = totals.lessonsStarted - totals.lessonsDone;
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Base title="Tiny Agents — learn how AI agents work by building one" section="home">
+  <section class="hero">
+    <p class="eyebrow">Learn · Build · Measure</p>
+    <h1>A coding agent, taken apart one piece at a time</h1>
+    <p class="lede">
+      <strong>Tiny Agents</strong> is me learning how AI agents actually work by building a small
+      coding agent from first principles, across {totals.lessons} five-minute lessons. The diagram below
+      <em>is</em> the progress tracker: every box is a piece of the architecture, and it stays locked
+      until I&rsquo;ve worked through the lessons behind it.
+    </p>
+  </section>
+
+  <section class="progress" aria-label="Learning progress">
+    <p class="progress-line">
+      <span><b>{totals.lessonsDone}</b> / {totals.lessons} lessons written</span>
+      <span aria-hidden="true">·</span>
+      <span><b>{inProgress}</b> in progress</span>
+      <span aria-hidden="true">·</span>
+      <span><b>{totals.componentsLive}</b> of {totals.components} components live</span>
+    </p>
+    <div
+      class="bar"
+      role="img"
+      aria-label={`${totals.lessonsDone} of ${totals.lessons} lessons written, ${inProgress} in progress`}
+    >
+      <span class="seg-done" style={{ width: pct(totals.lessonsDone) }}></span>
+      <span class="seg-progress" style={{ width: pct(inProgress) }}></span>
+    </div>
+  </section>
+
+  <section class="diagram-section">
+    <div class="section-head">
+      <h2>The architecture</h2>
+      <p class="hint">Click or Tab to a box · Esc clears</p>
+    </div>
+
+    <ArchitectureDiagram statuses={statuses} lessons={lessons} client:load />
+
+    {/* Same data, stacked — the 960-wide graph is unreadable on a phone. */}
+    <div class="arch-cards">
+      <ul>
+        {
+          COMPONENTS.map((component) => {
+            const cp = progress.byComponent[component.id];
+            return (
+              <li>
+                <article class="arch-card" data-status={cp.status}>
+                  <div class="arch-card-head">
+                    <strong>{component.label}</strong>
+                    <span class={`chip st-${cp.status}`}>{STATUS_LABEL[cp.status]}</span>
+                    <span class="count">
+                      {cp.total} lesson{cp.total === 1 ? '' : 's'}
+                    </span>
+                  </div>
+                  <p>{component.blurb}</p>
+                </article>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section id="curriculum">
+    <div class="section-head">
+      <h2>The curriculum</h2>
+      <p class="hint">{totals.lessons} lessons · 5 parts</p>
+    </div>
+
+    {
+      progress.parts.map((group) => (
+        <div class="part">
+          <h3>Part {group.part}</h3>
+          <ul class="lesson-list">
+            {group.lessons.map((lesson) => (
+              <LessonRow lesson={lesson} />
+            ))}
+          </ul>
+        </div>
+      ))
+    }
+  </section>
+</Base>
