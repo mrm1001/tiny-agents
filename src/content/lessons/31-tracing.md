@@ -6,5 +6,3 @@ component: tracing
 status: locked
 takeaway: "Why you need the full trajectory — model calls, tool calls and outputs — not merely the final answer."
 ---
-
-_Not written yet._

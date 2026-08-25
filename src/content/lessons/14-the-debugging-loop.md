@@ -6,5 +6,3 @@ component: environment
 status: locked
 takeaway: "Run → error → diagnose → modify → rerun. Why this makes coding highly agent-friendly."
 ---
-
-_Not written yet._

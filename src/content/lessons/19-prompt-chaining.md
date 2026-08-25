@@ -6,5 +6,3 @@ component: orchestration
 status: locked
 takeaway: "Fixed pipeline: A → B → C. Useful, but technically a workflow rather than an autonomous agent."
 ---
-
-_Not written yet._

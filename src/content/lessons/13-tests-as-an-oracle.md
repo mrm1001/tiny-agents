@@ -6,5 +6,3 @@ component: environment
 status: locked
 takeaway: "The crucial coding-agent advantage: actions produce objective feedback."
 ---
-
-_Not written yet._

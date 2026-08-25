@@ -6,5 +6,3 @@ component: tools
 status: locked
 takeaway: "How an agent gets a standardized interface to external resources and tools."
 ---
-
-_Not written yet._

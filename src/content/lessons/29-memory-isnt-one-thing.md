@@ -6,5 +6,3 @@ component: context
 status: locked
 takeaway: "Conversation state, scratchpad/work state, semantic memory, episodic memory and persistent user memory."
 ---
-
-_Not written yet._

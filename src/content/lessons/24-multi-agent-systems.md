@@ -6,5 +6,3 @@ component: orchestration
 status: locked
 takeaway: "Why \"more agents\" isn’t automatically better and often just adds coordination problems."
 ---
-
-_Not written yet._

@@ -6,5 +6,3 @@ component: loop
 status: locked
 takeaway: "Checkpoints, context compaction, summaries, state and recovering after failed approaches."
 ---
-
-_Not written yet._

@@ -6,5 +6,3 @@ component: guardrails
 status: locked
 takeaway: "Where autonomy should stop and deterministic checks or humans take over."
 ---
-
-_Not written yet._

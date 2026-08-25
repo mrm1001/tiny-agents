@@ -6,5 +6,3 @@ component: overview
 status: locked
 takeaway: "User → repo → model → inspect files → edit → run → inspect errors → edit again."
 ---
-
-_Not written yet._

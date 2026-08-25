@@ -6,5 +6,3 @@ component: context
 status: locked
 takeaway: "Selecting instructions, history, tool outputs and retrieved material at every turn."
 ---
-
-_Not written yet._

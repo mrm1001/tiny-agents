@@ -6,5 +6,3 @@ component: overview
 status: locked
 takeaway: "Draw a coding agent and then generalize it into a research/customer-support/scientific agent. This is your \"exam.\""
 ---
-
-_Not written yet._

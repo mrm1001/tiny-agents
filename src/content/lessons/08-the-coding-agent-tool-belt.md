@@ -6,5 +6,3 @@ component: tools
 status: locked
 takeaway: "`read`, `grep`/search, edit/patch, shell, test, git, browser/MCP."
 ---
-
-_Not written yet._

@@ -6,5 +6,3 @@ component: retrieval
 status: locked
 takeaway: "Symbols, dependency graphs, semantic search, targeted file loading. Aider is a particularly nice concrete example."
 ---
-
-_Not written yet._

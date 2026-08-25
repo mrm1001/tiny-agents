@@ -6,5 +6,3 @@ component: guardrails
 status: locked
 takeaway: "Read automatically; perhaps ask before destructive/network/external actions."
 ---
-
-_Not written yet._

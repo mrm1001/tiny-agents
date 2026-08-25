@@ -6,5 +6,3 @@ component: eval
 status: locked
 takeaway: "Repo + issue + executable tests gives you unusually strong ground truth."
 ---
-
-_Not written yet._

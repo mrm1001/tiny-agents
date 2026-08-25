@@ -6,5 +6,3 @@ component: edit
 status: locked
 takeaway: "Whole-file generation vs search/replace vs unified diffs vs structured patch tools."
 ---
-
-_Not written yet._

@@ -6,5 +6,3 @@ component: retrieval
 status: locked
 takeaway: "Why stuffing an entire repository into context performs badly."
 ---
-
-_Not written yet._

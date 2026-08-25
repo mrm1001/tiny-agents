@@ -126,15 +126,28 @@ export default function ArchitectureDiagram({ statuses, lessons }: Props) {
             >
               <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--border-hi)" />
             </marker>
+            <marker
+              id="arch-arrow-feedback"
+              viewBox="0 0 10 10"
+              refX="9"
+              refY="5"
+              markerWidth="6"
+              markerHeight="6"
+              orient="auto-start-reverse"
+            >
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--c-progress)" />
+            </marker>
           </defs>
 
           <g aria-hidden="true">
             {EDGES.map((edge) => (
               <path
                 key={`${edge.from}-${edge.to}`}
-                className={`edge${edge.dashed ? ' dashed' : ''}`}
+                className={`edge${edge.dashed ? ' dashed' : ''}${
+                  edge.accent ? ' feedback' : ''
+                }`}
                 d={edge.d}
-                markerEnd="url(#arch-arrow)"
+                markerEnd={edge.accent ? 'url(#arch-arrow-feedback)' : 'url(#arch-arrow)'}
               />
             ))}
             {EDGES.filter((e) => e.label && e.labelAt).map((edge) => (
@@ -147,7 +160,7 @@ export default function ArchitectureDiagram({ statuses, lessons }: Props) {
                 {edge.label}
               </text>
             ))}
-            <path className="edge dashed" d="M 40 430 H 962" style={{ opacity: 0.4 }} />
+            <line className="band-rule" x1={40} y1={430} x2={962} y2={430} />
             <text className="layer-caption" x={40} y={452}>
               Cross-cutting — studied alongside everything above
             </text>

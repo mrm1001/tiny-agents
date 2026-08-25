@@ -6,5 +6,3 @@ component: orchestration
 status: locked
 takeaway: "One agent generates; another critiques; generation repeats."
 ---
-
-_Not written yet._

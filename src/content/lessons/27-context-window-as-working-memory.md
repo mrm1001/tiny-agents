@@ -6,5 +6,3 @@ component: context
 status: locked
 takeaway: "Why agent \"intelligence\" depends heavily on what information gets placed in context."
 ---
-
-_Not written yet._

@@ -6,5 +6,3 @@ component: model
 status: locked
 takeaway: "RL on real software environments, tool use, executable rewards, instruction following and preference signals."
 ---
-
-_Not written yet._

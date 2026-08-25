@@ -138,13 +138,15 @@ export interface Edge {
   d: string;
   label?: string;
   dashed?: boolean;
+  /** Draw in the accent colour — for the one edge that closes the loop. */
+  accent?: boolean;
   /** Where to anchor the edge label, if it has one. */
   labelAt?: { x: number; y: number };
 }
 
 export const EDGES: Edge[] = [
   // request in — routed through the left gutter so it enters the loop's side
-  { from: 'overview', to: 'loop', d: 'M 236 76 H 254 V 210 H 278' },
+  { from: 'overview', to: 'loop', d: 'M 236 76 H 246 V 200 H 278' },
   // loop <-> model, as a parallel pair either side of centre
   { from: 'loop', to: 'model', d: 'M 364 180 V 116' },
   { from: 'model', to: 'loop', d: 'M 396 112 V 176' },
@@ -158,10 +160,11 @@ export const EDGES: Edge[] = [
   {
     from: 'environment',
     to: 'loop',
-    d: 'M 864 358 V 416 H 262 V 236 H 278',
+    d: 'M 864 358 V 416 H 266 V 240 H 278',
     label: 'feedback',
     dashed: true,
-    labelAt: { x: 563, y: 406 },
+    accent: true,
+    labelAt: { x: 565, y: 406 },
   },
   // harness inputs
   { from: 'context', to: 'loop', d: 'M 380 300 V 260' },

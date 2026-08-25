@@ -6,5 +6,3 @@ component: eval
 status: locked
 takeaway: "Outcome success, intermediate actions, efficiency, safety and robustness are separate things."
 ---
-
-_Not written yet._
