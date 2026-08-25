@@ -40,8 +40,12 @@ const nav = [
   <body>
     <header class="site-header">
       <div class="wrap">
-        <a class="brand" href={href('/')} aria-current={section === 'home' ? 'page' : undefined}
-          >tiny&#8209;agents</a
+        {/* the ::before diamond is decorative but lands in the accessible name */}
+        <a
+          class="brand"
+          href={href('/')}
+          aria-label="Tiny Agents — home"
+          aria-current={section === 'home' ? 'page' : undefined}>tiny&#8209;agents</a
         >
         <nav class="nav" aria-label="Sections">
           {
