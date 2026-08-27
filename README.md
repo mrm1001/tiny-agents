@@ -48,11 +48,30 @@ src/
 
 ```sh
 npm install
-npm run dev        # http://localhost:4321/tiny-agents/   (note the base path)
+npm run dev             # http://localhost:4321/tiny-agents/   (note the base path)
 npm run build
-npm run preview    # honours `base`, so it catches base-path mistakes dev hides
-npx astro check    # needs typescript 6.x; 7.x drops the API astro check uses
+npm run preview         # honours `base`, so it catches base-path mistakes dev hides
+npx astro check         # needs typescript 6.x; 7.x drops the API astro check uses
+npm run check:contrast  # WCAG check on the theme tokens
 ```
+
+### Theme
+
+The palette is a set of custom properties at the top of `src/styles/global.css`,
+solved against WCAG contrast minimums rather than picked by eye — a light theme has
+very little luminance room above white, so several values are close to their limit.
+`npm run check:contrast` parses the tokens out of that file and checks every pair
+they are actually used in, including the composited result for locked diagram nodes.
+Run it after touching any colour.
+
+Two conventions worth knowing:
+
+- `--c-locked` is a **graphics-only** token (status dot, padlock, dashed stroke, card
+  edge). Locked *text* uses `--muted`: a grey dim enough to read as "locked" cannot
+  also clear 4.5:1.
+- The diagram carries its own three fills (`--c-frame-fill`, `--c-node-fill`,
+  `--c-locked-fill`) instead of borrowing the page's `bg / bg-raised / surface`
+  stack, which has no room left above white on a light theme.
 
 Because the site is served from `/tiny-agents/`, every internal link must go through
 `href()` from `src/lib/href.ts` — a literal `href="/lessons/02"` works in dev and 404s in

@@ -5,33 +5,44 @@
    --------------------------------------------------------------------------- */
 
 :root {
-  /* Every value below is checked against WCAG contrast minimums for the pair it
-     is actually used in — see the note at the end of this block. */
-  --bg: #252a38;
-  --bg-raised: #2b3140;
-  --surface: #313747;
-  --surface-hi: #474d5e;
-  --border: #454d63;
-  --border-hi: #717a95;
+  /* Light theme. Every value is solved against the WCAG minimum for the pair it
+     is actually used in, not picked by eye. Run `npm run check:contrast`
+     after changing any of them — the checker parses this block. */
+  --bg: #fafbfd;          /* page */
+  --bg-raised: #ffffff;   /* panels, callouts, progress box */
+  --surface: #f1f4fa;     /* inline code, code blocks, row hover */
+  --surface-hi: #dde6fb;  /* hover/selected: tints toward the accent hue, since
+                             nothing can be brighter than white */
+  --border: #b1b8c7;
+  --border-hi: #7b8293;   /* diagram edges and node strokes: needs 3:1, not 1.5 */
 
-  --fg: #d5dcee;
-  --fg-strong: #e2e7f5;
-  --muted: #a8b2cd;
-  --faint: #97a1b9;
+  --fg: #2b3348;
+  --fg-strong: #1a2032;
+  --muted: #485167;
+  --faint: #5e6574;
 
-  --accent: #8ab4ff;
-  --accent-dim: #4a6aa8;
+  --accent: #3564ca;
+  --accent-dim: #9db4ea;
 
   /* --c-locked is a *graphical* token (dot, padlock, dashed stroke, card edge).
      Locked *text* uses --muted, which clears 4.5:1; a grey dim enough to read as
      "locked" cannot also be legible as a label. */
-  --c-locked: #7a839b;
-  --c-progress: #e8bd7a;
-  --c-done: #a8d977;
+  --c-locked: #747a8a;
+  --c-progress: #925e05;
+  --c-done: #347821;
 
-  /* Fill behind a locked diagram node — deeper than --surface so locked boxes
-     recede without fading their text into the background. */
-  --c-locked-fill: #272d3a;
+  /* The diagram carries its own three fills rather than borrowing the page's
+     bg/bg-raised/surface stack. On a light theme that stack has almost no
+     luminance room left above white, so a white node on a white panel was
+     separating by only 1.10:1. As their own tokens the sheet can be tinted and
+     the nodes left white: 1.13:1 node-vs-sheet, 1.26:1 locked-vs-unlocked. */
+  /* Progress-bar track. Needs its own value: --border is dark enough that the
+     dark --c-done / --c-progress fills only reached 2.7:1 against it. */
+  --c-track: #d7dae3;
+
+  --c-frame-fill: #eef1f8;
+  --c-node-fill: #ffffff;
+  --c-locked-fill: #dfe5f1;
 
   --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
   --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
@@ -85,7 +96,7 @@ code {
 }
 
 pre {
-  background: var(--bg-raised);
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 1rem;
@@ -218,7 +229,7 @@ main { padding-block: 2.5rem 4rem; }
 .bar {
   height: 6px;
   border-radius: 999px;
-  background: var(--surface-hi);
+  background: var(--c-track);
   overflow: hidden;
   display: flex;
 }
@@ -285,8 +296,8 @@ main { padding-block: 2.5rem 4rem; }
   border: 1px solid var(--border);
   border-radius: var(--radius);
   background:
-    radial-gradient(1200px 500px at 30% -10%, #2e3546 0%, transparent 70%),
-    var(--bg-raised);
+    radial-gradient(1200px 500px at 30% -10%, #e4eaf6 0%, transparent 70%),
+    var(--c-frame-fill);
   padding: 0.5rem;
 }
 
@@ -295,7 +306,7 @@ main { padding-block: 2.5rem 4rem; }
 /* nodes */
 .node { cursor: pointer; }
 .node .node-box {
-  fill: var(--surface);
+  fill: var(--c-node-fill);
   stroke: var(--border-hi);
   stroke-width: 1.5;
   transition: fill 120ms ease, stroke 120ms ease;
@@ -325,7 +336,7 @@ main { padding-block: 2.5rem 4rem; }
 }
 .node[data-status="locked"] .node-label { fill: var(--muted); }
 .node[data-status="locked"] .node-meta { fill: var(--faint); }
-.node[data-status="locked"] { opacity: 0.94; }
+.node[data-status="locked"] { opacity: 1; }
 
 .node:hover .node-box,
 .node:focus-visible .node-box { fill: var(--surface-hi); stroke: var(--accent); }
