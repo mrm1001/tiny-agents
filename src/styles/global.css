@@ -500,7 +500,13 @@ a.lesson-row:hover { background: var(--surface); border-left-color: var(--accent
 
 /* --- lesson page ---------------------------------------------------------- */
 
-.lesson { max-width: var(--measure); }
+/* Centred, unlike .hero: the curriculum and the diagram fill the page's full
+   width beside their heading, so left alignment reads as intentional there. A
+   lesson has nothing to its right, so the same rule just looked shifted. */
+.lesson {
+  max-width: var(--measure);
+  margin-inline: auto;
+}
 
 .lesson-meta {
   font-family: var(--mono);
