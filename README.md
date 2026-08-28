@@ -24,6 +24,9 @@ That makes pointer precision the product, so it is enforced rather than hoped fo
   only the fragment or path. One fix repairs a rotted link across all 36 lessons.
 - Anchors are **looked up, never guessed** (`node scripts/anchors.mjs <id>`), because a
   wrong anchor silently drops the reader at the top of the page instead of erroring.
+- `npm run check:pointers` re-verifies each one on its own terms — the anchor id must
+  be in the HTML, the line range must fit the file, the PDF page must exist. It is not
+  part of `npm run check` because it needs the network.
 - The Sources list at the foot of a lesson is **derived** from its pointers, so a
   bibliography cannot drift from what the lesson actually cites.
 
@@ -82,6 +85,7 @@ npm run check:secrets   # no credential is tracked in git
 npm run check:sources   # library integrity, cached files, blocked worklist
 npm run check:lessons   # reading budget, pointer hygiene, dead links
 node scripts/anchors.mjs <library-id|url>   # linkable sections, for writing a pointer
+npm run check:pointers  # every pointer's anchor/page/line still exists (network)
 npm run check:contrast  # WCAG check on the theme tokens and the code theme
 ```
 

@@ -262,6 +262,7 @@ node scripts/check-sources.mjs --for loop    # candidate reading for a component
 node scripts/check-sources.mjs --topics      # coverage, and where it's thin
 node scripts/anchors.mjs <id>                # the anchors a pointer can use
 npm run check:lessons                        # pointer hygiene + reading budget
+npm run check:pointers                       # do the targets still exist? (network)
 npm run build                                # every pointer's source resolves
 ```
 

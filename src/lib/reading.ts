@@ -12,6 +12,7 @@
  * deep into it.
  */
 import { resolveSource, type Source } from '../data/library';
+import { pointerUrl } from './pointer-url.mjs';
 
 export interface ReadingPointer {
   /** Library key. Everything pointed at belongs in the shared library. */
@@ -40,14 +41,7 @@ export interface ResolvedPointer extends ReadingPointer {
 /** Composes a pointer's deep URL. Throws on an unknown library key. */
 export function resolvePointer(pointer: ReadingPointer): ResolvedPointer {
   const entry = resolveSource(pointer.source);
-  const { href } = pointer;
-
-  let url = entry.url;
-  if (href) {
-    url = /^https?:\/\//.test(href) ? href : `${entry.url.replace(/\/$/, '')}${href}`;
-  }
-
-  return { ...pointer, entry, url };
+  return { ...pointer, entry, url: pointerUrl(entry.url, pointer.href) };
 }
 
 /**

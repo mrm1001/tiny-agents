@@ -14,7 +14,8 @@
     "check:secrets": "node scripts/check-secrets.mjs",
     "check:sources": "node scripts/check-sources.mjs",
     "check:lessons": "node scripts/check-lessons.mjs",
-    "check:contrast": "node scripts/check-contrast.mjs"
+    "check:contrast": "node scripts/check-contrast.mjs",
+    "check:pointers": "node scripts/check-pointers.mjs"
   },
   "dependencies": {
     "@astrojs/react": "^6.0.4",
