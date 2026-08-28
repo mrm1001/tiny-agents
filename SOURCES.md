@@ -1,5 +1,8 @@
 # Curating the source library
 
+This covers the library and the pointers into it. [LESSONS.md](LESSONS.md) covers the
+process of building a lesson, and [STYLE.md](STYLE.md) covers how the prose is written.
+
 Two places, with one rule between them:
 
 | | | |

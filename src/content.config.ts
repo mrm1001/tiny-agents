@@ -89,7 +89,7 @@ const keyPoint = z.object({
   heading: z.string().min(1),
   summary: z
     .string()
-    .min(220, 'a summary must explain the mechanism, not just assert the conclusion — see STYLE.md')
+    .min(1)
     .max(900, 'a point summary is one paragraph — split it, or point harder'),
   reading: z.array(readingPointer).min(1, 'a point with no reading is just an opinion'),
 });
@@ -148,6 +148,25 @@ const lessons = defineCollection({
     // Issues MUST carry a `path`. Astro derives the reported line from
     // `issue.path[0]`; with an empty path it prints "**:" and points at line 0.
     .superRefine((lesson, ctx) => {
+      // A finished summary has to explain a mechanism, and a couple of sentences
+      // cannot — see STYLE.md. Outlines are exempt on purpose: at that stage a
+      // summary is a placeholder line, and the review is about whether the
+      // coverage and the sources are right. See LESSONS.md.
+      if (!lesson.outline && lesson.status !== 'locked') {
+        lesson.points.forEach((point, i) => {
+          if (point.summary.length < 220) {
+            ctx.addIssue({
+              code: 'custom',
+              path: ['points', i, 'summary'],
+              input: point.summary,
+              message:
+                `summary is ${point.summary.length} characters — a finished point explains the ` +
+                `mechanism (min 220). Set \`outline: true\` if it is not finished yet.`,
+            });
+          }
+        });
+      }
+
       if (lesson.status !== 'locked' && lesson.points.length === 0) {
         ctx.addIssue({
           code: 'custom',

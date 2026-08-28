@@ -4,6 +4,9 @@ The target is a **good textbook or a technical blog post that explains a concept
 beginner**. Not aphorisms, not a magazine column, not a series of claims the reader
 has to decode.
 
+This covers the prose. [LESSONS.md](LESSONS.md) covers the process a lesson goes through,
+and [SOURCES.md](SOURCES.md) covers the source library and reading pointers.
+
 ## Who the reader is
 
 A competent programmer who has **never built an agent**, has **not read the sources**,

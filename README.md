@@ -46,7 +46,9 @@ checks any links in them.
 The one or two sentences of orientation above the points live in frontmatter as
 `intro`, which is what leaves the body free.
 
-`SOURCES.md` is the guide to writing a lesson; `STYLE.md` is how the prose is written.
+**[LESSONS.md](LESSONS.md) is the process** — outline, review, notes, publish.
+[STYLE.md](STYLE.md) is how the prose is written, and [SOURCES.md](SOURCES.md) is how the
+source library works.
 
 ## How progress works
 
