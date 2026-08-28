@@ -3,7 +3,7 @@ n: 1
 title: "Chatbot vs workflow vs agent"
 part: "I — What actually is an agent?"
 component: overview
-status: in-progress
+status: done
 takeaway: "Why calling an LLM isn't an agent; what \"model controls the loop\" means."
 
 points:
@@ -101,8 +101,6 @@ extraReading:
   - weng-agents
 ---
 
-<!-- Everything below the frontmatter is your notes. Delete these two bullets. -->
-
-- Rough notes go here, in ordinary Markdown: bullets, nested lists, `code`, **bold**, links,
-  code fences, tables. They render in the panel at the foot of the lesson.
-- Nothing here counts towards the five-minute reading budget, and `check:style` leaves it alone.
+- There is no consensus with the definition of "agent", although many would agree that you have workflows and agents and these are different things (i.e. Anthropic). Huggingface talks about a continuum in the level of agency of an agent.
+- A workflow is when you know the paths a program can take, and you can decide on the control-flow of a program, whereas most common definition of an agent involves the system deciding whether a certain criterion has been reached.
+- The definition of an agent is tightly bound to what it can do (tools and actions it can take in its environment)
