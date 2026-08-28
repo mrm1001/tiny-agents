@@ -75,9 +75,6 @@ const hasNotes = Boolean(lesson.body?.trim());
       hasNotes && (
         <section class="notes" aria-labelledby="h-notes">
           <h2 id="h-notes">My notes</h2>
-          <p class="notes-hint">
-            Rough working notes, kept alongside the lesson rather than folded into it.
-          </p>
           <div class="lesson-body">
             <slot />
           </div>

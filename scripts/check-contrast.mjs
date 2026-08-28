@@ -59,7 +59,6 @@ const TEXT = [
   ['inline code',          'fg', 'surface', 4.5],
   ['notes text',           'fg', 'surface', 4.5],
   ['notes heading',        'fgStrong', 'surface', 4.5],
-  ['notes hint',           'faint', 'surface', 4.5],
   ['notes link',           'accent', 'surface', 4.5],
   ['code lifted in notes', 'fg', 'bgRaised', 4.5],
 ];

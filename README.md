@@ -34,7 +34,8 @@ That makes pointer precision the product, so it is enforced rather than hoped fo
 ### Notes
 
 Everything below a lesson's frontmatter is **hand-written notes**, rendered in a panel
-at the foot of the page under "My notes". Ordinary Markdown, meant to be rough.
+at the foot of the page under "My notes". Ordinary Markdown, meant to be rough. The
+heading is the only framing; the panel says the rest.
 
 They are deliberately outside the machinery: not counted towards the five-minute
 reading budget, and not linted by `check:style`, since holding rough bullet points to
