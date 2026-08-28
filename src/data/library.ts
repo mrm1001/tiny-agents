@@ -12,6 +12,21 @@
  * `[Anthropic's post](#s-anthropic-bea)` and never repeats the URL.
  *
  * Hand-authored, same pattern as `src/data/architecture.ts`. Add to it freely.
+ *
+ * Sources that exist as a file are cached at `sources/raw/<id>.<ext>` with their
+ * extracted text alongside — see `sources/README.md`. Run
+ * `uv run scripts/ingest-source.py --list` to see what is cached.
+ *
+ * PREFERRED HUNTING GROUNDS, when looking for a source for a new lesson:
+ *   anthropic.com/engineering    Anthropic engineering blog
+ *   platform.claude.com/docs     Claude platform documentation
+ *   openai.com  (see caveat)     OpenAI blog and guides
+ *   arxiv.org                    papers
+ * Plus the real agent codebases listed further down. Caveat on OpenAI: the
+ * `openai.com/index/*` blog paths hard-403 every automated fetch, while
+ * `cdn.openai.com` file URLs work — so prefer their PDFs, or ask for a paste.
+ *
+ * Strip tracking parameters from every URL before adding it (`?utm_source=…` etc.).
  */
 
 export type SourceKind =
@@ -205,6 +220,171 @@ export const LIBRARY: Source[] = [
       '`while response.stop_reason == "tool_use":`. The reference to mirror for the lesson-2 exercise.',
   },
 
+  // ------------------------------------------- Anthropic engineering, by subject
+  {
+    id: 'anthropic-writing-tools',
+    // The real H1, which differs from the URL slug.
+    title: 'Writing effective tools for agents — with agents',
+    url: 'https://www.anthropic.com/engineering/writing-tools-for-agents',
+    author: 'Ken Aizawa',
+    site: 'Anthropic Engineering',
+    date: '2025-09-11',
+    kind: 'post',
+    core: true,
+    note:
+      'For the tool-belt and ACI lessons (8, 9): "Tools are a new kind of software which reflects a ' +
+      'contract between deterministic systems and non-deterministic agents." Warns that "More tools ' +
+      'don\'t always lead to better outcomes" and that wrapping existing APIs is a common error; ' +
+      'tools should "return only high signal information".',
+  },
+  {
+    id: 'anthropic-context-engineering',
+    title: 'Effective context engineering for AI agents',
+    url: 'https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents',
+    author: "Anthropic Applied AI team",
+    site: 'Anthropic Engineering',
+    date: '2025-09-29',
+    kind: 'post',
+    core: true,
+    note:
+      'The spine for lessons 27–28: "Context engineering refers to the set of strategies for curating ' +
+      'and maintaining the optimal set of tokens during LLM inference", and the distinction from ' +
+      'prompt engineering — prompts are instructions, context is "the entire context state" across ' +
+      'many turns.',
+  },
+  {
+    id: 'anthropic-demystifying-evals',
+    title: 'Demystifying evals for AI agents',
+    url: 'https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents',
+    author: 'Mikaela Grace, Jeremy Hadfield, Rodrigo Olivares and Jiri De Jonghe',
+    site: 'Anthropic Engineering',
+    date: '2026-01-09',
+    kind: 'post',
+    core: true,
+    note:
+      'For lessons 33–34: "Start early and don\'t wait for the perfect suite. Source realistic tasks ' +
+      'from the failures you see." And the line that ties evals to lesson 31 on tracing — "Read the ' +
+      'transcripts!"',
+  },
+
+  // ------------------------------------------------- real coding-agent codebases
+  // Worth reading against our own toy agent: these are what the real thing looks
+  // like. Most useful from lesson 7 onward.
+  {
+    id: 'mini-swe-agent',
+    title: 'mini-swe-agent — the minimal AI software engineering agent',
+    url: 'https://github.com/SWE-agent/mini-swe-agent',
+    author: 'Princeton and Stanford (SWE-bench team)',
+    site: 'GitHub',
+    kind: 'repo',
+    core: true,
+    note:
+      'The single best comparison for this course: ~100 lines of Python for the agent class, and it ' +
+      'still scores >74% on SWE-bench verified. Three design notes land directly on our lessons — it ' +
+      '"does not have any tools other than bash" and skips the tool-calling interface entirely ' +
+      '(lessons 8–9); it has "a completely linear history — every step of the agent just appends to ' +
+      'the messages", so "there\'s no difference between the trajectory and the messages" (lessons 2 ' +
+      'and 31); and it runs each action with `subprocess.run` so actions are independent and trivially ' +
+      'sandboxed (lessons 15–16).',
+  },
+  {
+    id: 'swe-agent-paper',
+    title: 'SWE-agent: Agent-Computer Interfaces Enable Automated Software Engineering',
+    url: 'https://arxiv.org/abs/2405.15793',
+    author: 'Yang, Jimenez, Wettig, Lieret, Yao, Narasimhan, Press',
+    site: 'arXiv:2405.15793 (NeurIPS 2024)',
+    date: '2024-05-06',
+    kind: 'paper',
+    core: true,
+    note:
+      'The primary source for lesson 9 — this is where the term "Agent-Computer Interface (ACI)" ' +
+      'comes from. Pair it with mini-swe-agent for one of the most useful arguments in the course: ' +
+      'the SAME team concluded a year later that most of the custom tooling "is not needed at all".',
+  },
+  {
+    id: 'swe-agent-background',
+    title: 'SWE-agent — project overview',
+    url: 'https://github.com/SWE-agent/SWE-agent/blob/main/docs/background/index.md',
+    site: 'GitHub — SWE-agent docs',
+    kind: 'docs',
+    note:
+      'The short version of the ACI argument: "simple LM-centric commands and feedback formats to ' +
+      'make it easier for the LM to browse the repository, view, edit and execute code files."',
+  },
+  {
+    id: 'openai-codex',
+    title: 'openai/codex — lightweight coding agent that runs in your terminal',
+    url: 'https://github.com/openai/codex',
+    author: 'OpenAI',
+    site: 'GitHub',
+    kind: 'repo',
+    note: 'A production terminal coding agent to compare architectures against, from lesson 7 onward.',
+  },
+  {
+    id: 'openhands-sdk',
+    title: 'OpenHands software-agent-sdk',
+    url: 'https://github.com/OpenHands/software-agent-sdk',
+    author: 'OpenHands',
+    site: 'GitHub',
+    kind: 'repo',
+    note:
+      'A modular SDK for software agents — useful for the harness lessons (5, 18) as a worked example ' +
+      'of where the boundaries get drawn.',
+  },
+  {
+    id: 'gemini-cli',
+    title: 'gemini-cli — an open-source AI agent in your terminal',
+    url: 'https://github.com/google-gemini/gemini-cli',
+    author: 'Google',
+    site: 'GitHub',
+    kind: 'repo',
+    note: 'A third terminal-agent implementation, for comparing tool surfaces and permission models.',
+  },
+  {
+    id: 'agent-lightning',
+    title: 'agent-lightning — a trainer for AI agents',
+    url: 'https://github.com/microsoft/agent-lightning',
+    author: 'Microsoft',
+    site: 'GitHub',
+    kind: 'repo',
+    note: 'For lesson 35: what it actually takes to train an agent rather than just prompt one.',
+  },
+
+  // ------------------------------------------- evaluation and training background
+  {
+    id: 'dietz-llm-as-judge',
+    title:
+      'LLM-as-a-Judge: Approaches, Failure Modes to Be Aware Of, and What Really Works (The Essentials)',
+    url: 'https://www.cs.unh.edu/~dietz/papers/llm-judge-book-essentials.pdf',
+    author: 'Laura Dietz',
+    site: 'University of New Hampshire',
+    date: '2026',
+    kind: 'book',
+    core: true,
+    note:
+      'Substantial for lesson 33, and the sharpest thing here on why eval numbers lie. Surveys the ' +
+      'judge approaches (holistic, multi-criteria, preference, nugget) and names the failure modes: ' +
+      'sycophancy, LLM narcissism, homogenization, leniency, circularity, and leaking evaluation ' +
+      'secrets. Its remedy is a division of labour where "human experts decide what matters and the ' +
+      'AI is restricted to canonicalizing and matching at scale". A working draft — cached locally at ' +
+      'sources/raw/, and the upstream file has already changed size since, so quote from the cache.',
+  },
+  {
+    id: 'cs229-notes',
+    title: 'CS229 Lecture Notes',
+    url: 'https://cs229.stanford.edu/main_notes.pdf',
+    author: 'Tengyu Ma and Andrew Ng',
+    site: 'Stanford CS229',
+    date: '2026-08-23',
+    kind: 'book',
+    note:
+      'Mostly OUT OF SCOPE for this course — 278 pages of classical supervised ML, with one mention of ' +
+      '"agent" in the whole document. Cite it for exactly one thing: §18 (p. 222) on reinforcement ' +
+      'learning with verifiable rewards, which is lesson 35\'s subject in miniature — "a programming ' +
+      'problem may have unit tests" as the reward signal, plus the o1 and DeepSeek-R1 scaling results. ' +
+      'Part VI (ch. 19, 21) is the MDP and policy-gradient background if that lesson needs it.',
+  },
+
   // ----------------------------------------------------- discussion and opinion
   {
     id: 'hn-building-effective-agents',
@@ -264,6 +444,22 @@ export const LIBRARY: Source[] = [
   // `blocked` is NOT for metadata problems. An ambiguous or missing publication
   // date is a gap in the entry (omit the `date` field and say so in `note`), never
   // a reason to exclude an otherwise good source — see `kinney-agent-loops`.
+  {
+    id: 'openai-agents-sdk-evolution',
+    title: 'The next evolution of the Agents SDK',
+    url: 'https://openai.com/index/the-next-evolution-of-the-agents-sdk/',
+    author: 'OpenAI',
+    site: 'OpenAI',
+    kind: 'post',
+    blocked: {
+      reason:
+        'openai.com/index/* returns HTTP 403 to every automated request — plain curl, a full browser ' +
+        'header set, and WebFetch all get the same bot-block page. Note the contrast: cdn.openai.com ' +
+        'serves files fine (see openai-practical-guide), it is the blog paths that are closed. Paste ' +
+        'the text and it can be quoted and attributed properly.',
+      tried: '2026-08-28',
+    },
+  },
   {
     id: 'reddit-agent-discussion',
     title: 'Reddit — agent discussion threads (none retrieved)',

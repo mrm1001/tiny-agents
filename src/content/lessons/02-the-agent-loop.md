@@ -12,6 +12,7 @@ sources:
   - anthropic-stop-reasons
   - ball-build-an-agent
   - openai-practical-guide
+  - mini-swe-agent
   - react-paper
 extraReading:
   - willison-agents
@@ -44,6 +45,11 @@ extraReading:
 - **The loop is stateless, and that is the surprise.** Nothing accumulates on the server; *you*
   resend the entire conversation every single turn. This is the one idea I want the interactive demo
   to carry, by showing the message array growing step by step.
+  [mini-swe-agent](#s-mini-swe-agent) is the proof that this is a feature rather than an annoyance:
+  it keeps "a completely linear history — every step of the agent just appends to the messages", so
+  "there's no difference between the trajectory and the messages that you pass on to the LM". That
+  one sentence is also why the trace this lesson records is worth looking at, and it sets up
+  lesson 31.
 
 - **Who actually stops it — the model, or you.** A turn cap is not a `stop_reason`; it is the harness
   overruling the model. [12-Factor Agents](#s-twelve-factor-own-control-flow) argues you should own
