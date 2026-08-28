@@ -148,6 +148,29 @@ export const LIBRARY: Source[] = [
       'Quotable body text is easier to reach via the ar5iv HTML mirror than the PDF.',
   },
 
+  {
+    id: 'openai-practical-guide',
+    title: 'A practical guide to building agents',
+    url: 'https://cdn.openai.com/business-guides-and-resources/a-practical-guide-to-building-agents.pdf',
+    // No `author`: it is corporately authored, and "OpenAI · OpenAI" reads badly.
+    site: 'OpenAI',
+    // From the PDF's own /CreationDate (D:20250407142051Z). The HTML landing page
+    // 403s, so this is the most reliable date available.
+    date: '2025-04-07',
+    kind: 'docs',
+    core: true,
+    note:
+      'The rival vendor definition, and a useful foil for Anthropic: "Agents are systems that ' +
+      'independently accomplish tasks on your behalf." Says outright that "Applications that ' +
+      'integrate LLMs but don\'t use them to control workflow execution—think simple chatbots, ' +
+      'single-turn LLMs, or sentiment classifiers—are not agents." Note it uses "workflow" to mean ' +
+      'the task itself ("a sequence of steps that must be executed to meet the user\'s goal"), NOT ' +
+      'an architecture category as Anthropic does — the same word, two meanings, across the two most ' +
+      'cited sources. On the loop: "a loop that lets agents operate until an exit condition is ' +
+      'reached", exiting when a final-output tool fires or "the model returns a response without any ' +
+      'tool calls". 34 pages; text extracts cleanly with pypdf.',
+  },
+
   // ---------------------------------------------------- Anthropic API reference
   {
     id: 'anthropic-tool-use-loop',
@@ -208,6 +231,21 @@ export const LIBRARY: Source[] = [
       'such reasoning loops and are more aptly described as LLM workflows".',
   },
   {
+    id: 'kinney-agent-loops',
+    title: 'The Anatomy of an Agent Loop',
+    url: 'https://stevekinney.com/writing/agent-loops',
+    author: 'Steve Kinney',
+    // Date deliberately omitted rather than guessed: the page renders it
+    // inconsistently (19 vs 23 March 2026). An uncertain date is a metadata gap,
+    // not a reason to exclude a good source.
+    kind: 'post',
+    note:
+      'The clearest short statement of the loop\'s two signals: "Tool calls are the continuation ' +
+      'signal—they mean \'I\'m not done yet\'" and "A text-only response is the termination signal". ' +
+      'Also the framing that "the loop is a solved problem" and the interesting decisions are all ' +
+      'around it.',
+  },
+  {
     id: 'twelve-factor-own-control-flow',
     title: 'Factor 8: Own your control flow',
     url: 'https://github.com/humanlayer/12-factor-agents/blob/main/content/factor-08-own-your-control-flow.md',
@@ -220,8 +258,12 @@ export const LIBRARY: Source[] = [
   },
 
   // ------------------------------------------------------------------- BLOCKED
-  // Tried and could not verify. Left here deliberately so they can be retrieved
-  // by hand and promoted, rather than quietly disappearing.
+  // Reserved for sources that genuinely CANNOT BE RETRIEVED. Left here rather than
+  // dropped, so they can be fetched by hand and promoted to normal entries.
+  //
+  // `blocked` is NOT for metadata problems. An ambiguous or missing publication
+  // date is a gap in the entry (omit the `date` field and say so in `note`), never
+  // a reason to exclude an otherwise good source — see `kinney-agent-loops`.
   {
     id: 'reddit-agent-discussion',
     title: 'Reddit — agent discussion threads (none retrieved)',
@@ -233,37 +275,6 @@ export const LIBRARY: Source[] = [
         'This environment cannot reach reddit.com at all — both domain-scoped web search and direct ' +
         'fetch are refused. No Reddit source has been cited anywhere as a result. To use one, paste ' +
         'the URL and the relevant comment text and it can be quoted and attributed properly.',
-      tried: '2026-08-27',
-    },
-  },
-  {
-    id: 'openai-practical-guide',
-    title: 'A practical guide to building agents',
-    url: 'https://cdn.openai.com/business-guides-and-resources/a-practical-guide-to-building-agents.pdf',
-    author: 'OpenAI',
-    site: 'OpenAI',
-    kind: 'docs',
-    blocked: {
-      reason:
-        'The landing page returns HTTP 403 and the PDF downloads but its text will not extract. Its ' +
-        'widely-quoted definition ("systems that independently accomplish tasks on your behalf") ' +
-        'therefore remains UNVERIFIED and is not cited anywhere. Useful as a contrast to Anthropic\'s ' +
-        'definition if it can be read.',
-      tried: '2026-08-27',
-    },
-  },
-  {
-    id: 'kinney-agent-loops',
-    title: 'The Anatomy of an Agent Loop',
-    url: 'https://stevekinney.com/writing/agent-loops',
-    author: 'Steve Kinney',
-    kind: 'post',
-    blocked: {
-      reason:
-        'Loads fine and has genuinely good phrasing ("Tool calls are the continuation signal … a ' +
-        'text-only response is the termination signal"), but the publication date renders ' +
-        'inconsistently (19 vs 23 March 2026) and the body self-refers to a different domain than the ' +
-        'one serving it. Excluded on citation hygiene, not availability — usable if the date can be pinned.',
       tried: '2026-08-27',
     },
   },

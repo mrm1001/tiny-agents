@@ -8,6 +8,7 @@ takeaway: "Why calling an LLM isn't an agent; what \"model controls the loop\" m
 outline: true
 sources:
   - anthropic-bea
+  - openai-practical-guide
   - hf-smolagents
   - willison-agents
   - huyen-agents
@@ -22,7 +23,10 @@ extraReading:
 - **The three rungs, concretely.** One LLM call, then a predefined code path, then a system that
   directs its own process. [Anthropic](#s-anthropic-bea) gives both halves of the split in one
   sentence each — workflows run "through predefined code paths", agents "dynamically direct their
-  own processes and tool usage" — so the lesson can quote rather than paraphrase.
+  own processes and tool usage" — so the lesson can quote rather than paraphrase. And
+  [OpenAI](#s-openai-practical-guide) settles the title's first rung outright: applications that use
+  LLMs but not "to control workflow execution — think simple chatbots, single-turn LLMs, or
+  sentiment classifiers — are not agents."
 
 - **What "controls the loop" actually means.** Not a vibe: it is the question of *who decides whether
   there is another step*. [smolagents](#s-hf-smolagents) has a levels-of-agency table whose middle
@@ -39,6 +43,11 @@ extraReading:
     an agent.
   - [Willison](#s-willison-agents) supplies the practical consensus ("runs tools in a loop to achieve
     a goal") while conceding the word is fought over.
+  - And the word *workflow* is itself overloaded between the two most-cited sources: for
+    [Anthropic](#s-anthropic-bea) it names an architecture (predefined code paths), for
+    [OpenAI](#s-openai-practical-guide) it names the task — "a sequence of steps that must be
+    executed to meet the user's goal". A reader who has met both and not noticed this is quietly
+    confused, so the lesson should say it plainly.
 
 - **Why the distinction has teeth.** Two concrete consequences, so this isn't taxonomy for its own
   sake: compounding error — [Huyen's](#s-huyen-agents) 95%-per-step over ten steps lands near 60% —

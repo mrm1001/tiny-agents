@@ -11,9 +11,11 @@ sources:
   - anthropic-tool-use-loop
   - anthropic-stop-reasons
   - ball-build-an-agent
+  - openai-practical-guide
   - react-paper
 extraReading:
   - willison-agents
+  - kinney-agent-loops
   - twelve-factor-own-control-flow
   - anthropic-build-tool-agent
 ---
@@ -34,6 +36,10 @@ extraReading:
 - **Two ways to read the same fact.** [Thorsten Ball's](#s-ball-build-an-agent) agent never inspects
   `stop_reason` at all — he checks whether any tool calls came back. Same behaviour, different mental
   model, and seeing both makes the loop feel less like API trivia.
+  [OpenAI](#s-openai-practical-guide) independently describes the same shape in vendor-neutral terms
+  — "a loop that lets agents operate until an exit condition is reached" — and names two exits: a
+  final-output tool fires, or "the model returns a response without any tool calls". That the exact
+  same loop is described three different ways is the point of the bullet.
 
 - **The loop is stateless, and that is the surprise.** Nothing accumulates on the server; *you*
   resend the entire conversation every single turn. This is the one idea I want the interactive demo
