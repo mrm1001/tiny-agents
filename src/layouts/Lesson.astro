@@ -8,7 +8,6 @@ import { STATUS_LABEL } from '../data/progress';
 import { href } from '../lib/href';
 import { inlineCode } from '../lib/inline-code';
 import { lessonMinutes } from '../lib/reading-time.mjs';
-import { sourcesFromPoints } from '../lib/reading';
 
 interface Props {
   lesson: CollectionEntry<'lessons'>;
@@ -26,9 +25,6 @@ const comp = COMPONENTS.find((c) => c.id === component)!;
 const minutes =
   outline || status === 'locked' ? null : lessonMinutes({ body: lesson.body, points });
 
-// Derived, not declared: a source is in the bibliography because a pointer sends
-// you there. One list to maintain instead of two that can drift apart.
-const sources = sourcesFromPoints(points);
 ---
 
 <Base title={`${n}. ${title} — Tiny Agents`} description={takeaway} section="learn">
@@ -82,16 +78,6 @@ const sources = sourcesFromPoints(points);
           </p>
           <pre><code>{exercise.command}</code></pre>
         </section>
-      )
-    }
-
-    {
-      sources.length > 0 && (
-        <SourceList
-          heading="Everything this lesson points at"
-          refs={sources}
-          blurb="Full title, author and date for each source above, in the order they first appear."
-        />
       )
     }
 

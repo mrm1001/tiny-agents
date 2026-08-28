@@ -122,7 +122,7 @@ so there's nothing to discover.
 for a lesson, not for a reader: which section carries which quote, where a byline or
 date is misleading, what part of a long document is out of scope. They show up in
 `--for <component>`, which is the moment they earn their keep. Anything a reader needs
-belongs in the lesson's own prose or in a pointer's `why`.
+belongs in the lesson's own summary.
 
 ---
 
@@ -199,25 +199,28 @@ SWE-agent, codex, gemini-cli, OpenHands, agent-lightning).
 ## Pointing at a source from a lesson
 
 A lesson is an **index**: a short paragraph naming one idea, then pointers to the
-exact place where someone explains it properly. So a lesson doesn't declare a list
-of sources — it declares points, and the bibliography is derived from them.
+exact place where someone explains it properly. A lesson declares points; there is
+no separate list of sources to keep in step with them.
 
 ```yaml
 points:
-  - heading: "The real question is who decides whether there is another step"
+  - heading: "Who decides whether there is another step"
     summary: >
-      One paragraph. Enough to tell the reader whether to follow the links.
+      One paragraph: what the thing is, how it works, what follows from it.
     reading:
-      - source: hf-smolagents                              # library id
-        at: '§ "An introduction to agentic systems"'        # required
-        href: "#an-introduction-to-agentic-systems"         # composed onto the url
-        why: >
-          What to take from it.
+      - source: hf-smolagents                                  # library id
+        at: "smolagents docs § An introduction to agentic systems"
+        href: "#an-introduction-to-agentic-systems"            # composed onto the url
 ```
 
 **`at` is required, and it is the whole point of the format.** A pointer that
 names only a source ("read Anthropic's post") makes the reader do the finding,
 which is the work this course is supposed to have already done.
+
+**`at` is also the only text rendered for a pointer.** There is no source title,
+byline or explanation next to it, so the value has to name its own source as well
+as the place: `Anthropic docs § Stop reason values`, not `§ "Stop reason values"`.
+Three anonymous links in one box tell the reader nothing about where they lead.
 
 `href` is appended to the source's URL in `library.ts`, so a rotted link stays a
 one-line fix even when 36 lessons point deep into it:
@@ -250,8 +253,10 @@ markers, and `#page=N` is the PDF page, not the printed one:
 grep -n "=== page" sources/text/openai-practical-guide.txt
 ```
 
-`extraReading` is for what the points deliberately *don't* send you to.
-`check:lessons` warns if something sits there that a point already points at.
+`extraReading` is for what the points deliberately *don't* send you to. It is the
+only list that renders full titles and bylines, and therefore the only source of
+`#s-<id>` anchors on the page. `check:lessons` warns if something sits there that a
+point already points at.
 
 ---
 

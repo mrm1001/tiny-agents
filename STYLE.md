@@ -91,8 +91,9 @@ problem; the problem was that the sentences asserted instead of explaining.
 2. how it works, concretely;
 3. what follows from it — a consequence, a cost, or what it enables.
 
-**A pointer's `why`** says what the reader will find at that link and what to take from
-it, in one or two complete sentences. Not an epigram.
+**A pointer** carries no prose at all. Its `at` value is a label — the source and the
+place, such as `Anthropic docs § Stop reason values`. Anything the reader needs to know
+before following it belongs in the summary above.
 
 ## Avoid
 

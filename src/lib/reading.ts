@@ -17,7 +17,11 @@ import { pointerUrl } from './pointer-url.mjs';
 export interface ReadingPointer {
   /** Library key. Everything pointed at belongs in the shared library. */
   source: string;
-  /** The specific place: a section heading, a file path, a chapter. Required. */
+  /**
+   * The specific place, and the only text shown for this pointer: a section
+   * heading, a file path, a page. Names its own source too, since nothing else
+   * on the page does.
+   */
   at: string;
   /**
    * Appended to the source's URL:
@@ -26,8 +30,6 @@ export interface ReadingPointer {
    *   `https://` an absolute URL, for a deep target on another host (a mirror)
    */
   href?: string;
-  /** What the reader is meant to take from it. */
-  why?: string;
 }
 
 export interface ResolvedPointer extends ReadingPointer {
@@ -42,22 +44,4 @@ export interface ResolvedPointer extends ReadingPointer {
 export function resolvePointer(pointer: ReadingPointer): ResolvedPointer {
   const entry = resolveSource(pointer.source);
   return { ...pointer, entry, url: pointerUrl(entry.url, pointer.href) };
-}
-
-/**
- * Every source a lesson points at, in first-appearance order.
- *
- * The bibliography is derived rather than declared. Under the old format a
- * lesson listed its sources *and* cited them, which was two places to keep in
- * step; now a source is in the Sources list precisely because a pointer sends
- * you there.
- */
-export function sourcesFromPoints(points: Array<{ reading: ReadingPointer[] }>): string[] {
-  const seen: string[] = [];
-  for (const point of points) {
-    for (const pointer of point.reading) {
-      if (!seen.includes(pointer.source)) seen.push(pointer.source);
-    }
-  }
-  return seen;
 }

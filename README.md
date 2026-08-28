@@ -27,8 +27,9 @@ That makes pointer precision the product, so it is enforced rather than hoped fo
 - `npm run check:pointers` re-verifies each one on its own terms — the anchor id must
   be in the HTML, the line range must fit the file, the PDF page must exist. It is not
   part of `npm run check` because it needs the network.
-- The Sources list at the foot of a lesson is **derived** from its pointers, so a
-  bibliography cannot drift from what the lesson actually cites.
+- A pointer renders as **one line and nothing else** — no source title, byline or
+  blurb — so its `at` value names both the source and the place. There is no
+  bibliography at the foot of a lesson to duplicate it.
 
 `SOURCES.md` is the guide to writing one.
 

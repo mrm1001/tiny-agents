@@ -20,28 +20,14 @@ points:
       your program will do.
     reading:
       - source: anthropic-bea
-        at: '§ "What are agents?"'
+        at: 'Anthropic, "Building effective agents" § What are agents?'
         href: "#what-are-agents"
-        why: >
-          Anthropic's definitions of the second and third kinds, one sentence each: workflows are
-          systems where models and tools "are orchestrated through predefined code paths", and agents
-          are systems where models "dynamically direct their own processes and tool usage". Both
-          sentences are quoted throughout the field, so read them in the original.
       - source: openai-practical-guide
-        at: 'p. 4, "What is an agent?"'
+        at: 'OpenAI, "A practical guide to building agents" p. 4, What is an agent?'
         href: "#page=4"
-        why: >
-          The same boundary drawn by exclusion, which is often clearer: chatbots, single-turn model
-          calls and sentiment classifiers "are not agents". Note that the two documents use
-          "workflow" differently — for OpenAI it means the task being carried out, not a category of
-          architecture.
       - source: ms-agents-for-beginners
-        at: "01-intro-to-ai-agents/README.md"
+        at: "Microsoft course · 01-intro-to-ai-agents/README.md"
         href: "/blob/main/01-intro-to-ai-agents/README.md"
-        why: >
-          A third explanation of the same distinction, with a list of use cases. Its code examples
-          use a framework rather than building the loop directly, which makes a useful comparison
-          with the approach this course takes.
 
   - heading: "Who decides whether there is another step"
     summary: >
@@ -54,25 +40,14 @@ points:
       which means the number of steps is not known until the run has finished.
     reading:
       - source: hf-smolagents
-        at: '§ "An introduction to agentic systems"'
+        at: "smolagents docs § An introduction to agentic systems"
         href: "#an-introduction-to-agentic-systems"
-        why: >
-          A table that grades systems by how much control the model has, from none up to writing the
-          program itself. The middle row, "LLM output controls iteration and program continuation",
-          is a precise statement of the distinction described above.
       - source: willison-agents
-        at: '§ "Tools in a loop to achieve a goal"'
+        at: "Willison § Tools in a loop to achieve a goal"
         href: "#tools-in-a-loop-to-achieve-a-goal"
-        why: >
-          A one-sentence definition, "An LLM agent runs tools in a loop to achieve a goal", followed
-          by an explanation of what each part of it is doing. A good sanity check once you have read
-          the two vendor definitions above.
       - source: openai-practical-guide
-        at: 'p. 14, "Single-agent systems"'
+        at: "OpenAI guide p. 14, Single-agent systems"
         href: "#page=14"
-        why: >
-          A description of the loop that avoids any particular API's vocabulary: "a loop that lets
-          agents operate until an exit condition is reached". Lesson 2 covers this loop in detail.
 
   - heading: "Why the sources disagree about the word"
     summary: >
@@ -86,25 +61,14 @@ points:
       an author is applying makes their writing much easier to follow.
     reading:
       - source: huyen-agents
-        at: '§ "Agent Overview"'
+        at: 'Chip Huyen, "Agents" § Agent Overview'
         href: "#agent_overview"
-        why: >
-          The textbook definition, credited to Russell and Norvig: an agent is "anything that can
-          perceive its environment and act upon that environment". Read this to see how much wider
-          the older definition is than the ones the vendors use.
       - source: hf-smolagents
-        at: '§ "An introduction to agentic systems" — the spectrum claim'
+        at: "smolagents docs § An introduction to agentic systems, the spectrum claim"
         href: "#an-introduction-to-agentic-systems"
-        why: >
-          The explicit refusal to draw a line, stated as "'agency' evolves on a continuous
-          spectrum". This is the clearest statement of the position that the binary question is the
-          wrong question.
       - source: anthropic-bea
-        at: '§ "Building blocks, workflows, and agents"'
+        at: 'Anthropic, "Building effective agents" § Building blocks, workflows, and agents'
         href: "#building-blocks-workflows-and-agents"
-        why: >
-          Five named workflow patterns, with a diagram for each and a note on when to use it.
-          Lessons 19 to 23 take one pattern each, so reading this section early gives you the map.
 
   - heading: "The costs of letting the model decide"
     summary: >
@@ -118,26 +82,14 @@ points:
       usually the better choice.
     reading:
       - source: anthropic-bea
-        at: '§ "When (and when not) to use agents"'
+        at: 'Anthropic, "Building effective agents" § When (and when not) to use agents'
         href: "#when-and-when-not-to-use-agents"
-        why: >
-          Anthropic's own recommendation to start small: "finding the simplest solution possible,
-          and only increasing complexity when needed". The section also describes the kinds of task
-          where the extra complexity does pay off.
       - source: huyen-agents
-        at: '§ "Agent Overview" — the compounding-error arithmetic'
+        at: 'Chip Huyen, "Agents" § Agent Overview, the compounding-error arithmetic'
         href: "#agent_overview"
-        why: >
-          The 95%-per-step calculation worked through, with the numbers for several step counts. Read
-          it if the multiplication above was surprising, because everything about evaluation later in
-          the course follows from it.
       - source: openai-practical-guide
-        at: 'p. 5, "When should you build an agent?"'
+        at: "OpenAI guide p. 5, When should you build an agent?"
         href: "#page=5"
-        why: >
-          Three conditions OpenAI suggests using to decide whether a task justifies an agent:
-          complex decision-making, rules that are hard to maintain, and heavy reliance on
-          unstructured data.
 
 extraReading:
   - hn-building-effective-agents

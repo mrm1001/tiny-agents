@@ -90,18 +90,14 @@ export function readingMinutes(body) {
 /**
  * Everything a reader reads on a lesson page, as one string.
  *
- * Most of a lesson now lives in `points` rather than in the Markdown body, so
+ * Most of a lesson lives in `points` rather than in the Markdown body, so
  * counting the body alone would report every lesson as a one-minute read. The
  * `at` labels are excluded: they are link text, scanned rather than read.
  *
- * @param {{ body?: string, points?: Array<{heading: string, summary: string, reading: Array<{why?: string}>}> }} lesson
+ * @param {{ body?: string, points?: Array<{heading: string, summary: string}> }} lesson
  */
 export function lessonText({ body = '', points = [] }) {
-  const fromPoints = points.flatMap((point) => [
-    point.heading,
-    point.summary,
-    ...point.reading.map((r) => r.why ?? ''),
-  ]);
+  const fromPoints = points.flatMap((point) => [point.heading, point.summary]);
   return [body, ...fromPoints].join('\n\n');
 }
 

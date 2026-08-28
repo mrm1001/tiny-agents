@@ -2,8 +2,11 @@
 /**
  * One key point: the idea in a paragraph, then where to read it properly.
  *
- * The reading list is the substance, so it gets the visual weight — the summary
- * is there to tell you whether to follow the links, not to replace them.
+ * A reading is a single line: the place to read, linked. No source title, no
+ * byline, no explanation of what the link contains. Because the line is all the
+ * reader gets, an `at` value has to name its own source — "Anthropic docs
+ * § …", "mini-swe-agent · default.py …" — rather than only the section, which
+ * would leave three anonymous links in a box.
  */
 import { resolvePointer, type ReadingPointer } from '../lib/reading';
 import { inlineCode } from '../lib/inline-code';
@@ -17,10 +20,6 @@ interface Props {
 
 const { n, heading, summary, reading } = Astro.props;
 const pointers = reading.map(resolvePointer);
-
-/** `author · site · date` — whichever of them the library actually has. */
-const byline = (entry: (typeof pointers)[number]['entry']) =>
-  [entry.author, entry.site, entry.date?.slice(0, 4)].filter(Boolean).join(' · ');
 ---
 
 <section class="point" aria-labelledby={`point-${n}`}>
@@ -37,14 +36,8 @@ const byline = (entry: (typeof pointers)[number]['entry']) =>
       pointers.map((p) => (
         <li>
           <a href={p.url} rel="noopener">
-            <span class="at">{p.at}</span>
-            <span class="in">{p.entry.title}</span>
+            {p.at}
           </a>
-          <p class="meta">
-            {byline(p.entry)}
-            <span class="kind">{p.entry.kind}</span>
-          </p>
-          {p.why && <p class="why" set:html={inlineCode(p.why)} />}
         </li>
       ))
     }

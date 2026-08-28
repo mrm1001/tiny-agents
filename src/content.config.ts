@@ -63,13 +63,17 @@ const sourceRef = z.union([z.string(), inlineSource]);
  */
 const readingPointer = z.object({
   source: z.string(),
-  at: z.string().min(1, 'a pointer must name the section, file or chapter to read'),
+  /**
+   * The place to read, and the only text rendered for this pointer. It must name
+   * its own source as well as the section, because nothing else on the page
+   * says which source a link belongs to.
+   */
+  at: z.string().min(1, 'a pointer must name the source and the section, file or chapter'),
   /** `#anchor` on the source's page, `/path` appended to it, or an absolute URL. */
   href: z
     .string()
     .regex(/^(#|\/|https?:\/\/)/, 'href must start with "#", "/" or "https://"')
     .optional(),
-  why: z.string().optional(),
 });
 
 /**

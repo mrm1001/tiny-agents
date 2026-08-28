@@ -18,22 +18,13 @@ points:
       choices.
     reading:
       - source: anthropic-tool-use-loop
-        at: '§ "The agentic loop (client tools)"'
+        at: "Anthropic docs § The agentic loop (client tools)"
         href: "#the-agentic-loop-client-tools"
-        why: >
-          The loop written out as a sequence of requests and responses, with the JSON for each step.
-          It shows exactly what your code is responsible for sending.
       - source: ball-build-an-agent
-        at: '§ "Pencils out!" through § "Let it edit_file"'
-        why: >
-          The same loop built from an empty file in under 400 lines of Go, adding one tool at a time.
-          The post has no section anchors, so scroll to the headings named above.
+        at: 'Thorsten Ball, "How to Build an Agent" § Pencils out! to § Let it edit_file'
       - source: mini-swe-agent
-        at: "src/minisweagent/agents/default.py — run(), lines 88–124"
+        at: "mini-swe-agent · agents/default.py, run(), lines 88–124"
         href: "/blob/main/src/minisweagent/agents/default.py#L88-L124"
-        why: >
-          The same loop in a real agent, including the error handling a teaching example leaves out.
-          Compare it with Ball's to see how little the core changes in production.
 
   - heading: "Stop conditions: how the loop knows it is finished"
     summary: >
@@ -47,24 +38,14 @@ points:
       so treating it as an ending cuts the work short.
     reading:
       - source: anthropic-stop-reasons
-        at: '§ "Stop reason values"'
+        at: "Anthropic docs § Stop reason values"
         href: "#stop-reason-values"
-        why: >
-          Every value the field can take, with a subsection each on what your code should do next.
-          Read `tool_use`, `pause_turn` and `refusal` first; those three account for most mistakes.
       - source: anthropic-stop-reasons
-        at: '§ "pause_turn"'
+        at: "Anthropic docs § pause_turn"
         href: "#pause-turn"
-        why: >
-          The specific case described above, with the rule stated plainly: send the conversation back
-          unchanged to let the model continue.
       - source: openai-practical-guide
-        at: 'p. 14, "Single-agent systems"'
+        at: "OpenAI guide p. 14, Single-agent systems"
         href: "#page=14"
-        why: >
-          The same stopping rule without any vendor's field names: a loop that runs "until an exit
-          condition is reached", exiting when a designated final-output tool is called or the model
-          returns no tool calls.
 
   - heading: "Why the whole conversation is sent every time"
     summary: >
@@ -78,24 +59,14 @@ points:
       at once.
     reading:
       - source: mini-swe-agent
-        at: 'README — "Has a completely linear history"'
+        at: "mini-swe-agent · README, Has a completely linear history"
         href: "/blob/main/README.md?plain=1#L45"
-        why: >
-          A real agent stating this as a deliberate choice: "every step of the agent just appends to
-          the messages and that's it". One consequence the authors draw is that the record of what
-          the agent did and the text sent to the model are the same object.
       - source: mini-swe-agent
-        at: "src/minisweagent/agents/default.py — add_messages(), lines 69–86"
+        at: "mini-swe-agent · agents/default.py, add_messages(), lines 69–86"
         href: "/blob/main/src/minisweagent/agents/default.py#L69-L86"
-        why: >
-          The twenty lines that do the appending. Reading them is the quickest way to confirm that
-          nothing more complicated happens between steps.
       - source: anthropic-tool-use-loop
-        at: '§ "The tool use contract"'
+        at: "Anthropic docs § The tool use contract"
         href: "#the-tool-use-contract"
-        why: >
-          The rules the API enforces on what you send back, including that every tool call must be
-          answered by a matching result. This is why a conversation cannot be trimmed arbitrarily.
 
   - heading: "Turn limits and other endings the model does not choose"
     summary: >
@@ -108,24 +79,14 @@ points:
       occasionally runs up a surprising bill.
     reading:
       - source: twelve-factor-own-control-flow
-        at: 'Factor 8 — "Own your control flow"'
+        at: "12-Factor Agents · Factor 8, Own your control flow"
         href: "#user-content-8-own-your-control-flow"
-        why: >
-          The argument for writing the loop yourself rather than accepting a framework's: it lets you
-          pause, resume and interrupt between steps instead of only around a whole run.
       - source: anthropic-bea
-        at: '§ "Agents" — the stopping-conditions paragraph'
+        at: 'Anthropic, "Building effective agents" § Agents, the stopping-conditions paragraph'
         href: "#agents"
-        why: >
-          Stopping conditions and human checkpoints described as ordinary parts of a design. The same
-          section explains that an agent gains "ground truth" from its environment at each step,
-          which is what makes the loop a feedback loop.
       - source: kinney-agent-loops
-        at: '§ "The loop every framework converges on"'
+        at: "Steve Kinney § The loop every framework converges on"
         href: "#the-loop-every-framework-converges-on"
-        why: >
-          Five frameworks reduced to the same loop, side by side, which confirms that none of this is
-          specific to one vendor's API.
 
   - heading: "Where the idea came from: the ReAct paper"
     summary: >
@@ -138,18 +99,11 @@ points:
       returns that structure directly.
     reading:
       - source: react-paper
-        at: "§ 2, ReAct (p. 3)"
+        at: "ReAct paper § 2, ReAct (p. 3)"
         href: "https://arxiv.org/pdf/2210.03629#page=3"
-        why: >
-          The method in about two pages: thought, action, observation, repeat. Stop there unless the
-          benchmark results interest you.
       - source: react-paper
-        at: "§ 3.1 Setup (p. 4) — the action space"
+        at: "ReAct paper § 3.1 Setup (p. 4), the action space"
         href: "https://arxiv.org/pdf/2210.03629#page=4"
-        why: >
-          Where the three available actions are defined, including `finish[answer]`. Seeing the stop
-          action listed alongside the search actions shows how the ending was modelled before APIs
-          reported it separately.
 
 extraReading:
   - willison-agents

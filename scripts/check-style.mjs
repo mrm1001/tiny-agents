@@ -80,11 +80,7 @@ for (const file of files) {
   if (!points.length) continue;
 
   const where = file.replace(/\.md$/, '');
-  const prose = [
-    ...points.map((p) => p.summary ?? ''),
-    ...points.flatMap((p) => (p.reading ?? []).map((r) => r.why ?? '')),
-    fm[2],
-  ].join('\n');
+  const prose = [...points.map((p) => p.summary ?? ''), fm[2]].join('\n');
 
   // --- banned phrases ---------------------------------------------------------
   // Quotations and code are exempt: STYLE.md governs our prose, and a source is

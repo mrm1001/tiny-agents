@@ -11,7 +11,7 @@
  *   2. every pointer names a *place* inside its source, not just the source;
  *   3. no source is pointed at twice for the same reason, and nothing sits in
  *      `extraReading` that a point already points at;
- *   4. `#s-` citations in the body resolve to a source the lesson points at;
+ *   4. `#s-` citations in the body resolve to an anchor that exists on the page;
  *   5. Markdown links go to pages that exist.
  *
  * The build enforces what belongs in a schema — a non-locked lesson has points,
@@ -131,13 +131,20 @@ for (const file of files) {
   }
 
   // 4. Dead `#s-` citations. These render as ordinary anchors that jump nowhere,
-  //    which no build step and no browser complains about.
+  //    which no build step and no browser complains about. Only Extra reading
+  //    renders `<li id="s-…">` now that the derived bibliography is gone, so an
+  //    anchor for a pointed-at source has nothing to land on.
+  const anchored = new Set(
+    extraReading.map((ref) => (typeof ref === 'string' ? ref : ref?.id)).filter(Boolean),
+  );
   for (const [, id] of body.matchAll(/\(#s-([a-z0-9][a-z0-9-]*)\)/g)) {
-    if (!pointedAt.has(id))
+    if (!anchored.has(id))
       fail(
-        isKnownSourceId(id)
-          ? `${file}: body cites #s-${id}, which no point in this lesson points at`
-          : `${file}: body cites #s-${id}, which is not a known source`,
+        pointedAt.has(id)
+          ? `${file}: body cites #s-${id}, but pointed-at sources no longer render an anchor — link the pointer instead`
+          : isKnownSourceId(id)
+            ? `${file}: body cites #s-${id}, which is not in this lesson's extraReading`
+            : `${file}: body cites #s-${id}, which is not a known source`,
       );
   }
 
