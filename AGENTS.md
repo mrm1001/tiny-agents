@@ -37,6 +37,29 @@ astro dev --background
 
 Manage the background server with `astro dev stop`, `astro dev status`, and `astro dev logs`.
 
+**After installing or removing a dependency, restart the dev server with its cache
+cleared:**
+
+```
+astro dev stop && rm -rf node_modules/.vite .astro && astro dev --background
+```
+
+`npm install` invalidates Vite's pre-bundled dependencies, and a running dev server
+keeps serving the stale ones. The symptom is a React island that silently renders
+nothing while the page around it looks fine — the architecture diagram vanished this
+way after `npm i -D yaml`. The give-away is in `astro dev logs`:
+
+```
+TypeError: Cannot read properties of null (reading 'useState')
+```
+
+which means two copies of React, not a bug in the component. **`npm run build` is
+unaffected**, so check the production build before changing any component code:
+
+```
+npm run build && npx astro preview --port 4322
+```
+
 ## Documentation
 
 Full documentation: https://docs.astro.build
