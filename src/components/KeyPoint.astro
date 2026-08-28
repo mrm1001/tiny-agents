@@ -1,0 +1,52 @@
+---
+/**
+ * One key point: the idea in a paragraph, then where to read it properly.
+ *
+ * The reading list is the substance, so it gets the visual weight — the summary
+ * is there to tell you whether to follow the links, not to replace them.
+ */
+import { resolvePointer, type ReadingPointer } from '../lib/reading';
+import { inlineCode } from '../lib/inline-code';
+
+interface Props {
+  n: number;
+  heading: string;
+  summary: string;
+  reading: ReadingPointer[];
+}
+
+const { n, heading, summary, reading } = Astro.props;
+const pointers = reading.map(resolvePointer);
+
+/** `author · site · date` — whichever of them the library actually has. */
+const byline = (entry: (typeof pointers)[number]['entry']) =>
+  [entry.author, entry.site, entry.date?.slice(0, 4)].filter(Boolean).join(' · ');
+---
+
+<section class="point" aria-labelledby={`point-${n}`}>
+  <h2 id={`point-${n}`}>
+    <span class="point-n" aria-hidden="true">{String(n).padStart(2, '0')}</span>
+    {heading}
+  </h2>
+
+  <p class="point-summary" set:html={inlineCode(summary)} />
+
+  <h3 class="reading-heading">Read</h3>
+  <ol class="reading">
+    {
+      pointers.map((p) => (
+        <li>
+          <a href={p.url} rel="noopener">
+            <span class="at">{p.at}</span>
+            <span class="in">{p.entry.title}</span>
+          </a>
+          <p class="meta">
+            {byline(p.entry)}
+            <span class="kind">{p.entry.kind}</span>
+          </p>
+          {p.why && <p class="why" set:html={inlineCode(p.why)} />}
+        </li>
+      ))
+    }
+  </ol>
+</section>

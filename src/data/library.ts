@@ -74,6 +74,12 @@ export interface Source {
    * the entry then promoted to a normal source.
    */
   blocked?: { reason: string; tried: string };
+  /**
+   * The page has no linkable headings, so a reading pointer into it can only name
+   * its section in prose. Set this and `check:lessons` stops asking for an
+   * `href`. Confirm with `node scripts/anchors.mjs <id>` before setting it.
+   */
+  noAnchors?: true;
 }
 
 export const LIBRARY: Source[] = [
@@ -161,6 +167,7 @@ export const LIBRARY: Source[] = [
     site: 'Amp',
     date: '2025-04-15',
     kind: 'post',
+    noAnchors: true,
     topics: ['loop', 'tools', 'edit'],
     core: true,
     note:

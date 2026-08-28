@@ -9,6 +9,26 @@ The core idea is that the site gets more capable as the curriculum advances. The
 architecture diagram *is* the learning-progress tracker: each of the 12 boxes is a piece of the
 agent, and it stays padlocked until the lessons behind it are written.
 
+## What a lesson is
+
+**An index, not an essay.** Each lesson is a handful of key points; each point is one
+paragraph naming the idea, then pointers to the exact place someone explains it
+properly — a named section of a blog post, a page of a PDF, a line range in a real
+agent's source. Original writing is kept deliberately small, because the good
+explanations already exist and are better than a paraphrase of them.
+
+That makes pointer precision the product, so it is enforced rather than hoped for:
+
+- A pointer must name a **place inside** its source, not just the source.
+- Deep links are **composed** — `src/data/library.ts` owns the URL, a lesson supplies
+  only the fragment or path. One fix repairs a rotted link across all 36 lessons.
+- Anchors are **looked up, never guessed** (`node scripts/anchors.mjs <id>`), because a
+  wrong anchor silently drops the reader at the top of the page instead of erroring.
+- The Sources list at the foot of a lesson is **derived** from its pointers, so a
+  bibliography cannot drift from what the lesson actually cites.
+
+`SOURCES.md` is the guide to writing one.
+
 ## How progress works
 
 There is no database, no auth and no server — the site is static files. Progress lives in the
@@ -60,7 +80,8 @@ npx astro check         # needs typescript 6.x; 7.x drops the API astro check us
 npm run check           # all four checks below
 npm run check:secrets   # no credential is tracked in git
 npm run check:sources   # library integrity, cached files, blocked worklist
-npm run check:lessons   # reading budget, dead citations, uncited sources, dead links
+npm run check:lessons   # reading budget, pointer hygiene, dead links
+node scripts/anchors.mjs <library-id|url>   # linkable sections, for writing a pointer
 npm run check:contrast  # WCAG check on the theme tokens and the code theme
 ```
 

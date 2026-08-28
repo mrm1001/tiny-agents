@@ -54,6 +54,37 @@ const inlineSource = z.object({
 /** Either a key into src/data/library.ts, or a full inline source. */
 const sourceRef = z.union([z.string(), inlineSource]);
 
+/**
+ * One reading pointer: a library source plus the exact place inside it.
+ *
+ * `at` is required, and that is the point of the format. A pointer that names
+ * only a source ("read Anthropic's post") makes the reader do the finding, which
+ * is the work this course is supposed to have already done.
+ */
+const readingPointer = z.object({
+  source: z.string(),
+  at: z.string().min(1, 'a pointer must name the section, file or chapter to read'),
+  /** `#anchor` on the source's page, `/path` appended to it, or an absolute URL. */
+  href: z
+    .string()
+    .regex(/^(#|\/|https?:\/\/)/, 'href must start with "#", "/" or "https://"')
+    .optional(),
+  why: z.string().optional(),
+});
+
+/**
+ * A key point: one paragraph of our own writing, then where to read about it.
+ *
+ * The summary is deliberately capped. This course indexes other people's
+ * writing; if a point needs more than a paragraph to state, it is really two
+ * points, or the pointer is doing too little work.
+ */
+const keyPoint = z.object({
+  heading: z.string().min(1),
+  summary: z.string().min(1).max(700, 'a point summary is one paragraph — split it, or point harder'),
+  reading: z.array(readingPointer).min(1, 'a point with no reading is just an opinion'),
+});
+
 /** Collect unresolvable library keys so they can be reported with a real path. */
 function unknownKeys(refs: Array<z.infer<typeof sourceRef>>): string[] {
   return refs.filter((r): r is string => typeof r === 'string').filter((r) => !isKnownSourceId(r));
@@ -70,9 +101,14 @@ const lessons = defineCollection({
       status: z.enum(STATUSES),
       takeaway: z.string(),
 
-      /** What the lesson is written from. Library keys or inline sources. */
-      sources: z.array(sourceRef).default([]),
-      /** Optional onward reading, rendered under its own heading. */
+      /**
+       * The lesson itself: key points, each with its reading. The Sources list is
+       * derived from these, so there is no separate `sources` field to keep in
+       * step with them.
+       */
+      points: z.array(keyPoint).default([]),
+
+      /** Onward reading, deliberately not pointed at from any single point. */
       extraReading: z.array(sourceRef).default([]),
 
       /**
@@ -94,27 +130,37 @@ const lessons = defineCollection({
     // Issues MUST carry a `path`. Astro derives the reported line from
     // `issue.path[0]`; with an empty path it prints "**:" and points at line 0.
     .superRefine((lesson, ctx) => {
-      if (lesson.status !== 'locked' && lesson.sources.length === 0) {
+      if (lesson.status !== 'locked' && lesson.points.length === 0) {
         ctx.addIssue({
           code: 'custom',
-          path: ['sources'],
-          input: lesson.sources,
-          message: `a lesson with status "${lesson.status}" must cite at least one source`,
+          path: ['points'],
+          input: lesson.points,
+          message: `a lesson with status "${lesson.status}" must have at least one key point`,
         });
       }
 
-      for (const [field, refs] of [
-        ['sources', lesson.sources],
-        ['extraReading', lesson.extraReading],
-      ] as const) {
-        for (const key of unknownKeys(refs)) {
-          ctx.addIssue({
-            code: 'custom',
-            path: [field],
-            input: key,
-            message: `unknown source key "${key}" — add it to src/data/library.ts or inline the source`,
-          });
-        }
+      // Everything pointed at lives in the shared library — that is what makes a
+      // rotted link a one-line fix rather than a hunt through 36 lessons.
+      lesson.points.forEach((point, i) => {
+        point.reading.forEach((pointer, j) => {
+          if (!isKnownSourceId(pointer.source)) {
+            ctx.addIssue({
+              code: 'custom',
+              path: ['points', i, 'reading', j, 'source'],
+              input: pointer.source,
+              message: `unknown source key "${pointer.source}" — add it to src/data/library.ts`,
+            });
+          }
+        });
+      });
+
+      for (const key of unknownKeys(lesson.extraReading)) {
+        ctx.addIssue({
+          code: 'custom',
+          path: ['extraReading'],
+          input: key,
+          message: `unknown source key "${key}" — add it to src/data/library.ts or inline the source`,
+        });
       }
     }),
 });

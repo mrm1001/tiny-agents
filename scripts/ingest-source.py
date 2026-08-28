@@ -67,11 +67,14 @@ def sha256(path: Path) -> str:
     return h.hexdigest()
 
 
-def fetch(url: str, dest: Path) -> None:
+def fetch(url: str, dest: Path) -> str:
+    """Download to `dest`. Returns the Content-Type, which names the file type
+    when the URL does not — arXiv serves PDFs from paths like /pdf/2210.03629."""
     req = urllib.request.Request(url, headers={"User-Agent": UA})
     try:
         with urllib.request.urlopen(req, timeout=120) as resp, dest.open("wb") as out:
             shutil.copyfileobj(resp, out)
+            return resp.headers.get("Content-Type", "").split(";")[0].strip().lower()
     except urllib.error.HTTPError as exc:
         raise SystemExit(
             f"! {url}\n  HTTP {exc.code} {exc.reason}\n"
@@ -82,13 +85,37 @@ def fetch(url: str, dest: Path) -> None:
         raise SystemExit(f"! {url}\n  could not connect: {exc.reason}") from exc
 
 
-def extension_for(origin: str, downloaded: Path | None = None) -> str:
+CONTENT_TYPES = {
+    "application/pdf": ".pdf",
+    "text/html": ".html",
+    "text/plain": ".txt",
+    "text/markdown": ".md",
+    "application/json": ".json",
+    "text/csv": ".csv",
+}
+
+
+def extension_for(origin: str, downloaded: Path | None = None, content_type: str = "") -> str:
+    """Work out the file type, trusting the bytes over the URL.
+
+    The URL suffix is the least reliable signal: https://arxiv.org/pdf/2210.03629
+    is a PDF whose "extension" is .03629, and taking that literally produced a
+    file nothing could extract. So sniff the content, then fall back to the
+    suffix only when it names a type we actually handle, then Content-Type.
+    """
+    if downloaded and downloaded.exists():
+        with downloaded.open("rb") as fh:
+            if fh.read(5) == b"%PDF-":
+                return ".pdf"
+
     suffix = Path(origin.split("?")[0]).suffix.lower()
-    if suffix:
+    if suffix == ".pdf" or suffix in TEXTUAL:
         return suffix
-    if downloaded and downloaded.read_bytes()[:5] == b"%PDF-":
-        return ".pdf"
-    return ".bin"
+
+    if content_type in CONTENT_TYPES:
+        return CONTENT_TYPES[content_type]
+
+    return suffix or ".bin"
 
 
 def extract_pdf(path: Path) -> tuple[str, dict]:
@@ -190,8 +217,13 @@ def ingest(target: str, source_id: str | None, force: bool) -> None:
             return
         tmp = RAW / f".{name}.part"
         print(f"  fetching {target}")
-        fetch(target, tmp)
-        raw_path = RAW / f"{name}{extension_for(target, tmp)}"
+        content_type = fetch(target, tmp)
+        raw_path = RAW / f"{name}{extension_for(target, tmp, content_type)}"
+        # Same rule as the local-file branch: nothing unsupported may land in
+        # raw/, or every later --scan trips over it.
+        if not supported(raw_path):
+            tmp.unlink(missing_ok=True)
+            raise SystemExit(f"! {Unsupported(raw_path)}")
         tmp.replace(raw_path)
     else:
         src = Path(target).expanduser().resolve()

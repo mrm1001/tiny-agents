@@ -195,20 +195,62 @@ SWE-agent, codex, gemini-cli, OpenHands, agent-lightning).
 
 ---
 
-## Citing inside a lesson
+## Pointing at a source from a lesson
 
-Link to the anchor, never the URL:
+A lesson is an **index**: a short paragraph naming one idea, then pointers to the
+exact place where someone explains it properly. So a lesson doesn't declare a list
+of sources — it declares points, and the bibliography is derived from them.
 
-```md
-[Anthropic's post](#s-anthropic-bea) gives both halves of the split.
+```yaml
+points:
+  - heading: "The real question is who decides whether there is another step"
+    summary: >
+      One paragraph. Enough to tell the reader whether to follow the links.
+    reading:
+      - source: hf-smolagents                              # library id
+        at: '§ "An introduction to agentic systems"'        # required
+        href: "#an-introduction-to-agentic-systems"         # composed onto the url
+        why: >
+          What to take from it.
 ```
 
-The Sources list renders each entry as `<li id="s-<id>">`, so the citation jumps to
-it and highlights it. Zero URLs in lesson prose, and citations survive reordering —
-positional `[3]` wouldn't.
+**`at` is required, and it is the whole point of the format.** A pointer that
+names only a source ("read Anthropic's post") makes the reader do the finding,
+which is the work this course is supposed to have already done.
 
-`extraReading` entries don't need to be cited in the prose; `sources` entries should
-be.
+`href` is appended to the source's URL in `library.ts`, so a rotted link stays a
+one-line fix even when 36 lessons point deep into it:
+
+| Form | Means | Example |
+|---|---|---|
+| `#anchor` | An anchor on the source's own page | `#what-are-agents` |
+| `/path` | Appended to the source's path — for repos | `/blob/main/src/agent.py#L88-L124` |
+| `#page=N` | A page in a PDF | `#page=14` |
+| `https://…` | An absolute URL, for a deep target on another host | `https://arxiv.org/pdf/2210.03629#page=3` |
+
+### Finding the anchor
+
+Never guess one. A wrong anchor doesn't error — it silently drops the reader at
+the top of the page.
+
+```sh
+node scripts/anchors.mjs anthropic-bea          # every linkable heading
+node scripts/anchors.mjs ms-agents-for-beginners  # a repo's tree instead
+```
+
+Some pages have no anchors at all (ampcode.com is one). Set `noAnchors: true` on
+that source in `library.ts` and `check:lessons` stops asking for an `href`;
+pointers into it name their section in prose and the reader scrolls.
+
+For PDFs, get the page number from the cached text — it carries `=== page N ===`
+markers, and `#page=N` is the PDF page, not the printed one:
+
+```sh
+grep -n "=== page" sources/text/openai-practical-guide.txt
+```
+
+`extraReading` is for what the points deliberately *don't* send you to.
+`check:lessons` warns if something sits there that a point already points at.
 
 ---
 
@@ -218,13 +260,16 @@ be.
 npm run check:sources                        # integrity + cached files + worklist
 node scripts/check-sources.mjs --for loop    # candidate reading for a component
 node scripts/check-sources.mjs --topics      # coverage, and where it's thin
-npm run build                                # citation keys, sources-required rule
+node scripts/anchors.mjs <id>                # the anchors a pointer can use
+npm run check:lessons                        # pointer hygiene + reading budget
+npm run build                                # every pointer's source resolves
 ```
 
 `check:sources` catches tracking parameters, duplicate ids, duplicate URLs
 (ignoring trailing slashes), malformed dates, `blocked` without a reason, and any
 source with no `topics` — which would otherwise be invisible to `--for`.
 
-The build enforces the two that matter most: **every citation key resolves**, and
-**any lesson not `status: locked` must cite at least one source.** That last one
-means adding sources is part of writing a lesson, not an afterthought.
+The build enforces the three that matter most: **every pointer's source resolves
+in the library**, **any lesson not `status: locked` has at least one point**, and
+**every point has at least one pointer.** A point with no reading is just an
+opinion, which is what this course is trying not to be.

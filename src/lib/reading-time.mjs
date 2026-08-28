@@ -79,3 +79,28 @@ export function proseWords(body) {
 export function readingMinutes(body) {
   return Math.max(1, Math.round(proseWords(body) / WORDS_PER_MINUTE));
 }
+
+/**
+ * Everything a reader reads on a lesson page, as one string.
+ *
+ * Most of a lesson now lives in `points` rather than in the Markdown body, so
+ * counting the body alone would report every lesson as a one-minute read. The
+ * `at` labels are excluded: they are link text, scanned rather than read.
+ *
+ * @param {{ body?: string, points?: Array<{heading: string, summary: string, reading: Array<{why?: string}>}> }} lesson
+ */
+export function lessonText({ body = '', points = [] }) {
+  const fromPoints = points.flatMap((point) => [
+    point.heading,
+    point.summary,
+    ...point.reading.map((r) => r.why ?? ''),
+  ]);
+  return [body, ...fromPoints].join('\n\n');
+}
+
+/** Prose words on a whole lesson page. */
+export const lessonWords = (lesson) => proseWords(lessonText(lesson));
+
+/** Reading time for a whole lesson page, never zero. */
+export const lessonMinutes = (lesson) =>
+  Math.max(1, Math.round(lessonWords(lesson) / WORDS_PER_MINUTE));
