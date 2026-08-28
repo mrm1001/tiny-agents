@@ -19,8 +19,15 @@ export const WORDS_PER_MINUTE = 220;
 /** Five minutes at 220 wpm. A lesson over this has to lose something. */
 export const BUDGET_WORDS = 1100;
 
-/** Warn early enough that the fix is an edit, not a rewrite. */
-export const WARN_WORDS = 950;
+/**
+ * Warn early enough that the fix is an edit, not a rewrite.
+ *
+ * Raised from 950 when lessons moved to the index format. Explaining a mechanism
+ * to a beginner, as STYLE.md requires, costs more words than asserting a
+ * conclusion did, so a finished lesson now lands nearer 1,000 than 800 and a
+ * warning at 950 would be permanently on. A warning that never clears is noise.
+ */
+export const WARN_WORDS = 1000;
 
 /**
  * Prose words in a Markdown body, excluding markup a reader doesn't read.

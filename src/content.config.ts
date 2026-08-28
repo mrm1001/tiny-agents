@@ -75,13 +75,18 @@ const readingPointer = z.object({
 /**
  * A key point: one paragraph of our own writing, then where to read about it.
  *
- * The summary is deliberately capped. This course indexes other people's
- * writing; if a point needs more than a paragraph to state, it is really two
- * points, or the pointer is doing too little work.
+ * The summary is capped at a paragraph, because this course indexes other
+ * people's writing rather than replacing it. There is a floor as well as a
+ * ceiling: STYLE.md asks a summary to say what the thing is, how it works and
+ * what follows from it, and a couple of sentences cannot do that. Too short
+ * usually means a conclusion was asserted instead of explained.
  */
 const keyPoint = z.object({
   heading: z.string().min(1),
-  summary: z.string().min(1).max(700, 'a point summary is one paragraph — split it, or point harder'),
+  summary: z
+    .string()
+    .min(220, 'a summary must explain the mechanism, not just assert the conclusion — see STYLE.md')
+    .max(900, 'a point summary is one paragraph — split it, or point harder'),
   reading: z.array(readingPointer).min(1, 'a point with no reading is just an opinion'),
 });
 

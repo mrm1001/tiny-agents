@@ -10,10 +10,11 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "check": "npm run check:secrets && npm run check:sources && npm run check:lessons && npm run check:contrast",
+    "check": "npm run check:secrets && npm run check:sources && npm run check:lessons && npm run check:style && npm run check:contrast",
     "check:secrets": "node scripts/check-secrets.mjs",
     "check:sources": "node scripts/check-sources.mjs",
     "check:lessons": "node scripts/check-lessons.mjs",
+    "check:style": "node scripts/check-style.mjs",
     "check:contrast": "node scripts/check-contrast.mjs",
     "check:pointers": "node scripts/check-pointers.mjs"
   },
