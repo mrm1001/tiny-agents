@@ -42,6 +42,11 @@ src/
 ├── layouts/                     Base shell, Lesson page
 ├── lib/href.ts                  base-path helper — all internal links go through it
 └── pages/                       index, /lessons, /lessons/[...slug]
+
+sources/                         local cache of source files (gitignored)
+├── raw/                         original PDFs etc., byte-for-byte
+└── text/                        extracted text + provenance sidecars
+scripts/ingest-source.py         fetch/copy a source file and cache its text
 ```
 
 ## Development
@@ -54,6 +59,27 @@ npm run preview         # honours `base`, so it catches base-path mistakes dev h
 npx astro check         # needs typescript 6.x; 7.x drops the API astro check uses
 npm run check:contrast  # WCAG check on the theme tokens
 ```
+
+### Source files
+
+Sources that exist as a file — mostly PDFs — are cached under `sources/`, together
+with their extracted text. Everything there except the README is gitignored: the
+raw files are third-party material we have no licence to redistribute, and the text
+is a rebuildable cache rather than source of truth.
+
+```sh
+uv run scripts/ingest-source.py <url-or-path> --id <library-id>   # fetch + extract
+uv run scripts/ingest-source.py --scan                            # extract new drops
+uv run scripts/ingest-source.py --list                            # what's cached
+```
+
+Drop files into `sources/raw/` by hand and `--scan` picks them up. It skips files
+whose cached text is current and re-extracts any whose `sha256` changed, so
+replacing a file in place just works. Extracted text carries `=== page N ===`
+markers so a quote can cite a page. Details in [`sources/README.md`](sources/README.md).
+
+The script declares its dependencies inline (PEP 723), so there is no install step —
+`uv` provisions them in an ephemeral environment.
 
 ### Theme
 
