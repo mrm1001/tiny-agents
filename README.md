@@ -57,11 +57,37 @@ npm run dev             # http://localhost:4321/tiny-agents/   (note the base pa
 npm run build
 npm run preview         # honours `base`, so it catches base-path mistakes dev hides
 npx astro check         # needs typescript 6.x; 7.x drops the API astro check uses
-npm run check            # all three checks below
+npm run check           # all four checks below
+npm run check:secrets   # no credential is tracked in git
 npm run check:sources   # library integrity, cached files, blocked worklist
 npm run check:lessons   # reading budget, dead citations, uncited sources, dead links
 npm run check:contrast  # WCAG check on the theme tokens and the code theme
 ```
+
+### The Anthropic API key
+
+Only the trace-recording scripts need it. **The published site is static and makes
+no API calls**, so a visitor can never spend it.
+
+```sh
+# .env already exists and is gitignored — paste the key after the `=`
+ANTHROPIC_API_KEY=sk-ant-...
+```
+
+`uv` does **not** read `.env` on its own (verified: `--no-env-file` implies it might,
+but a bare `uv run` sees nothing), so recording commands pass it explicitly:
+
+```sh
+uv run --env-file .env exercises/lesson_02/run.py
+```
+
+Set `UV_ENV_FILE=.env` in your shell if you would rather drop the flag. A key
+exported from `~/.zshrc` also works and needs no flag at all — the trade is that it
+is then visible to every process on the machine rather than scoped to this project.
+
+`npm run check:secrets` is the second line of defence after `.gitignore`: it fails if
+`.env` is ever tracked, or if anything key-shaped appears in a tracked file. Worth
+having on a public repo, where a leaked key can only be fixed by rotating it.
 
 ### Source files
 

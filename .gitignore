@@ -28,3 +28,8 @@ pnpm-debug.log*
 # cache. See sources/README.md — which IS tracked, so the convention is documented.
 sources/*
 !sources/README.md
+
+# Secrets. The key lives in .env; .env.example is the tracked template.
+.env
+.env.*
+!.env.example
