@@ -72,3 +72,8 @@ extraReading:
 - Show the loop first and the stop condition second, or the reverse?
 - Is the stateless/resend point strong enough to carry the demo on its own, or does the demo also
   need to show tokens growing?
+
+## Feedback
+
+- you choose the order
+- keep the demo simple
