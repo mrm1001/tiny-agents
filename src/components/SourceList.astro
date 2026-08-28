@@ -10,6 +10,12 @@ interface Props {
 }
 
 const { heading, refs, blurb } = Astro.props;
+
+// A source's `note` is deliberately NOT rendered. Notes are internal working
+// notes — which section carries which quote, what to be careful of — and they
+// read as memos to ourselves next to lesson prose written for a reader. They stay
+// in the library for `check-sources.mjs --for <component>`, which is where they
+// earn their keep.
 const sources = refs.map(resolveSource);
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -38,7 +44,6 @@ function formatDate(date?: string): string | undefined {
             <a class="src-title" href={s.url} rel="noopener">{s.title}</a>
             {meta && <span class="src-meta">{meta}</span>}
             <span class={`chip src-kind`}>{s.kind}</span>
-            {s.note && <p class="src-note">{s.note}</p>}
           </li>
         );
       })

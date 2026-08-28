@@ -28,7 +28,7 @@ through 36 lesson files.
   kind: 'post',
   topics: ['tools'],               // what it's about — see "Topics" below
   core: true,
-  note: 'What this supplies, and any caveat. Renders on the page.',
+  note: 'What this supplies, and any caveat. Internal — never rendered.',
 },
 ```
 
@@ -55,7 +55,7 @@ extraReading:
 | `author` | optional | Byline **as printed**. Omit for corporate authors where `site` already says it — "OpenAI · OpenAI" reads badly. |
 | `site` | optional | Publication: `Anthropic Engineering`, `Lil'Log`, `GitHub`. |
 | `date` | optional | `YYYY`, `YYYY-MM` or `YYYY-MM-DD`. **Omit rather than guess.** Omit for living docs. |
-| `note` | optional | Why it's cited, plus caveats. This renders publicly — see the caveat below. |
+| `note` | optional | Why it's cited, plus caveats. **Internal** — see below. |
 | `core` | optional | `true` for sources expected to recur across many lessons. |
 | `blocked` | optional | Only for genuinely unretrievable sources. See below. |
 
@@ -118,10 +118,11 @@ so there's nothing to discover.
 (lowercase, no "AI") even though its `<title>` says otherwise, and its byline prints
 `Erik S.`, not the widely-cited "Erik Schluntz".
 
-**Notes render on the page.** They're currently written half as working notes
-("NB the live byline prints…"), which is useful to us and odd for a reader. If you
-want them purely reader-facing, say so and I'll do a pass — it's an open question
-from the Round 0 review.
+**Notes are internal and never rendered.** Write them for whoever is choosing sources
+for a lesson, not for a reader: which section carries which quote, where a byline or
+date is misleading, what part of a long document is out of scope. They show up in
+`--for <component>`, which is the moment they earn their keep. Anything a reader needs
+belongs in the lesson's own prose or in a pointer's `why`.
 
 ---
 

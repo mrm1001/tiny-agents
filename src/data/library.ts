@@ -64,7 +64,15 @@ export interface Source {
   kind: SourceKind;
   /** Which architecture components this source speaks to. Required: see Topic. */
   topics: Topic[];
-  /** What this source actually supplies — why it is cited. */
+  /**
+   * What this source actually supplies, and anything to be careful of.
+   *
+   * INTERNAL. Never rendered on the site. Write it as a note to whoever picks
+   * this source for a lesson: which section carries which quote, where the
+   * byline or date is misleading, what is out of scope. It surfaces in
+   * `node scripts/check-sources.mjs --for <component>`, which is the moment it
+   * is useful.
+   */
   note?: string;
   /** A course-wide source, expected to recur across many lessons. */
   core?: true;

@@ -748,7 +748,6 @@ a.lesson-row:hover { background: var(--surface); border-left-color: var(--accent
 
 .src-kind { color: var(--muted); margin-top: 0.35rem; display: inline-block; }
 
-.src-note { margin: 0.4rem 0 0; font-size: 0.86rem; color: var(--muted); }
 
 /* Landing from an in-text citation should show you what you landed on. */
 .source-list li:target {
