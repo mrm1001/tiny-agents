@@ -111,6 +111,15 @@ const lessons = defineCollection({
       takeaway: z.string(),
 
       /**
+       * One or two sentences of orientation, above the points.
+       *
+       * This lives in frontmatter rather than in the Markdown body because the
+       * body is reserved for hand-written notes. Keep it short: the takeaway
+       * callout above it already says what the lesson is for.
+       */
+      intro: z.string().max(320, 'the intro is one or two sentences — the points carry the lesson').optional(),
+
+      /**
        * The lesson itself: key points, each with its reading. The Sources list is
        * derived from these, so there is no separate `sources` field to keep in
        * step with them.

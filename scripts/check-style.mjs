@@ -80,7 +80,9 @@ for (const file of files) {
   if (!points.length) continue;
 
   const where = file.replace(/\.md$/, '');
-  const prose = [...points.map((p) => p.summary ?? ''), fm[2]].join('\n');
+  // The Markdown body is hand-written notes. STYLE.md governs lesson prose, and
+  // holding rough bullet points to it would make the notes not worth keeping.
+  const prose = [data.intro ?? '', ...points.map((p) => p.summary ?? '')].join('\n');
 
   // --- banned phrases ---------------------------------------------------------
   // Quotations and code are exempt: STYLE.md governs our prose, and a source is

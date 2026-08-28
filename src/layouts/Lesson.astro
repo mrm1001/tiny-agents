@@ -16,14 +16,18 @@ interface Props {
 }
 
 const { lesson, prev, next } = Astro.props;
-const { n, title, part, component, status, takeaway, points, extraReading, outline, exercise } =
+const { n, title, part, component, status, takeaway, intro, points, extraReading, outline, exercise } =
   lesson.data;
 const comp = COMPONENTS.find((c) => c.id === component)!;
 
 // The same function `check:lessons` uses, so the page and the budget check can
 // never disagree. Outlines and stubs have no read to time.
-const minutes =
-  outline || status === 'locked' ? null : lessonMinutes({ body: lesson.body, points });
+const minutes = outline || status === 'locked' ? null : lessonMinutes({ intro, points });
+
+// The Markdown body is hand-written notes, not lesson prose, so it renders below
+// the points under its own heading and is left out of the reading time. An empty
+// body must render nothing rather than an empty box.
+const hasNotes = Boolean(lesson.body?.trim());
 
 ---
 
@@ -63,11 +67,23 @@ const minutes =
       )
     }
 
-    <div class="lesson-body">
-      <slot />
-    </div>
+    {intro && <p class="lesson-intro">{intro}</p>}
 
     {points.map((point, i) => <KeyPoint n={i + 1} {...point} />)}
+
+    {
+      hasNotes && (
+        <section class="notes" aria-labelledby="h-notes">
+          <h2 id="h-notes">My notes</h2>
+          <p class="notes-hint">
+            Rough working notes, kept alongside the lesson rather than folded into it.
+          </p>
+          <div class="lesson-body">
+            <slot />
+          </div>
+        </section>
+      )
+    }
 
     {
       exercise && (

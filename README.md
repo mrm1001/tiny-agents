@@ -31,7 +31,21 @@ That makes pointer precision the product, so it is enforced rather than hoped fo
   blurb — so its `at` value names both the source and the place. There is no
   bibliography at the foot of a lesson to duplicate it.
 
-`SOURCES.md` is the guide to writing one.
+### Notes
+
+Everything below a lesson's frontmatter is **hand-written notes**, rendered in a panel
+at the foot of the page under "My notes". Ordinary Markdown, meant to be rough.
+
+They are deliberately outside the machinery: not counted towards the five-minute
+reading budget, and not linted by `check:style`, since holding rough bullet points to
+a prose style guide would defeat the point of keeping them. `check:lessons` still
+reports their length (`+40w notes`) so nothing on the page goes unmeasured, and still
+checks any links in them.
+
+The one or two sentences of orientation above the points live in frontmatter as
+`intro`, which is what leaves the body free.
+
+`SOURCES.md` is the guide to writing a lesson; `STYLE.md` is how the prose is written.
 
 ## How progress works
 

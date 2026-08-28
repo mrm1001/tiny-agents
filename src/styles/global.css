@@ -653,6 +653,35 @@ a.lesson-row:hover { background: var(--surface); border-left-color: var(--accent
 }
 .reading a:hover { text-decoration: underline; }
 
+/* --- intro and hand-written notes ----------------------------------------- */
+
+.lesson-intro { color: var(--muted); margin: 0 0 0.5rem; }
+
+/* Notes are marked off so a reader can tell rough working notes from the lesson.
+   A tinted panel rather than a dashed border: dashed already means "not written
+   yet" on this site, and notes are written, just informal. */
+.notes {
+  margin-top: 3rem;
+  padding: 1.1rem 1.25rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.notes > h2 {
+  font-size: 1.1rem;
+  margin: 0 0 0.15rem;
+}
+.notes-hint {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--faint);
+  margin: 0 0 0.9rem;
+}
+/* Inline code and code blocks default to --surface, which is now the panel's own
+   background, so they need lifting off it to stay visible. */
+.notes code { background: var(--bg-raised); }
+.notes pre { background: var(--bg-raised); }
+
 /* --- outline and exercise callouts --------------------------------------- */
 
 /* Dashed border is the established "not written yet" convention here. */

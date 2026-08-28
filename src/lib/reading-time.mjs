@@ -88,17 +88,18 @@ export function readingMinutes(body) {
 }
 
 /**
- * Everything a reader reads on a lesson page, as one string.
+ * The lesson itself, as one string, for timing and for the budget.
  *
- * Most of a lesson lives in `points` rather than in the Markdown body, so
- * counting the body alone would report every lesson as a one-minute read. The
- * `at` labels are excluded: they are link text, scanned rather than read.
+ * Excludes two things on purpose. The `at` labels are link text, scanned rather
+ * than read. The Markdown body is hand-written notes, which are deliberately
+ * outside the five-minute promise: notes can run long without making the lesson
+ * longer, and holding them to a budget would defeat the point of having them.
  *
- * @param {{ body?: string, points?: Array<{heading: string, summary: string}> }} lesson
+ * @param {{ intro?: string, points?: Array<{heading: string, summary: string}> }} lesson
  */
-export function lessonText({ body = '', points = [] }) {
+export function lessonText({ intro = '', points = [] }) {
   const fromPoints = points.flatMap((point) => [point.heading, point.summary]);
-  return [body, ...fromPoints].join('\n\n');
+  return [intro, ...fromPoints].join('\n\n');
 }
 
 /** Prose words on a whole lesson page. */

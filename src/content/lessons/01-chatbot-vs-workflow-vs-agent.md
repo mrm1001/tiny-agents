@@ -91,11 +91,18 @@ points:
         at: "OpenAI guide p. 5, When should you build an agent?"
         href: "#page=5"
 
+intro: >
+  This lesson sets up the vocabulary the rest of the course uses. Lesson 2 builds the loop described
+  in the second point below.
+
 extraReading:
   - hn-building-effective-agents
   - bowne-harness
   - weng-agents
 ---
 
-This lesson sets up the vocabulary the rest of the course uses. Lesson 2 builds the loop described
-in the second point below.
+<!-- Everything below the frontmatter is your notes. Delete these two bullets. -->
+
+- Rough notes go here, in ordinary Markdown: bullets, nested lists, `code`, **bold**, links,
+  code fences, tables. They render in the panel at the foot of the lesson.
+- Nothing here counts towards the five-minute reading budget, and `check:style` leaves it alone.

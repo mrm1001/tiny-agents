@@ -106,6 +106,13 @@ before following it belongs in the summary above.
 | Rhetorical questions as headings | See failure 2. |
 | Undefined API field names, acronyms, or jargon | See "Who the reader is". |
 
+## What this guide does not cover
+
+A lesson's **notes** — everything below the frontmatter, rendered under "My notes" —
+are exempt. They are rough by design: bullet points, half-thoughts, reminders. None of
+the rules above apply to them, `check:style` skips them, and they are outside the
+reading budget.
+
 ## What is checked, and what is not
 
 `npm run check:style` catches the countable part: banned phrases, slogan-shaped headings,

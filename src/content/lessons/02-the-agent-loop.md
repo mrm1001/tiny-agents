@@ -105,10 +105,11 @@ points:
         at: "ReAct paper § 3.1 Setup (p. 4), the action space"
         href: "https://arxiv.org/pdf/2210.03629#page=4"
 
+intro: >
+  This lesson describes the loop that the rest of the course extends. An exercise that runs it and
+  records a real trace follows.
+
 extraReading:
   - willison-agents
   - anthropic-build-tool-agent
 ---
-
-This lesson describes the loop that the rest of the course extends. An exercise that runs it and
-records a real trace follows.

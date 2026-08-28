@@ -92,7 +92,10 @@ for (const file of files) {
 
   const pointers = points.flatMap((p, i) => (p.reading ?? []).map((r) => ({ ...r, point: i + 1 })));
   const pointedAt = new Set(pointers.map((p) => p.source));
-  const words = lessonWords({ body, points });
+  const words = lessonWords({ intro: data.intro, points });
+  // Notes are not held to the budget, but silently unmeasured content is worse
+  // than measured content, so they are counted and shown.
+  const noteWords = proseWords(body);
   totalPointers += pointers.length;
 
   // 1. Reading budget.
@@ -155,14 +158,15 @@ for (const file of files) {
     if (!ROUTES.has(path)) fail(`${file}: links to ${target}, which is not a page`);
   }
 
-  const notes = [];
-  if (isOutline) notes.push('outline');
-  if (isLocked) notes.push('locked');
-  const time = isOutline || isLocked ? '' : `${lessonMinutes({ body, points })} min`;
+  const flags = [];
+  if (isOutline) flags.push('outline');
+  if (isLocked) flags.push('locked');
+  const time = isOutline || isLocked ? '' : `${lessonMinutes({ intro: data.intro, points })} min`;
+  const notes = noteWords ? `  +${noteWords}w notes` : '';
   console.log(
     `  ${file.replace(/\.md$/, '').padEnd(38)} ${String(words).padStart(5)}w ${time.padStart(6)}` +
       `  ${String(points.length).padStart(2)} pts ${String(pointers.length).padStart(3)} ptr ` +
-      `${String(pointedAt.size).padStart(2)} src${notes.length ? `  (${notes.join(', ')})` : ''}`,
+      `${String(pointedAt.size).padStart(2)} src${notes}${flags.length ? `  (${flags.join(', ')})` : ''}`,
   );
 }
 
