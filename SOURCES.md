@@ -92,9 +92,10 @@ node scripts/check-sources.mjs --topics
 ```
 
 shows how many readable sources exist per component, flagging any that are `thin`
-or `none yet`. Right now `retrieval`, `edit`, `environment`, `context` and
-`tracing` have two each — those are the gaps to fill as the course moves past
-Part I.
+or `none yet`. Read it before starting a lesson: a `thin` component means the
+lesson will be written from two sources, which is usually a sign to go hunting
+first. The flags come from live counts, so this guide does not carry a list that
+can rot.
 
 ### Tagging well
 

@@ -386,6 +386,27 @@ export const LIBRARY: Source[] = [
     note: 'For lesson 35: what it actually takes to train an agent rather than just prompt one.',
   },
 
+  // ------------------------------------------------ other courses on this subject
+  // Not spines. Useful for comparing coverage and for borrowing a framing, and
+  // worth checking before writing a lesson to see how someone else sequenced it.
+  {
+    id: 'ms-agents-for-beginners',
+    title: 'AI Agents for Beginners - A Course',
+    url: 'https://github.com/microsoft/ai-agents-for-beginners',
+    author: 'Microsoft',
+    site: 'GitHub',
+    kind: 'repo',
+    topics: ['overview', 'tools', 'retrieval', 'context', 'orchestration', 'guardrails', 'environment'],
+    note:
+      'An 18-lesson MIT-licensed course covering much of the same ground, and the most useful kind of ' +
+      'contrast: its samples are framework-first (Python on the Microsoft Agent Framework and Foundry ' +
+      'Agent Service) where this course writes the loop by hand, so the same idea appears with and ' +
+      'without the abstraction. Individual lessons map onto ours — Tool Use Design Pattern, Agentic ' +
+      'RAG, Context Engineering, Managing Agentic Memory, Building Trustworthy AI Agents, Securing AI ' +
+      'Agents, Planning and Multi-Agent design patterns. Living repo, so no date; check the lesson ' +
+      'list before citing, since it has grown from 10 lessons to 18.',
+  },
+
   // ------------------------------------------- evaluation and training background
   {
     id: 'dietz-llm-as-judge',
