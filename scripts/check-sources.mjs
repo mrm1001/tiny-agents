@@ -1,7 +1,10 @@
 /**
- * Sanity checks on the shared source library.
+ * Sanity checks on the shared source library, and the lookup used when picking
+ * reading for a lesson.
  *
- *   node scripts/check-sources.mjs      (or: npm run check:sources)
+ *   node scripts/check-sources.mjs              (or: npm run check:sources)
+ *   node scripts/check-sources.mjs --for loop   candidate sources for a component
+ *   node scripts/check-sources.mjs --topics     coverage per component
  *
  * Also prints the blocked worklist — sources that could not be retrieved and need
  * fetching by hand — and flags library entries whose cached file is missing or
@@ -12,7 +15,58 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
-const { LIBRARY, CORE_SOURCES, BLOCKED_SOURCES } = await import(join(root, 'src/data/library.ts'));
+const { LIBRARY, CORE_SOURCES, BLOCKED_SOURCES, sourcesForTopic, topicCoverage } = await import(
+  join(root, 'src/data/library.ts')
+);
+const { COMPONENTS } = await import(join(root, 'src/data/architecture.ts'));
+
+const argv = process.argv.slice(2);
+const flag = (name) => {
+  const i = argv.indexOf(name);
+  return i === -1 ? undefined : (argv[i + 1] ?? true);
+};
+
+const wrap = (text, width, indent) =>
+  text
+    .replace(/\s+/g, ' ')
+    .replace(new RegExp(`(.{1,${width}})(\\s|$)`, 'g'), `${indent}$1\n`)
+    .trimEnd();
+
+// --- --for <component>: the lookup used when choosing reading for a lesson -----
+const forTopic = flag('--for');
+if (typeof forTopic === 'string') {
+  const known = COMPONENTS.map((c) => c.id);
+  if (!known.includes(forTopic)) {
+    console.error(`unknown component "${forTopic}"\nknown: ${known.join(', ')}`);
+    process.exit(1);
+  }
+  const label = COMPONENTS.find((c) => c.id === forTopic).label;
+  const hits = sourcesForTopic(forTopic);
+  console.log(`sources for "${forTopic}" (${label}) — ${hits.length} readable\n`);
+  for (const s of hits) {
+    console.log(`  ${s.core ? '★' : '·'} ${s.id}  [${s.kind}]  ${s.topics.join(' ')}`);
+    console.log(`      ${s.title}`);
+    if (s.note) console.log(wrap(s.note, 74, '      '));
+    console.log();
+  }
+  const blocked = sourcesForTopic(forTopic, true).filter((s) => s.blocked);
+  if (blocked.length) console.log(`  (${blocked.length} more blocked: ${blocked.map((s) => s.id).join(', ')})`);
+  process.exit(0);
+}
+
+// --- --topics: where the gaps are ---------------------------------------------
+if (flag('--topics')) {
+  const coverage = new Map(topicCoverage().map((c) => [c.topic, c.count]));
+  console.log('readable sources per component:\n');
+  // Count first, then the bar — a count wider than the bar would otherwise push
+  // the columns out of alignment.
+  for (const c of COMPONENTS) {
+    const n = coverage.get(c.id) ?? 0;
+    const warn = n === 0 ? '   ← none yet' : n <= 2 ? '   ← thin' : '';
+    console.log(`  ${c.id.padEnd(14)} ${String(n).padStart(2)}  ${'█'.repeat(n)}${warn}`);
+  }
+  process.exit(0);
+}
 
 let fails = 0;
 const fail = (msg) => {
@@ -47,6 +101,12 @@ for (const s of LIBRARY) {
     fail(`${s.id}: date "${s.date}" must be YYYY, YYYY-MM or YYYY-MM-DD`);
   if (!/^https?:\/\//.test(s.url)) fail(`${s.id}: url must be absolute`);
   if (s.blocked && !s.blocked.reason) fail(`${s.id}: blocked without a reason`);
+  // An untagged source is invisible to `--for`, which is how reading gets picked.
+  if (!s.topics?.length) fail(`${s.id}: no topics — it will never surface for a lesson`);
+  const knownTopics = COMPONENTS.map((c) => c.id);
+  for (const t of s.topics ?? []) {
+    if (!knownTopics.includes(t)) fail(`${s.id}: unknown topic "${t}"`);
+  }
 }
 
 console.log(

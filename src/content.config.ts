@@ -15,6 +15,23 @@ export const STATUSES = ['done', 'in-progress', 'locked'] as const;
 
 const SOURCE_KINDS = ['post', 'docs', 'paper', 'thread', 'newsletter', 'repo', 'book'] as const;
 
+/** The twelve architecture components — used for a lesson's own component and,
+ *  on a source, for what that source is about. See Topic in src/data/library.ts. */
+const COMPONENT_IDS = [
+  'overview',
+  'loop',
+  'model',
+  'tools',
+  'retrieval',
+  'edit',
+  'environment',
+  'guardrails',
+  'context',
+  'orchestration',
+  'tracing',
+  'eval',
+] as const;
+
 /** A source supplied inline, for one-offs that don't belong in the shared library. */
 const inlineSource = z.object({
   id: z
@@ -30,6 +47,7 @@ const inlineSource = z.object({
     .regex(/^\d{4}(-\d{2}(-\d{2})?)?$/, 'date must be YYYY, YYYY-MM or YYYY-MM-DD')
     .optional(),
   kind: z.enum(SOURCE_KINDS).default('post'),
+  topics: z.array(z.enum(COMPONENT_IDS)).default([]),
   note: z.string().optional(),
 });
 
@@ -48,20 +66,7 @@ const lessons = defineCollection({
       n: z.number().int().min(1).max(36),
       title: z.string(),
       part: z.string(),
-      component: z.enum([
-        'overview',
-        'loop',
-        'model',
-        'tools',
-        'retrieval',
-        'edit',
-        'environment',
-        'guardrails',
-        'context',
-        'orchestration',
-        'tracing',
-        'eval',
-      ]),
+      component: z.enum(COMPONENT_IDS),
       status: z.enum(STATUSES),
       takeaway: z.string(),
 

@@ -26,6 +26,7 @@ through 36 lesson files.
   site: 'Anthropic Engineering',
   date: '2025-09-11',
   kind: 'post',
+  topics: ['tools'],               // what it's about — see "Topics" below
   core: true,
   note: 'What this supplies, and any caveat. Renders on the page.',
 },
@@ -50,12 +51,65 @@ extraReading:
 | `title` | **required** | The **H1 as rendered**, which is often not the `<title>` tag or the URL slug. |
 | `url` | **required** | Absolute, and **strip tracking parameters** (`?utm_source=…`, `?ref=…`, `fbclid`). |
 | `kind` | **required** | `post` · `docs` · `paper` · `thread` · `newsletter` · `repo` · `book` |
+| `topics` | **required** | What the source is *about*. See below. |
 | `author` | optional | Byline **as printed**. Omit for corporate authors where `site` already says it — "OpenAI · OpenAI" reads badly. |
 | `site` | optional | Publication: `Anthropic Engineering`, `Lil'Log`, `GitHub`. |
 | `date` | optional | `YYYY`, `YYYY-MM` or `YYYY-MM-DD`. **Omit rather than guess.** Omit for living docs. |
 | `note` | optional | Why it's cited, plus caveats. This renders publicly — see the caveat below. |
 | `core` | optional | `true` for sources expected to recur across many lessons. |
 | `blocked` | optional | Only for genuinely unretrievable sources. See below. |
+
+---
+
+## Topics — how a source gets found again
+
+`topics` is what makes the library searchable instead of a list you re-read every
+time. It uses the **same twelve architecture components the lessons are mapped
+to**, so "which sources can serve this lesson?" is a lookup rather than a guess:
+
+```
+overview · loop · model · tools · retrieval · edit
+environment · guardrails · context · orchestration · tracing · eval
+```
+
+Because it's a closed set drawn from `ComponentId`, a typo is a **type error**, and
+the vocabulary can't quietly fork from the diagram.
+
+### Finding reading for a lesson
+
+Look up the lesson's `component` in its frontmatter, then:
+
+```sh
+node scripts/check-sources.mjs --for retrieval
+```
+
+You get every readable source tagged with it — `★` marks course-wide ones — with its
+kind, its other topics, and its note. Blocked sources are listed separately at the
+end rather than mixed in, since they can't be read yet.
+
+```sh
+node scripts/check-sources.mjs --topics
+```
+
+shows how many readable sources exist per component, flagging any that are `thin`
+or `none yet`. Right now `retrieval`, `edit`, `environment`, `context` and
+`tracing` have two each — those are the gaps to fill as the course moves past
+Part I.
+
+### Tagging well
+
+**Tag generously.** A source that genuinely speaks to five components should list
+five — `mini-swe-agent` is tagged `loop tools environment tracing guardrails`
+because it has something specific to say about each. Under-tagging is the failure
+mode that matters: it hides a source from the lesson that needed it, and nothing
+will ever tell you.
+
+**Don't tag aspirationally.** If a source only mentions a topic in passing, leave
+it off. `cs229-notes` is tagged `model` alone, even though 278 pages touch plenty,
+because there is exactly one section worth citing.
+
+Inline one-off sources can skip `topics` — they're already attached to one lesson,
+so there's nothing to discover.
 
 ### Two things worth getting right
 
@@ -160,12 +214,15 @@ be.
 ## Checks
 
 ```sh
-npm run check:sources   # library integrity + cached files + blocked worklist
-npm run build           # unknown source key, or a written lesson with no sources
+npm run check:sources                        # integrity + cached files + worklist
+node scripts/check-sources.mjs --for loop    # candidate reading for a component
+node scripts/check-sources.mjs --topics      # coverage, and where it's thin
+npm run build                                # citation keys, sources-required rule
 ```
 
 `check:sources` catches tracking parameters, duplicate ids, duplicate URLs
-(ignoring trailing slashes), malformed dates, and `blocked` without a reason.
+(ignoring trailing slashes), malformed dates, `blocked` without a reason, and any
+source with no `topics` — which would otherwise be invisible to `--for`.
 
 The build enforces the two that matter most: **every citation key resolves**, and
 **any lesson not `status: locked` must cite at least one source.** That last one

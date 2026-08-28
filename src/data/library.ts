@@ -30,6 +30,18 @@
  * Strip tracking parameters from every URL before adding it (`?utm_source=…` etc.).
  */
 
+import type { ComponentId } from './architecture';
+
+/**
+ * What a source is *about*, drawn from the same twelve architecture components the
+ * lessons are mapped to. Reusing that vocabulary means "which sources can serve
+ * this lesson?" is a lookup rather than a guess, and a typo is a type error.
+ *
+ * Tag generously — a source that genuinely speaks to five components should list
+ * five. Under-tagging hides a source from the lesson that needed it.
+ */
+export type Topic = ComponentId;
+
 export type SourceKind =
   | 'post'        // blog post, essay
   | 'docs'        // official documentation
@@ -50,6 +62,8 @@ export interface Source {
   /** YYYY | YYYY-MM | YYYY-MM-DD. Omit for living documents. Formatted at render. */
   date?: string;
   kind: SourceKind;
+  /** Which architecture components this source speaks to. Required: see Topic. */
+  topics: Topic[];
   /** What this source actually supplies — why it is cited. */
   note?: string;
   /** A course-wide source, expected to recur across many lessons. */
@@ -72,6 +86,7 @@ export const LIBRARY: Source[] = [
     site: 'Anthropic Engineering',
     date: '2024-12-19',
     kind: 'post',
+    topics: ['overview', 'loop', 'orchestration'],
     core: true,
     note:
       'The canonical workflow-vs-agent split: workflows are "orchestrated through predefined code ' +
@@ -89,6 +104,7 @@ export const LIBRARY: Source[] = [
     site: "Simon Willison's Weblog",
     date: '2025-09-18',
     kind: 'post',
+    topics: ['overview', 'loop'],
     core: true,
     note:
       'The one-sentence definition: "An LLM agent runs tools in a loop to achieve a goal." Also the ' +
@@ -100,6 +116,7 @@ export const LIBRARY: Source[] = [
     url: 'https://huggingface.co/docs/smolagents/conceptual_guides/intro_agents',
     site: 'Hugging Face — smolagents docs',
     kind: 'docs',
+    topics: ['overview', 'loop', 'tools'],
     core: true,
     note:
       'Rejects the binary: "\'agency\' evolves on a continuous spectrum", with a levels-of-agency ' +
@@ -114,6 +131,7 @@ export const LIBRARY: Source[] = [
     site: 'huyenchip.com',
     date: '2025-01-07',
     kind: 'post',
+    topics: ['overview', 'model', 'eval'],
     core: true,
     note:
       'The rival definitional tradition, after Russell & Norvig: an agent is "anything that can ' +
@@ -128,6 +146,7 @@ export const LIBRARY: Source[] = [
     site: "Lil'Log",
     date: '2023-06-23',
     kind: 'post',
+    topics: ['model', 'context', 'tools'],
     core: true,
     note:
       'Architecture reference: LLM as the "brain" plus planning, memory and tool use. NB it makes no ' +
@@ -142,6 +161,7 @@ export const LIBRARY: Source[] = [
     site: 'Amp',
     date: '2025-04-15',
     kind: 'post',
+    topics: ['loop', 'tools', 'edit'],
     core: true,
     note:
       '"It\'s an LLM, a loop, and enough tokens." Builds a working agent in "less than 400 lines of ' +
@@ -156,6 +176,7 @@ export const LIBRARY: Source[] = [
     site: 'arXiv:2210.03629',
     date: '2022-10-06',
     kind: 'paper',
+    topics: ['loop', 'model'],
     core: true,
     note:
       'Interleaves reasoning traces with actions. The ancestor of the loop, and the origin of an ' +
@@ -174,6 +195,7 @@ export const LIBRARY: Source[] = [
     // 403s, so this is the most reliable date available.
     date: '2025-04-07',
     kind: 'docs',
+    topics: ['overview', 'loop', 'orchestration', 'guardrails'],
     core: true,
     note:
       'The rival vendor definition, and a useful foil for Anthropic: "Agents are systems that ' +
@@ -194,6 +216,7 @@ export const LIBRARY: Source[] = [
     url: 'https://platform.claude.com/docs/en/agents-and-tools/tool-use/how-tool-use-works',
     site: 'Claude Platform Docs',
     kind: 'docs',
+    topics: ['loop', 'tools'],
     core: true,
     note:
       'The precise termination condition, stated outright: "The canonical shape is a `while` loop ' +
@@ -206,6 +229,7 @@ export const LIBRARY: Source[] = [
     url: 'https://platform.claude.com/docs/en/build-with-claude/handling-stop-reasons',
     site: 'Claude Platform Docs',
     kind: 'docs',
+    topics: ['loop'],
     note:
       'The enumerated stop reasons: end_turn, max_tokens, stop_sequence, tool_use, pause_turn, ' +
       'refusal, model_context_window_exceeded. Importantly `pause_turn` is NOT terminal.',
@@ -216,6 +240,7 @@ export const LIBRARY: Source[] = [
     url: 'https://platform.claude.com/docs/en/agents-and-tools/tool-use/build-a-tool-using-agent',
     site: 'Claude Platform Docs',
     kind: 'docs',
+    topics: ['loop', 'tools'],
     note:
       'Complete runnable loops in several languages; the Python one is literally ' +
       '`while response.stop_reason == "tool_use":`. The reference to mirror for the lesson-2 exercise.',
@@ -231,6 +256,7 @@ export const LIBRARY: Source[] = [
     site: 'Anthropic Engineering',
     date: '2025-09-11',
     kind: 'post',
+    topics: ['tools'],
     core: true,
     note:
       'For the tool-belt and ACI lessons (8, 9): "Tools are a new kind of software which reflects a ' +
@@ -246,6 +272,7 @@ export const LIBRARY: Source[] = [
     site: 'Anthropic Engineering',
     date: '2025-09-29',
     kind: 'post',
+    topics: ['context'],
     core: true,
     note:
       'The spine for lessons 27–28: "Context engineering refers to the set of strategies for curating ' +
@@ -261,6 +288,7 @@ export const LIBRARY: Source[] = [
     site: 'Anthropic Engineering',
     date: '2026-01-09',
     kind: 'post',
+    topics: ['eval', 'tracing'],
     core: true,
     note:
       'For lessons 33–34: "Start early and don\'t wait for the perfect suite. Source realistic tasks ' +
@@ -278,6 +306,7 @@ export const LIBRARY: Source[] = [
     author: 'Princeton and Stanford (SWE-bench team)',
     site: 'GitHub',
     kind: 'repo',
+    topics: ['loop', 'tools', 'environment', 'tracing', 'guardrails'],
     core: true,
     note:
       'The single best comparison for this course: ~100 lines of Python for the agent class, and it ' +
@@ -296,6 +325,7 @@ export const LIBRARY: Source[] = [
     site: 'arXiv:2405.15793 (NeurIPS 2024)',
     date: '2024-05-06',
     kind: 'paper',
+    topics: ['tools', 'retrieval', 'edit', 'eval'],
     core: true,
     note:
       'The primary source for lesson 9 — this is where the term "Agent-Computer Interface (ACI)" ' +
@@ -308,6 +338,7 @@ export const LIBRARY: Source[] = [
     url: 'https://github.com/SWE-agent/SWE-agent/blob/main/docs/background/index.md',
     site: 'GitHub — SWE-agent docs',
     kind: 'docs',
+    topics: ['overview', 'tools', 'retrieval'],
     note:
       'The short version of the ACI argument: "simple LM-centric commands and feedback formats to ' +
       'make it easier for the LM to browse the repository, view, edit and execute code files."',
@@ -319,6 +350,7 @@ export const LIBRARY: Source[] = [
     author: 'OpenAI',
     site: 'GitHub',
     kind: 'repo',
+    topics: ['tools', 'environment', 'guardrails'],
     note: 'A production terminal coding agent to compare architectures against, from lesson 7 onward.',
   },
   {
@@ -328,6 +360,7 @@ export const LIBRARY: Source[] = [
     author: 'OpenHands',
     site: 'GitHub',
     kind: 'repo',
+    topics: ['loop', 'tools'],
     note:
       'A modular SDK for software agents — useful for the harness lessons (5, 18) as a worked example ' +
       'of where the boundaries get drawn.',
@@ -339,6 +372,7 @@ export const LIBRARY: Source[] = [
     author: 'Google',
     site: 'GitHub',
     kind: 'repo',
+    topics: ['tools', 'guardrails'],
     note: 'A third terminal-agent implementation, for comparing tool surfaces and permission models.',
   },
   {
@@ -348,6 +382,7 @@ export const LIBRARY: Source[] = [
     author: 'Microsoft',
     site: 'GitHub',
     kind: 'repo',
+    topics: ['model'],
     note: 'For lesson 35: what it actually takes to train an agent rather than just prompt one.',
   },
 
@@ -361,6 +396,7 @@ export const LIBRARY: Source[] = [
     site: 'University of New Hampshire',
     date: '2026',
     kind: 'book',
+    topics: ['eval'],
     core: true,
     note:
       'Substantial for lesson 33, and the sharpest thing here on why eval numbers lie. Surveys the ' +
@@ -378,6 +414,7 @@ export const LIBRARY: Source[] = [
     site: 'Stanford CS229',
     date: '2026-08-23',
     kind: 'book',
+    topics: ['model'],
     note:
       'Mostly OUT OF SCOPE for this course — 278 pages of classical supervised ML, with one mention of ' +
       '"agent" in the whole document. Cite it for exactly one thing: §18 (p. 222) on reinforcement ' +
@@ -394,6 +431,7 @@ export const LIBRARY: Source[] = [
     site: 'Hacker News',
     date: '2024-12-20',
     kind: 'thread',
+    topics: ['overview'],
     note:
       '763 points. Where practitioners argue the definition: Animats objects that "an agent is a ' +
       'party who acts for another … That\'s an autonomous system, not an agent". NB comment text was ' +
@@ -407,6 +445,7 @@ export const LIBRARY: Source[] = [
     site: 'Vanishing Gradients',
     date: '2026-07-21',
     kind: 'newsletter',
+    topics: ['overview', 'loop'],
     note:
       'The blunt practitioner version of lesson 1\'s thesis: "most common parlance agents don\'t have ' +
       'such reasoning loops and are more aptly described as LLM workflows".',
@@ -420,6 +459,7 @@ export const LIBRARY: Source[] = [
     // inconsistently (19 vs 23 March 2026). An uncertain date is a metadata gap,
     // not a reason to exclude a good source.
     kind: 'post',
+    topics: ['loop'],
     note:
       'The clearest short statement of the loop\'s two signals: "Tool calls are the continuation ' +
       'signal—they mean \'I\'m not done yet\'" and "A text-only response is the termination signal". ' +
@@ -433,6 +473,7 @@ export const LIBRARY: Source[] = [
     author: 'HumanLayer',
     site: '12-Factor Agents',
     kind: 'repo',
+    topics: ['loop', 'guardrails', 'orchestration'],
     note:
       'The counterweight to "the model decides when to stop": sometimes YOU stop it. "Build your own ' +
       'control structures that make sense for your specific use case."',
@@ -452,6 +493,7 @@ export const LIBRARY: Source[] = [
     author: 'OpenAI',
     site: 'OpenAI',
     kind: 'post',
+    topics: ['orchestration', 'loop'],
     blocked: {
       reason:
         'openai.com/index/* returns HTTP 403 to every automated request — plain curl, a full browser ' +
@@ -467,6 +509,7 @@ export const LIBRARY: Source[] = [
     url: 'https://www.reddit.com/r/LocalLLaMA/',
     site: 'Reddit',
     kind: 'thread',
+    topics: ['overview'],
     blocked: {
       reason:
         'This environment cannot reach reddit.com at all — both domain-scoped web search and direct ' +
@@ -504,3 +547,26 @@ export function resolveSource(ref: SourceRef): Source {
 }
 
 export const isKnownSourceId = (id: string) => BY_ID.has(id);
+
+/**
+ * Sources that speak to a component — i.e. the candidate reading for any lesson
+ * mapped to it. Blocked sources are excluded by default: they cannot be read yet,
+ * so offering them as candidates just wastes a look.
+ */
+export function sourcesForTopic(topic: Topic, includeBlocked = false): Source[] {
+  return LIBRARY.filter(
+    (s) => s.topics.includes(topic) && (includeBlocked || !s.blocked),
+  );
+}
+
+/** How many readable sources exist per component — i.e. where the gaps are. */
+export function topicCoverage(): Array<{ topic: Topic; count: number }> {
+  const counts = new Map<Topic, number>();
+  for (const s of LIBRARY) {
+    if (s.blocked) continue;
+    for (const t of s.topics) counts.set(t, (counts.get(t) ?? 0) + 1);
+  }
+  return [...counts.entries()]
+    .map(([topic, count]) => ({ topic, count }))
+    .sort((a, b) => b.count - a.count || a.topic.localeCompare(b.topic));
+}
