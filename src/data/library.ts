@@ -11,7 +11,8 @@
  * The `id` is also the in-page anchor: a lesson body cites a source as
  * `[Anthropic's post](#s-anthropic-bea)` and never repeats the URL.
  *
- * Hand-authored, same pattern as `src/data/architecture.ts`. Add to it freely.
+ * Hand-authored, same pattern as `src/data/architecture.ts`. Add to it freely —
+ * see SOURCES.md at the repo root for how to curate it.
  *
  * Sources that exist as a file are cached at `sources/raw/<id>.<ext>` with their
  * extracted text alongside — see `sources/README.md`. Run

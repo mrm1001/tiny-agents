@@ -76,7 +76,11 @@ uv run scripts/ingest-source.py --list                            # what's cache
 Drop files into `sources/raw/` by hand and `--scan` picks them up. It skips files
 whose cached text is current and re-extracts any whose `sha256` changed, so
 replacing a file in place just works. Extracted text carries `=== page N ===`
-markers so a quote can cite a page. Details in [`sources/README.md`](sources/README.md).
+markers so a quote can cite a page.
+
+**[SOURCES.md](SOURCES.md) is the guide to curating the library** — adding URL
+sources, dropping in PDFs, what to do when something can't be fetched, and how
+lessons cite. Mechanics of the file cache are in [`sources/README.md`](sources/README.md).
 
 The script declares its dependencies inline (PEP 723), so there is no install step —
 `uv` provisions them in an ephemeral environment.

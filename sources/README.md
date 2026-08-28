@@ -1,5 +1,8 @@
 # Source files
 
+> Curating the library itself — adding sources, citing them — is in
+> [SOURCES.md](../SOURCES.md). This file covers the file cache mechanics.
+
 Local cache of course sources that exist as files — mostly PDFs — plus their
 extracted text. **Everything here except this README is gitignored**, so it never
 gets pushed. That is deliberate on two counts: the raw files are third-party
