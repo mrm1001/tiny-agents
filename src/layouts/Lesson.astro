@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import Base from './Base.astro';
+import SourceList from '../components/SourceList.astro';
 import { COMPONENTS } from '../data/architecture';
 import { STATUS_LABEL } from '../data/progress';
 import { href } from '../lib/href';
@@ -13,7 +14,8 @@ interface Props {
 }
 
 const { lesson, prev, next } = Astro.props;
-const { n, title, part, component, status, takeaway } = lesson.data;
+const { n, title, part, component, status, takeaway, sources, extraReading, outline, exercise } =
+  lesson.data;
 const comp = COMPONENTS.find((c) => c.id === component)!;
 ---
 
@@ -35,9 +37,43 @@ const comp = COMPONENTS.find((c) => c.id === component)!;
       <p set:html={inlineCode(takeaway)} />
     </div>
 
+    {
+      outline && (
+        <p class="outline-note">
+          <strong>This is an outline, not the finished lesson.</strong> It lists what the lesson will
+          cover and which sources back each point, so the shape can be reviewed before the prose is
+          written.
+        </p>
+      )
+    }
+
     <div class="lesson-body">
       <slot />
     </div>
+
+    {
+      exercise && (
+        <section class="exercise-callout">
+          <span class="k">Exercise</span>
+          <p>
+            Run it yourself — the code lives in <code>{exercise.dir}</code> in this repository.
+          </p>
+          <pre><code>{exercise.command}</code></pre>
+        </section>
+      )
+    }
+
+    {
+      sources.length > 0 && (
+        <SourceList
+          heading="Sources"
+          refs={sources}
+          blurb="This lesson is written from these. Citations in the text link to the entry here."
+        />
+      )
+    }
+
+    {extraReading.length > 0 && <SourceList heading="Extra reading" refs={extraReading} />}
 
     {
       status === 'locked' && (

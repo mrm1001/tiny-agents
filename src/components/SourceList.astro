@@ -1,0 +1,47 @@
+---
+import { resolveSource, type SourceRef } from '../data/library';
+
+interface Props {
+  heading: string;
+  /** Frontmatter refs: library keys or inline sources. */
+  refs: SourceRef[];
+  /** Rendered as the section's blurb, if given. */
+  blurb?: string;
+}
+
+const { heading, refs, blurb } = Astro.props;
+const sources = refs.map(resolveSource);
+
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+/** '2024-12-19' -> '19 Dec 2024'; '2024-12' -> 'Dec 2024'; '2024' -> '2024'. */
+function formatDate(date?: string): string | undefined {
+  if (!date) return undefined;
+  const [y, m, d] = date.split('-');
+  const month = m ? MONTHS[Number(m) - 1] : undefined;
+  if (d) return `${Number(d)} ${month} ${y}`;
+  if (month) return `${month} ${y}`;
+  return y;
+}
+---
+
+<section class="sources" aria-labelledby={`h-${heading.toLowerCase().replace(/\s+/g, '-')}`}>
+  <h2 id={`h-${heading.toLowerCase().replace(/\s+/g, '-')}`}>{heading}</h2>
+  {blurb && <p class="sources-blurb">{blurb}</p>}
+  <ol class="source-list">
+    {
+      sources.map((s) => {
+        const meta = [s.author, s.site, formatDate(s.date)].filter(Boolean).join(' · ');
+        return (
+          /* The id is the citation target: lesson prose links to #s-<id>. */
+          <li id={`s-${s.id}`}>
+            <a class="src-title" href={s.url} rel="noopener">{s.title}</a>
+            {meta && <span class="src-meta">{meta}</span>}
+            <span class={`chip src-kind`}>{s.kind}</span>
+            {s.note && <p class="src-note">{s.note}</p>}
+          </li>
+        );
+      })
+    }
+  </ol>
+</section>

@@ -539,6 +539,127 @@ a.lesson-row:hover { background: var(--surface); border-left-color: var(--accent
 .lesson-body { color: var(--fg); }
 .lesson-body em { color: var(--muted); }
 
+/* Markdown output had NO typography before lessons had bodies. */
+.lesson-body h2 {
+  font-size: 1.25rem;
+  margin: 2.25rem 0 0.75rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--border);
+}
+.lesson-body h3 { font-size: 1.05rem; margin: 1.75rem 0 0.5rem; }
+.lesson-body h2:first-child,
+.lesson-body h3:first-child { margin-top: 0; }
+
+.lesson-body p { margin: 0 0 1.1em; }
+.lesson-body > :last-child { margin-bottom: 0; }
+
+.lesson-body ul,
+.lesson-body ol { margin: 0 0 1.1em; padding-left: 1.35rem; }
+.lesson-body li + li { margin-top: 0.5rem; }
+.lesson-body li > ul,
+.lesson-body li > ol { margin: 0.5rem 0 0; }
+.lesson-body li::marker { color: var(--faint); }
+
+.lesson-body blockquote {
+  margin: 1.25em 0;
+  padding: 0.15rem 0 0.15rem 1rem;
+  border-left: 3px solid var(--border-hi);
+  color: var(--muted);
+}
+
+.lesson-body pre { margin: 1.25em 0; }
+
+.lesson-body table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+  margin: 1.25em 0;
+}
+.lesson-body th,
+.lesson-body td {
+  text-align: left;
+  padding: 0.45rem 0.6rem;
+  border-bottom: 1px solid var(--border);
+}
+.lesson-body th { color: var(--fg-strong); font-weight: 600; }
+
+.lesson-body hr { margin: 2em 0; }
+
+/* --- outline and exercise callouts --------------------------------------- */
+
+/* Dashed border is the established "not written yet" convention here. */
+.outline-note {
+  border: 1px dashed var(--border-hi);
+  border-radius: var(--radius);
+  padding: 0.85rem 1.05rem;
+  margin: 0 0 2rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+.outline-note strong { color: var(--fg-strong); }
+
+.exercise-callout {
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--c-done);
+  border-radius: var(--radius);
+  background: var(--bg-raised);
+  padding: 0.9rem 1.1rem;
+  margin: 2rem 0;
+}
+.exercise-callout .k {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--c-done);
+  display: block;
+  margin-bottom: 0.3rem;
+}
+.exercise-callout p { margin: 0 0 0.6rem; color: var(--fg); }
+.exercise-callout pre { margin: 0; }
+
+/* --- sources and extra reading ------------------------------------------- */
+
+.sources { margin-top: 2.75rem; }
+
+.sources h2 {
+  font-size: 1.1rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 0.75rem;
+}
+
+.sources-blurb { color: var(--muted); font-size: 0.88rem; margin-bottom: 1rem; }
+
+.source-list { margin: 0; padding-left: 1.7rem; }
+.source-list li { margin-bottom: 1.1rem; }
+.source-list li::marker {
+  color: var(--faint);
+  font-family: var(--mono);
+  font-size: 0.85rem;
+}
+
+.src-title { font-weight: 500; }
+
+.src-meta {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--faint);
+  margin-top: 0.15rem;
+}
+
+.src-kind { color: var(--muted); margin-top: 0.35rem; display: inline-block; }
+
+.src-note { margin: 0.4rem 0 0; font-size: 0.86rem; color: var(--muted); }
+
+/* Landing from an in-text citation should show you what you landed on. */
+.source-list li:target {
+  background: var(--surface-hi);
+  border-radius: 6px;
+  box-shadow: 0 0 0 0.5rem var(--surface-hi);
+}
+
 .stub-note {
   border: 1px dashed var(--border-hi);
   border-radius: var(--radius);
