@@ -6,6 +6,7 @@ import { COMPONENTS } from '../data/architecture';
 import { STATUS_LABEL } from '../data/progress';
 import { href } from '../lib/href';
 import { inlineCode } from '../lib/inline-code';
+import { readingMinutes } from '../lib/reading-time.mjs';
 
 interface Props {
   lesson: CollectionEntry<'lessons'>;
@@ -17,6 +18,10 @@ const { lesson, prev, next } = Astro.props;
 const { n, title, part, component, status, takeaway, sources, extraReading, outline, exercise } =
   lesson.data;
 const comp = COMPONENTS.find((c) => c.id === component)!;
+
+// From `entry.body`, the same function `check:lessons` uses — so the page and the
+// budget check can never disagree. Outlines and stubs have no read to time.
+const minutes = outline || status === 'locked' ? null : readingMinutes(lesson.body ?? '');
 ---
 
 <Base title={`${n}. ${title} — Tiny Agents`} description={takeaway} section="learn">
@@ -27,6 +32,14 @@ const comp = COMPONENTS.find((c) => c.id === component)!;
       <span>Lesson {String(n).padStart(2, '0')} of 36</span>
       <span aria-hidden="true">·</span>
       <a href={href('/#curriculum')}>{comp.label}</a>
+      {
+        minutes && (
+          <>
+            <span aria-hidden="true">·</span>
+            <span>{minutes} min read</span>
+          </>
+        )
+      }
       <span class={`chip st-${status}`}>{STATUS_LABEL[status]}</span>
     </p>
 

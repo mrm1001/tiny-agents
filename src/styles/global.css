@@ -566,6 +566,9 @@ a.lesson-row:hover { background: var(--surface); border-left-color: var(--accent
   border-left: 3px solid var(--border-hi);
   color: var(--muted);
 }
+/* Lessons use a blockquote for the one question the lesson turns on, so bold
+   text inside it must not inherit the quote's muted grey. */
+.lesson-body blockquote strong { color: var(--fg-strong); }
 
 .lesson-body pre { margin: 1.25em 0; }
 

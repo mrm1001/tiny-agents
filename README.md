@@ -57,7 +57,10 @@ npm run dev             # http://localhost:4321/tiny-agents/   (note the base pa
 npm run build
 npm run preview         # honours `base`, so it catches base-path mistakes dev hides
 npx astro check         # needs typescript 6.x; 7.x drops the API astro check uses
-npm run check:contrast  # WCAG check on the theme tokens
+npm run check            # all three checks below
+npm run check:sources   # library integrity, cached files, blocked worklist
+npm run check:lessons   # reading budget, dead citations, uncited sources, dead links
+npm run check:contrast  # WCAG check on the theme tokens and the code theme
 ```
 
 ### Source files
@@ -93,6 +96,13 @@ very little luminance room above white, so several values are close to their lim
 `npm run check:contrast` parses the tokens out of that file and checks every pair
 they are actually used in, including the composited result for locked diagram nodes.
 Run it after touching any colour.
+
+Syntax highlighting is checked too, and needed its own mechanism. Shiki writes token
+colours inline on every span, so no stylesheet can see or override them — four
+`github-light` colours were below AA on our code background while the checker still
+said "0 failures". `src/lib/code-theme.mjs` darkens those colours at build time,
+preserving hue, and the checker re-derives that same theme and audits it. So the
+theme the site ships is the theme that gets measured.
 
 Two conventions worth knowing:
 

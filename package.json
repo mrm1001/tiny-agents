@@ -10,8 +10,10 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "check:contrast": "node scripts/check-contrast.mjs",
-    "check:sources": "node scripts/check-sources.mjs"
+    "check": "npm run check:sources && npm run check:lessons && npm run check:contrast",
+    "check:sources": "node scripts/check-sources.mjs",
+    "check:lessons": "node scripts/check-lessons.mjs",
+    "check:contrast": "node scripts/check-contrast.mjs"
   },
   "dependencies": {
     "@astrojs/react": "^6.0.4",

@@ -11,24 +11,22 @@
  * (diagram edges, status dots, padlocks, focus rings). Pairs below 3:1 are
  * decorative separations (hairlines, fills) where the number just has to be
  * high enough to be visible; those thresholds are our own.
+ *
+ * Syntax highlighting is checked too, and that needed a different mechanism:
+ * Shiki writes token colours inline on each span, so parsing the stylesheet can
+ * never see them. Instead the last section re-derives the very theme the build
+ * ships (`src/lib/code-theme.mjs`) and audits every colour in it. Before this
+ * existed the script reported "0 failures" while four token colours on every
+ * code block were below AA — true, and meaningless.
  */
-import { readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
-import { dirname, join } from 'node:path';
+import { token as tok, cssNumber } from '../src/lib/theme-tokens.mjs';
+import { contrastRatio as ratio, blend } from '../src/lib/contrast.mjs';
+import { accessibleCodeTheme, CODE_BG, MIN_RATIO } from '../src/lib/code-theme.mjs';
 
-const root = join(dirname(fileURLToPath(import.meta.url)), '..');
-const css = readFileSync(join(root, 'src/styles/global.css'), 'utf8');
-
-const tok = (n) => {
-  const m = css.match(new RegExp(`--${n}:\\s*(#[0-9a-fA-F]{6})`));
-  if (!m) throw new Error(`token --${n} not found in src/styles/global.css`);
-  return m[1];
-};
-const lockedOpacity = (() => {
-  const m = css.match(/\.node\[data-status="locked"\]\s*\{\s*opacity:\s*([\d.]+);/);
-  if (!m) throw new Error('locked-node opacity rule not found in src/styles/global.css');
-  return parseFloat(m[1]);
-})();
+const lockedOpacity = cssNumber(
+  /\.node\[data-status="locked"\]\s*\{\s*opacity:\s*([\d.]+);/,
+  'locked-node opacity rule',
+);
 
 const P = {
   bg: tok('bg'), bgRaised: tok('bg-raised'), surface: tok('surface'), surfaceHi: tok('surface-hi'),
@@ -37,22 +35,6 @@ const P = {
   accent: tok('accent'), locked: tok('c-locked'), progress: tok('c-progress'), done: tok('c-done'),
   track: tok('c-track'),
   frameFill: tok('c-frame-fill'), nodeFill: tok('c-node-fill'), lockedFill: tok('c-locked-fill'),
-};
-
-const srgb = (c) => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
-const lum = (h) => {
-  const [r, g, b] = h.replace('#', '').match(/../g).map((x) => parseInt(x, 16) / 255);
-  return 0.2126 * srgb(r) + 0.7152 * srgb(g) + 0.0722 * srgb(b);
-};
-const ratio = (a, b) => {
-  const [l1, l2] = [lum(a), lum(b)].sort((x, y) => y - x);
-  return (l1 + 0.05) / (l2 + 0.05);
-};
-/** Composite `col` at `alpha` over `over` — what the eye actually receives. */
-const blend = (col, over, alpha) => {
-  const x = col.replace('#', '').match(/../g).map((h) => parseInt(h, 16));
-  const y = over.replace('#', '').match(/../g).map((h) => parseInt(h, 16));
-  return '#' + x.map((v, i) => Math.round(v * alpha + y[i] * (1 - alpha)).toString(16).padStart(2, '0')).join('');
 };
 
 // [description, fg token, bg token, minimum]
@@ -125,6 +107,30 @@ for (const [label, key, min] of [['label', 'muted', 4.5], ['meta', 'faint', 4.5]
   const pass = r >= min;
   if (!pass) fails++;
   console.log(`  ${pass ? 'ok  ' : 'FAIL'} ${label.padEnd(24)} ${r.toFixed(2).padStart(6)}  (min ${min})`);
+}
+
+// Every foreground in the theme the build actually ships. Token styles that
+// carry their own background (diff fills) are measured against that instead.
+console.log(`\ncode tokens as shipped (theme repaired in src/lib/code-theme.mjs)`);
+const theme = await accessibleCodeTheme();
+const codeFails = [];
+for (const style of theme.tokenColors ?? []) {
+  const { foreground, background } = style.settings ?? {};
+  if (!foreground) continue;
+  const bg = background ?? CODE_BG;
+  const r = ratio(foreground, bg);
+  if (r < MIN_RATIO) {
+    codeFails.push({ style, r, bg });
+    fails++;
+  }
+}
+const scopeOf = (s) => (Array.isArray(s.scope) ? s.scope.join(', ') : (s.scope ?? '?'));
+if (codeFails.length === 0) {
+  const n = (theme.tokenColors ?? []).filter((s) => s.settings?.foreground).length;
+  console.log(`  ok   ${n} token colours, all ≥ ${MIN_RATIO}:1 on ${CODE_BG}`);
+} else {
+  for (const { style, r, bg } of codeFails)
+    console.log(`  FAIL ${scopeOf(style).slice(0, 40).padEnd(40)} ${r.toFixed(2).padStart(6)}  ${style.settings.foreground} on ${bg}`);
 }
 
 console.log(`\n${fails === 0 ? 'CONTRAST OK — 0 failures' : `${fails} pair(s) below minimum`}`);
