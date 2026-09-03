@@ -336,6 +336,39 @@ export const LIBRARY: Source[] = [
       'hence noAnchors.',
   },
 
+  // -------------------------------- other vendors' engineering, by subject
+  {
+    id: 'cloudflare-code-mode',
+    title: 'Code Mode: the better way to use MCP',
+    url: 'https://blog.cloudflare.com/code-mode/',
+    author: 'Kenton Varda and Sunil Pai',
+    site: 'The Cloudflare Blog',
+    date: '2025-09-26',
+    kind: 'post',
+    noAnchors: true,
+    topics: ['tools', 'model', 'orchestration', 'guardrails', 'context'],
+    core: true,
+    note:
+      'Two things, and the first is useful well beyond the thesis. § Anatomy of a tool call is the ' +
+      'clearest explanation anywhere of what a tool call physically IS, which lesson 4 needs: the ' +
+      'model emits a special token meaning "the following should be interpreted as a tool call", then ' +
+      'JSON, then a closing token, and "these tokens do not represent text at all". Second, the ' +
+      'thesis itself, which is lesson 30 and lesson 26: convert the MCP tools into a TypeScript API ' +
+      'and have the model write code against it instead. Their explanation is about training data, ' +
+      'not cleverness — the special tokens "are things LLMs have never seen in the wild", so models ' +
+      '"must be specially trained to use tools, based on synthetic training data", whereas "they have ' +
+      'seen real-world code from millions of open source projects". Two consequences worth citing ' +
+      'elsewhere: tool authors are pushed to "dumb it down" and "present greatly simplified APIs" ' +
+      '(lesson 9), and chaining calls the ordinary way means "the output of each tool call must feed ' +
+      'into the LLM\'s neural network, just to be copied over to the inputs of the next call, wasting ' +
+      'time, energy, and tokens" (lessons 21 and 27). NB the whole approach requires running ' +
+      'model-written code, so §§ Running code in a sandbox and Workers are better sandboxes are ' +
+      'lesson-16 material, and the rest of the post is a Cloudflare Workers product pitch that is out ' +
+      'of scope. Their headline claim — that agents "handle many more tools, and more complex tools" ' +
+      'this way — is asserted from experience, with no benchmark in the post, which is what makes it ' +
+      'a good candidate for a Measure experiment rather than a citation. No heading ids.',
+  },
+
   // ------------------------------------------------- real coding-agent codebases
   // Worth reading against our own toy agent: these are what the real thing looks
   // like. Most useful from lesson 7 onward.

@@ -4,7 +4,7 @@ title: "MCP"
 part: "IV — Context, memory and infrastructure"
 component: tools
 status: locked
-takeaway: "How an agent gets a standardized interface to external resources and tools."
+takeaway: "A standard interface to external tools — and \"code mode\", where the model writes code against it."
 ---
 
 <!-- ────────────────────────────────────────────────────────────────────────────

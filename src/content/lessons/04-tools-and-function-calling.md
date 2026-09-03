@@ -4,7 +4,7 @@ title: "Tools and function calling"
 part: "I — What actually is an agent?"
 component: model
 status: locked
-takeaway: "The model doesn’t actually \"run Python\": it requests an action and the harness executes it."
+takeaway: "The model doesn't \"run Python\": it emits a special token the harness reads as a request, and runs it."
 ---
 
 <!-- ────────────────────────────────────────────────────────────────────────────
