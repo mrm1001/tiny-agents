@@ -6,13 +6,18 @@ for each step. **Read [STYLE.md](STYLE.md) before writing or editing any lesson 
 Neither is optional guidance: the first draft of lessons 1 and 2 was rejected for style and
 rewritten against them.
 
-Two rules from LESSONS.md worth repeating here, because breaking either is expensive:
+Three rules from LESSONS.md worth repeating here, because breaking any of them is
+expensive:
 
 - **The Markdown body of a lesson belongs to Maria.** Do not write in it. Anything left
   there publishes as-is, HTML comments included.
 - **Never guess an anchor** for a reading pointer. Use `node scripts/anchors.mjs <id>`, then
   `npm run check:pointers`. A wrong anchor does not error — it silently drops the reader at
   the top of the page.
+- **Check the lesson against [CURRICULUM.md](CURRICULUM.md)**, and when they diverge, ask
+  before editing it. Nothing compares the two, so a renamed lesson leaves the curriculum
+  wrong and silent. Report the divergence and propose the wording; changing the shape of
+  the course is Maria's call.
 
 The target is a textbook or a technical blog post explaining a concept to a beginner. The
 reader is a competent programmer who has never built an agent, has not read the sources,

@@ -3,9 +3,10 @@
 Four steps, in order. Claude writes the lesson, Maria reviews it and writes the notes,
 and it ships when both parts are done.
 
-Two companion documents cover the parts this one only points at: **[STYLE.md](STYLE.md)**
-is how the prose is written, and **[SOURCES.md](SOURCES.md)** is how the source library
-works and how a pointer is put together.
+Three companion documents cover the parts this one only points at:
+**[STYLE.md](STYLE.md)** is how the prose is written, **[SOURCES.md](SOURCES.md)** is how
+the source library works and how a pointer is put together, and
+**[CURRICULUM.md](CURRICULUM.md)** is the list of what the 36 lessons are.
 
 ---
 
@@ -55,6 +56,25 @@ publishes as-is, comments included.
 Set `outline: true`. That exempts the lesson from the reading budget, relaxes the
 minimum summary length, and puts a banner on the page saying it is not finished, so the
 review is about **coverage, sources and framing** rather than sentence polish.
+
+### Checking the lesson against CURRICULUM.md
+
+[CURRICULUM.md](CURRICULUM.md) is the list of what the 36 lessons are: number, title,
+part, and what the reader should understand by the end of each. The lesson files under
+`src/content/lessons/` are what the site renders, so the two can fall out of step
+without anything failing — no script compares them, and the build never reads
+CURRICULUM.md.
+
+Read the lesson's entry there before writing it, and read it again whenever a change
+lands on the lesson's `title`, `part`, `component` or `takeaway`. That includes changes
+made in step 2, which is where a title usually moves.
+
+**When the file and the entry disagree, do not edit CURRICULUM.md unprompted.** Say
+which one diverged, quote both, propose the wording the entry would take, and wait for
+Maria to confirm. The lesson file is the accurate record of what exists, but the
+curriculum is the shape of the whole course: a lesson drifting away from its entry is
+sometimes a reason to reconsider the lesson rather than the plan, and that is her call
+to make, not a tidy-up to perform on the way past.
 
 ### Start from the library, not from memory
 
@@ -112,7 +132,9 @@ astro dev --background     # http://localhost:4321/tiny-agents/
 ```
 
 Feedback can go anywhere convenient, including the lesson body, since that is hers and
-gets replaced in step 3. Claude applies it and reruns the checks.
+gets replaced in step 3. Claude applies it and reruns the checks — and re-reads the
+CURRICULUM.md entry if the feedback moved the lesson's title, part, component or
+takeaway.
 
 The revisions that have already been asked for once, so they should not need asking again:
 
@@ -182,6 +204,7 @@ Two things to expect and not mistake for bugs:
 - [ ] Every `at` names the source *and* the place; every anchor verified with `anchors.mjs`
 - [ ] Every quote checked against the section it is attributed to
 - [ ] Under 1,100 words, and `outline: true` removed
+- [ ] Checked against CURRICULUM.md, and any divergence confirmed with Maria before editing it
 - [ ] `npm run check`, `astro check`, `npm run build`, `npm run check:pointers` all clean
 - [ ] Reviewed on localhost by Maria
 - [ ] Notes written
