@@ -311,6 +311,31 @@ export const LIBRARY: Source[] = [
       'transcripts!"',
   },
 
+  {
+    id: 'claude-code-large-codebases',
+    title: 'How Claude Code works in large codebases: Best practices and where to start',
+    url: 'https://claude.com/blog/how-claude-code-works-in-large-codebases-best-practices-and-where-to-start',
+    // No `author`: corporately authored, and `site` already says Anthropic.
+    site: 'Claude Blog',
+    date: '2026-05-14',
+    kind: 'post',
+    noAnchors: true,
+    topics: ['overview', 'retrieval', 'context', 'tools', 'environment'],
+    core: true,
+    note:
+      'First-party account of how one real coding agent works, and useful for two separate lessons. ' +
+      'For 10-11 (retrieval), the case for searching over indexing: RAG-based tools "work by ' +
+      'embedding the entire codebase and retrieving relevant chunks at query time", and at scale "by ' +
+      'the time a developer queries the index, it reflects the codebase as it previously existed ' +
+      'weeks, days, or even hours before", whereas Claude Code "traverses the file system, reads ' +
+      'files, uses grep to find exactly what it needs" and "doesn\'t require a codebase index to be ' +
+      'built, maintained, or uploaded to a server". For lesson 5, the name for the thing this course ' +
+      'builds: "the ecosystem built around the model—the harness—determines how Claude Code performs ' +
+      'more than the model alone", enumerated as five extension points (CLAUDE.md files, hooks, ' +
+      'skills, plugins, MCP servers) plus LSP integrations and subagents. Headings carry no ids, ' +
+      'hence noAnchors.',
+  },
+
   // ------------------------------------------------- real coding-agent codebases
   // Worth reading against our own toy agent: these are what the real thing looks
   // like. Most useful from lesson 7 onward.
@@ -401,6 +426,85 @@ export const LIBRARY: Source[] = [
     note: 'For lesson 35: what it actually takes to train an agent rather than just prompt one.',
   },
 
+  {
+    id: 'rastrigin-claude-code-wire',
+    title: 'What Claude Code Actually Sends to the Cloud',
+    url: 'https://rastrigin.systems/blog/claude-code-part-1-requests/',
+    author: 'Sergei Rastrigin',
+    site: 'rastrigin.systems',
+    date: '2026-01-09',
+    kind: 'post',
+    topics: ['loop', 'context', 'model', 'tracing'],
+    note:
+      'The same agent as claude-code-large-codebases, but measured from outside rather than described ' +
+      'from inside: he put a MITM proxy in front of Claude Code and read the actual requests. The ' +
+      'strongest evidence for lesson 2\'s stateless point — "the full conversation is sent with every ' +
+      'request … Turn 50? You\'re sending 50 copies of Claude\'s responses plus your messages plus ' +
+      'the system prompt" (§ The Conversation History). Also a 15-25K-token system prompt and where ' +
+      'prompt caching fits (§ What About Caching?), a real `tool_result` block carrying file contents ' +
+      '(§ Your Files, for lessons 27-28), and the SSE event sequence (§ The Response). Part 1 of a ' +
+      'series; part 2 covers the system prompt.',
+  },
+
+  // ------------------------------------------ writing a minimal agent yourself
+  // The "it is only a loop" genre: short, complete walkthroughs that build a
+  // working agent in one sitting. Closest in spirit to this course, and the place
+  // to send a reader who wants the whole thing at once rather than in 36 pieces.
+  // Most useful for lessons 2 and 7.
+  {
+    id: 'ptacek-write-an-agent',
+    // The rendered H1. The URL slug says "everyone-write-an-agent" instead.
+    title: 'You Should Write An Agent',
+    url: 'https://fly.io/blog/everyone-write-an-agent/',
+    author: 'Thomas Ptacek',
+    site: 'The Fly Blog',
+    date: '2025-11-06',
+    kind: 'post',
+    topics: ['overview', 'loop', 'context', 'tools'],
+    core: true,
+    note:
+      'The argument for the exercises in this course, made by someone unimpressed by agents: "You ' +
+      'don\'t have to like them, but you should want to be right about them." Builds up from a ' +
+      'nine-line terminal ChatGPT to a tool-using agent, and supplies the line for lesson 27 — "the ' +
+      'dreaded \'context window\' is just a list of strings". NB the code uses the OpenAI Responses ' +
+      'API, not Anthropic, so the shape of the loop carries over but the field names do not.',
+  },
+  {
+    id: 'zeyliger-agent-loop',
+    title: 'The Unreasonable Effectiveness of an LLM Agent Loop with Tool Use',
+    url: 'https://sketch.dev/blog/agent-loop',
+    author: 'Philip Zeyliger',
+    site: 'Sketch',
+    date: '2025-05-15',
+    kind: 'post',
+    noAnchors: true,
+    topics: ['loop', 'tools', 'edit'],
+    note:
+      'The shortest complete statement of lesson 2 anywhere: the whole loop in nine lines of Python, ' +
+      'written by someone shipping a commercial agent — "how shockingly simple the main loop of using ' +
+      'an LLM with tool use is". Independently reaches mini-swe-agent\'s bash-only conclusion: with ' +
+      'that "one very general purpose tool … the current models can nail many problems, some of them ' +
+      'in \'one shot\'". Also one sentence worth all of lesson 12 — "Tools that let the LLM edit text ' +
+      'correctly are surprisingly tricky." One page, one heading, no anchors. Mirrored at ' +
+      'philz.dev/blog/agent-loop/.',
+  },
+  {
+    id: 'hn-280-line-agent',
+    title: "Show HN: Recreated Claude Code's behavior in 280 lines of Python",
+    url: 'https://news.ycombinator.com/item?id=45128754',
+    site: 'Hacker News',
+    date: '2025-09-04',
+    kind: 'thread',
+    topics: ['overview', 'loop'],
+    note:
+      'A quiet thread — 5 points and one reply — so cite it for that one comment, not for a debate. ' +
+      'zahlman (permalink #45131054) says why a working agent turns out to be unremarkable: "Once ' +
+      'you\'ve identified an entire LLM as a single \'moving part\', and have the idea of allowing its ' +
+      'output to be interpreted as commands … the rest pretty much writes itself." The submission ' +
+      'itself links github.com/ljw1004/mini_agent, which is NOT in this library — add it as its own ' +
+      'entry if a lesson wants the code rather than the comment.',
+  },
+
   // ------------------------------------------------ other courses on this subject
   // Not spines. Useful for comparing coverage and for borrowing a framing, and
   // worth checking before writing a lesson to see how someone else sequenced it.
@@ -420,6 +524,27 @@ export const LIBRARY: Source[] = [
       'RAG, Context Engineering, Managing Agentic Memory, Building Trustworthy AI Agents, Securing AI ' +
       'Agents, Planning and Multi-Agent design patterns. Living repo, so no date; check the lesson ' +
       'list before citing, since it has grown from 10 lessons to 18.',
+  },
+  {
+    id: 'byo-coding-agent',
+    // The README's H1. The repo name is build-your-own-coding-agent.
+    title: 'Nanocode: Build Your Own AI Coding Agent',
+    url: 'https://github.com/optimalone/build-your-own-coding-agent',
+    site: 'GitHub',
+    kind: 'repo',
+    topics: ['loop', 'tools', 'edit', 'retrieval', 'context', 'environment', 'guardrails'],
+    core: true,
+    note:
+      'The closest structural analogue to this course, and the easiest source to point precisely at: ' +
+      'companion code to the book "Build Your Own Coding Agent" (buildyourowncodingagent.com), where ' +
+      'each `chXX/nanocode.py` is a complete runnable snapshot of the agent as it stood at the end of ' +
+      'that chapter, growing to ~700 lines. "No LangChain. No vector databases. No orchestration ' +
+      'frameworks." The chapters line up with ours closely enough to cite file by file — ch01 event ' +
+      'loop, ch03 stateful chat, ch05 file tools, ch06 cross-session memory, ch07 plan mode, ch08 ' +
+      'codebase search, ch09 run-commands-and-fix-errors, ch10 local models via Ollama — so a pointer ' +
+      'can name one file showing one idea in isolation. MIT, Python 3.10+. Living repo, so no date. ' +
+      'NB the README\'s clone command still says owner `owenthereal`; that account was renamed to ' +
+      '`optimalone` and GitHub 301s the old path, so it is a stale README rather than a second repo.',
   },
 
   // ------------------------------------------- evaluation and training background
@@ -522,6 +647,29 @@ export const LIBRARY: Source[] = [
   // `blocked` is NOT for metadata problems. An ambiguous or missing publication
   // date is a gap in the entry (omit the `date` field and say so in `note`), never
   // a reason to exclude an otherwise good source — see `kinney-agent-loops`.
+  {
+    id: 'openai-codex-agent-loop',
+    title: 'Unrolling the Codex agent loop',
+    url: 'https://openai.com/index/unrolling-the-codex-agent-loop/',
+    author: 'Michael Bolin',
+    site: 'OpenAI',
+    // Month only. The Hacker News submission (2026-01-23) bounds the publication
+    // date without fixing the day, and the page itself cannot be read to check.
+    date: '2026-01',
+    kind: 'post',
+    topics: ['loop', 'context', 'tools'],
+    blocked: {
+      reason:
+        'The same wall as openai-agents-sdk-evolution below: openai.com/index/* returns HTTP 403 to ' +
+        'plain curl, to a full browser header set, and to WebFetch, and the /mt-MT/ locale prefix is ' +
+        'blocked too. Title and byline are confirmed from OpenAI\'s own developer forum and from the ' +
+        'Hacker News submission (item?id=46737630, 456 points, 208 comments) — only the body text is ' +
+        'missing. Worth retrieving: it is Codex CLI\'s agent loop described by an engineer who works ' +
+        'on it, which would be the third first-party loop account alongside anthropic-tool-use-loop ' +
+        'and claude-code-large-codebases. Paste the text and it can be quoted and attributed.',
+      tried: '2026-09-03',
+    },
+  },
   {
     id: 'openai-agents-sdk-evolution',
     title: 'The next evolution of the Agents SDK',

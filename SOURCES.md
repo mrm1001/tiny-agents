@@ -182,10 +182,11 @@ blocked: {
 },
 ```
 
-`npm run check:sources` prints these as a worklist. Currently two: **Reddit**
-(unreachable from this environment entirely) and **`openai.com/index/*`** (403s to
-curl, browser headers and WebFetch alike — though `cdn.openai.com` file URLs work
-fine, so prefer their PDFs).
+`npm run check:sources` prints these as a worklist. Two things cause every entry on
+it: **Reddit** (unreachable from this environment entirely) and
+**`openai.com/index/*`** (403s to curl, browser headers and WebFetch alike, locale
+prefixes included — though `cdn.openai.com` file URLs work fine, so prefer their
+PDFs). Run the check for the current list rather than trusting a count written here.
 
 **`blocked` is only for genuine unretrievability.** A missing or ambiguous
 publication date is a metadata gap — omit `date`, note the uncertainty, and cite the
