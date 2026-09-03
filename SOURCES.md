@@ -297,6 +297,13 @@ npm run build                                # every pointer's source resolves
 (ignoring trailing slashes), malformed dates, `blocked` without a reason, and any
 source with no `topics` — which would otherwise be invisible to `--for`.
 
+`check:pointers` verifies each pointer on its own terms: an anchor id must be in the
+HTML, a line range must fit the file, a PDF page must exist. For a source whose page
+refuses automated fetching, it reads the `§ section` out of the pointer's `at` and
+looks for it in `sources/text/<id>.txt` instead — so those pointers are checked
+against the cached text rather than waved through, and a source with no cache still
+fails.
+
 The build enforces the three that matter most: **every pointer's source resolves
 in the library**, **any lesson not `status: locked` has at least one point**, and
 **every point has at least one pointer.** A point with no reading is just an

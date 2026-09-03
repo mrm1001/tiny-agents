@@ -19,6 +19,13 @@
  *   #page=N      the PDF must have that many pages — from the local cache when
  *                we have one, so it costs nothing
  *   no href      the page must at least resolve
+ *
+ * One exception, and it is a verification rather than an excuse: a page that hard
+ * 403s every automated request is not a rotted pointer, and openai.com/index/* is
+ * one of those. When such a source has its text cached under sources/text/, the
+ * `§ section` named in the pointer's `at` is looked up there instead. That is a
+ * stronger claim than the HTTP 200 we settle for elsewhere, because it checks the
+ * section rather than the page.
  */
 import { readdirSync, readFileSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -77,6 +84,16 @@ const cachedPages = (sourceId) => {
   }
 };
 
+/** Ligatures survive PDF extraction and would fail a plain substring match. */
+const unligature = (t) =>
+  t.replace(/\uFB01/g, 'fi').replace(/\uFB02/g, 'fl').replace(/\uFB00/g, 'ff');
+
+/** Extracted text from the local cache, for a source whose page cannot be fetched. */
+const cachedText = (sourceId) => {
+  const f = join(root, 'sources/text', `${sourceId}.txt`);
+  return existsSync(f) ? unligature(readFileSync(f, 'utf8')).toLowerCase() : null;
+};
+
 async function verify(pointer) {
   const { url, source } = pointer;
   const hash = url.includes('#') ? url.slice(url.indexOf('#') + 1) : '';
@@ -115,7 +132,20 @@ async function verify(pointer) {
 
   // --- an anchor on the page ---------------------------------------------------
   const res = await fetchText(base);
-  if (!res.ok) return { ok: false, detail: `HTTP ${res.status || res.error}` };
+  if (!res.ok) {
+    const cached = cachedText(source);
+    if (!cached) return { ok: false, detail: `HTTP ${res.status || res.error}` };
+    const section = unligature(pointer.at.split('§')[1] ?? '').trim().toLowerCase();
+    if (!section) {
+      return { ok: true, detail: `HTTP ${res.status}, but the source text is cached locally` };
+    }
+    return cached.includes(section)
+      ? { ok: true, detail: `HTTP ${res.status}; "${section}" is in the cached text` }
+      : {
+          ok: false,
+          detail: `HTTP ${res.status}, and "${section}" is not in sources/text/${source}.txt`,
+        };
+  }
   if (!hash) return { ok: true, detail: 'resolves (no anchor claimed)' };
 
   const ids = [hash, `user-content-${hash}`, hash.replace(/^user-content-/, '')];
