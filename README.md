@@ -9,6 +9,10 @@ The core idea is that the site gets more capable as the curriculum advances. The
 architecture diagram *is* the learning-progress tracker: each of the 12 boxes is a piece of the
 agent, and it stays padlocked until the lessons behind it are written.
 
+It should read as a polished technical playground rather than an online course: clean, visual,
+interactive, and aimed at engineers. [CURRICULUM.md](CURRICULUM.md) is the lesson list, and the
+plan for what each lesson adds to the agent and which experiments get run.
+
 ## What a lesson is
 
 **An index, not an essay.** A lesson names an idea in a paragraph, then points at the
@@ -174,6 +178,7 @@ to **GitHub Actions**). Moving to a custom domain later is a one-line `base` cha
 ## Not built yet
 
 The Agent Playground and its trace recorder, the experiments/"Measure" section, the Agent
-Architecture Atlas, the Journey page, and the miniature coding-agent implementation. The playground
+Architecture Atlas, the Journey page — which should carry a short "what I learned" note — and
+the miniature coding-agent implementation. The playground
 will replay **pre-recorded** traces committed to the repo — recording is a local dev script that
 uses the author's own API key, so visitors never spend it and the site stays fully static.

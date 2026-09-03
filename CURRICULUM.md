@@ -1,30 +1,25 @@
-# Tiny Agents — Project Overview
+# The curriculum
 
-Build a public, interactive website called **Tiny Agents** that teaches how AI agents work by progressively building a small coding agent from first principles.
+Thirty-six lessons that teach how AI agents work by building a small coding agent from
+first principles. This document is the list of what those lessons are and what each one
+adds to the agent. The project itself is described in [README.md](README.md), the process
+for writing a lesson in [LESSONS.md](LESSONS.md).
 
-The site should combine three things:
+## The three tracks
+
+Every lesson belongs to the first track. Some also carry work in the second, fewer in the
+third.
 
 1. **Learn** — ~36 self-contained 5-minute lessons covering agent loops, tools, coding agents, context engineering, planning, memory, multi-agent patterns, sandboxing, tracing and evaluation.
 2. **Build** — an interactive architecture diagram that evolves as new capabilities are added to a minimal coding agent. Build should tell one continuous story: a tiny loop gradually becomes a reasonably serious coding agent.
-3. **Measure** — small experiments comparing architectural choices, e.g. planning vs no planning, repo maps vs simple search, memory vs no memory, or evaluator vs no evaluator. Measure should be selective: perhaps 8–12 genuinely interesting experiments across the entire curriculum. 
+3. **Measure** — small experiments comparing architectural choices, e.g. planning vs no planning, repo maps vs simple search, memory vs no memory, or evaluator vs no evaluator. Measure should be selective: perhaps 8–12 genuinely interesting experiments across the entire curriculum.
 
-Key pages/features:
+The curriculum advances all three together, so the site and the agent both become more
+capable as the lessons are written.
 
-* Homepage with current architecture and learning progress. The homepage could show a summary view of the architectural components that have been explored with locks showing the ones that have not yet been looked at. The learning progress becomes the architecture diagram.
-* Lesson pages with a short explanation, diagram, code snippet and optional deeper reading.
-* Interactive **Agent Architecture Atlas** explaining common agent patterns.
-* **Agent Playground** where visitors can configure tools/architecture and inspect a simulated or real trajectory.
-* Experiments/evals section with results and conclusions.
-* Journey/progress page showing what has been implemented and explored. It should also have a "what I learned" short paragraph.
-* Open-source miniature coding-agent implementation linked to the lessons.
+## The 36 lessons
 
-Design should feel like a polished technical playground rather than an online course: clean, visual, interactive and aimed at engineers.
-
-Core principle: **the website and coding agent should become progressively more capable as the curriculum advances, so the project itself demonstrates understanding of agentic AI.**
-
-A suggestion for the curriculum divided into 36 lessons:
-
-| #                                                        | Your 5-minute lesson                        | What you should understand afterwards                                                                                   |
+| #                                                        | Lesson                                      | Takeaway — what the reader should understand                                                                                   |
 | -------------------------------------------------------- | ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
 | **Part I — What actually is an agent?**                  |                                             |                                                                                                                         |
 | 1                                                        | **Chatbot vs workflow vs agent**            | Why calling an LLM isn't an agent; what "model controls the loop" means.                                                |
@@ -70,10 +65,10 @@ A suggestion for the curriculum divided into 36 lessons:
 
 ---
 
-# The Build and Measure plan
+## Build and Measure
 
-The two tracks are deliberately not symmetrical, for the reasons given at the top of this
-document: **Build is one continuous story**, and **Measure is selective**. Build therefore
+The two tracks are deliberately not symmetrical, for the reasons given under **The three tracks**
+above: **Build is one continuous story**, and **Measure is selective**. Build therefore
 appears in most lessons, because each one adds a piece to the same agent. Measure appears
 in roughly a third, because an experiment is only worth running when its result could
 plausibly go either way.
@@ -85,7 +80,7 @@ agent's infrastructure. Part V turns it into an evaluated system.
 
 **★ marks an experiment worth publishing on the site as a result in its own right.**
 
-## The Build story — one project, eight versions
+### The Build story — one project, eight versions
 
 The progression is not 36 separate projects. It is one agent passing through eight
 versions, each of which runs:
@@ -105,7 +100,7 @@ versions, each of which runs:
 failing test without supervision. Everything after it makes the same agent less of a toy
 rather than starting something new.
 
-## Part I — What actually is an agent?
+### Part I — What actually is an agent?
 
 | Lesson | Build | Measure |
 | --- | --- | --- |
@@ -121,7 +116,7 @@ is painful, and lesson 31 later replaces that crude logger with typed traces onc
 is understood as an architectural component. That ordering is stronger than logging
 nothing until lesson 31.
 
-## Part II — Take apart a coding agent
+### Part II — Take apart a coding agent
 
 Most of Build happens here.
 
@@ -140,7 +135,7 @@ Most of Build happens here.
 | **17.** Approvals and permissions | An `ExecutionPolicy`: reads automatic, writes inside the workspace allowed, destructive or network or external actions approved or denied. | — |
 | **18.** Long-running coding agents | Checkpoint and resume, explicit working state, context compaction. A killed process can resume its run. | **★ Full trajectory against compaction.** Metrics: success, context tokens, cost, and whether facts established early are lost. |
 
-## Part III — Generic agent architectures
+### Part III — Generic agent architectures
 
 These patterns are **not** bolted permanently onto the coding agent. Each is a strategy in
 its own module — `best_of_n.py`, `orchestrator_workers.py`, `critic.py` — attached
@@ -160,7 +155,7 @@ than embarrassing.
 | **25.** Agents-as-tools vs handoffs | — | None. A lesson does not need an experiment merely because it exists. |
 | **26.** LLM orchestration vs code orchestration | **This one does change the core agent.** Move the deterministic decisions into code: budgets, validation, test acceptance, policy enforcement, termination. The model is left only the genuinely semantic choices. | **★ Model-controlled against code-controlled completion.** The model declaring itself done, against the harness accepting completion only when the required checks pass. Metric: false declarations of success. |
 
-## Part IV — Context, memory and infrastructure
+### Part IV — Context, memory and infrastructure
 
 | Lesson | Build | Measure |
 | --- | --- | --- |
@@ -171,7 +166,7 @@ than embarrassing.
 | **31.** Tracing | Replace lesson 2's JSONL with typed traces: model call, tool call, observation, token count, timing, state change. Build the trace viewer on the site. | —. The traces are the instrumentation every other Measure task depends on. |
 | **32.** Human-in-the-loop and guardrails | Wire the lesson-17 policy engine to real approval hooks and deterministic checks. | **★ Unguarded against policy-controlled**, on tasks and repositories containing instructions that conflict with policy. |
 
-## Part V — Why some agents are much better than others
+### Part V — Why some agents are much better than others
 
 Evaluation is the payoff here rather than a new subject, because the benchmark has existed
 since lesson 13 and the traces since lesson 2.
@@ -183,7 +178,7 @@ since lesson 13 and the traces since lesson 2.
 | **35.** How coding agents get trained | Train nothing. Use the stored trajectories to work out what executable rewards and training data would look like. | — |
 | **36.** Build the architecture yourself | **Tiny Coding Agent v1.3.** Clean architecture, README, the interactive diagram, a runnable demo, and the generalisation from coding agent to generic agent. | **★ Ablation study.** Remove one component at a time — repo map, iterative tests, context manager, planning — and show which ones actually contributed. |
 
-## The experiments to run first
+### The experiments to run first
 
 If time is short, these eight are the ones worth having, in priority order. Each is marked
 ★ above.
@@ -197,7 +192,7 @@ If time is short, these eight are the ones worth having, in priority order. Each
 7. **Standard benchmark** — the complete agent against its minimal baseline (34).
 8. **Final ablations** — which pieces mattered (36).
 
-## The shape of a Measure page
+### The shape of a Measure page
 
 Every experiment writes up the same way, so results can be compared and a reader knows
 where to look:
