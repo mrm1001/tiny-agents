@@ -1,59 +1,43 @@
 ## Writing lesson content
 
-**Read [LESSONS.md](LESSONS.md) before starting a lesson** — it is the four-step process
-(Claude outlines, Maria reviews, Maria writes the notes, then it ships) with the principles
-for each step. **Read [STYLE.md](STYLE.md) before writing or editing any lesson prose.**
-Neither is optional guidance: the first draft of lessons 1 and 2 was rejected for style and
-rewritten against them.
+**Read [LESSONS.md](LESSONS.md) before starting a lesson** — the four-step process
+(Claude outlines, Maria reviews, Maria writes the notes, then it ships), with the
+principles for each step. **Read [STYLE.md](STYLE.md) before writing or editing any
+lesson prose**, and read the file rather than working from a summary of it: the first
+draft of lessons 1 and 2 was rejected for style and rewritten against it.
+[SOURCES.md](SOURCES.md) is the source library and how a pointer is put together.
 
-Three rules from LESSONS.md worth repeating here, because breaking any of them is
-expensive:
+Three rules from those documents are repeated here, because breaking any of them is
+expensive and nothing catches it:
 
 - **The Markdown body of a lesson belongs to Maria.** Do not write in it. Anything left
   there publishes as-is, HTML comments included.
-- **Never guess an anchor** for a reading pointer. Use `node scripts/anchors.mjs <id>`, then
-  `npm run check:pointers`. A wrong anchor does not error — it silently drops the reader at
-  the top of the page.
+- **Never guess an anchor** for a reading pointer. Use `node scripts/anchors.mjs <id>`,
+  then `npm run check:pointers`. A wrong anchor does not error — it silently drops the
+  reader at the top of the page.
 - **Check the lesson against [CURRICULUM.md](CURRICULUM.md)**, and when they diverge, ask
   before editing it. Nothing compares the two, so a renamed lesson leaves the curriculum
   wrong and silent. Report the divergence and propose the wording; changing the shape of
   the course is Maria's call.
 
-The target is a textbook or a technical blog post explaining a concept to a beginner. The
-reader is a competent programmer who has never built an agent, has not read the sources,
-and does not know the vocabulary.
-
-The five rules that were actually broken, in priority order:
-
-1. **Define every technical term on first use**, in the same sentence, in plain words.
-2. **Say what a thing is before why it matters.** Explain the mechanism; do not assert the
-   conclusion and move on.
-3. **Headings name the topic** — noun phrases, not claims. Not "Everything hinges on the
-   exact stop condition" but "Stop conditions: how the loop knows it is finished".
-4. **No metaphors used as though familiar.** "Three rungs" meant nothing to the reader.
-5. **No meta-commentary** — not about the writing ("that is the point"), not about other
-   writing ("most posts wave at this"), not about the reader's reaction ("the surprise
-   is").
-
-Also avoid *simply*, *just*, *obviously*, *of course*, *merely* — they tell a stuck reader
-the problem is them.
-
-Run `npm run check:style` before committing a lesson. It catches the countable part;
-whether a term was really defined and a mechanism really explained is editorial, so reread
-the draft as someone seeing the vocabulary for the first time.
+Run `npm run check` before committing. It catches the countable part of the style guide;
+whether a term was really defined and a mechanism really explained is editorial, so
+reread the draft as someone seeing the vocabulary for the first time.
 
 ## Development
 
-When starting the dev server, use background mode:
+The commands are in [README.md](README.md). Two things that are specific to working here
+through an agent session:
+
+Start the dev server in background mode, so the session is not left holding it:
 
 ```
 astro dev --background
 ```
 
-Manage the background server with `astro dev stop`, `astro dev status`, and `astro dev logs`.
+Manage it with `astro dev stop`, `astro dev status` and `astro dev logs`.
 
-**After installing or removing a dependency, restart the dev server with its cache
-cleared:**
+**After installing or removing a dependency, restart it with the cache cleared:**
 
 ```
 astro dev stop && rm -rf node_modules/.vite .astro && astro dev --background
@@ -74,16 +58,3 @@ unaffected**, so check the production build before changing any component code:
 ```
 npm run build && npx astro preview --port 4322
 ```
-
-## Documentation
-
-Full documentation: https://docs.astro.build
-
-Consult these guides before working on related tasks:
-
-- [Adding pages, dynamic routes, or middleware](https://docs.astro.build/en/guides/routing/)
-- [Working with Astro components](https://docs.astro.build/en/basics/astro-components/)
-- [Using React, Vue, Svelte, or other framework components](https://docs.astro.build/en/guides/framework-components/)
-- [Adding or managing content](https://docs.astro.build/en/guides/content-collections/)
-- [Adding styles or using Tailwind](https://docs.astro.build/en/guides/styling/)
-- [Supporting multiple languages](https://docs.astro.build/en/guides/internationalization/)

@@ -139,7 +139,17 @@ uv run scripts/ingest-source.py --scan
 
 That extracts anything new into `sources/text/<name>.txt`, with
 `=== page N ===` markers so a quote can cite a page, plus a `.meta.json` recording
-origin, `sha256`, page and word counts.
+origin, `sha256`, page and word counts:
+
+```
+sources/
+  raw/   <id>.<ext>        the original file, byte-for-byte
+  text/  <id>.txt          extracted text, with `=== page N ===` markers
+         <id>.meta.json    provenance: origin, sha256, pages, words, when
+```
+
+Neither directory is in a fresh clone — the whole of `sources/` is gitignored, and
+the script creates what it needs.
 
 **Name the file after its library `id`** (`dietz-llm-as-judge.pdf`) and the cache
 lines up with the bibliography. Any name works; it just won't be linked, and
@@ -168,6 +178,13 @@ the extracted text is a rebuildable cache. So a fresh clone starts empty —
 **keep any quote you rely on in the source's `note` or in the lesson prose**, not
 only in `sources/text/`. Rebuild with `--scan`, or re-fetch from the URLs in
 `library.ts`.
+
+One case where that last promise does not hold: a page whose URL blocks automated
+fetching, captured by printing it to a PDF by hand. `openai-codex-agent-loop` is
+one — `openai.com/index/*` returns 403 to everything, so the raw file is the only
+copy there will be and `--scan` cannot recreate it. For these the `note` in
+`library.ts` is not a convenience but the actual archive: put every quote a lesson
+relies on there.
 
 ---
 

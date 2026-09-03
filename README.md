@@ -11,44 +11,23 @@ agent, and it stays padlocked until the lessons behind it are written.
 
 ## What a lesson is
 
-**An index, not an essay.** Each lesson is a handful of key points; each point is one
-paragraph naming the idea, then pointers to the exact place someone explains it
-properly — a named section of a blog post, a page of a PDF, a line range in a real
-agent's source. Original writing is kept deliberately small, because the good
-explanations already exist and are better than a paraphrase of them.
+**An index, not an essay.** A lesson names an idea in a paragraph, then points at the
+exact place someone else explains it properly — a named section of a blog post, a page
+of a PDF, a line range in a real agent's source. What gets written here is deliberately
+small, because those explanations already exist and beat a paraphrase of them.
 
-That makes pointer precision the product, so it is enforced rather than hoped for:
+That makes the precision of the pointers the thing actually being built, so the repo
+enforces it rather than hoping for it: `src/data/library.ts` owns every URL and a lesson
+supplies only the fragment, so one edit repairs a rotted link everywhere; anchors are
+looked up rather than guessed; and `npm run check:pointers` re-verifies every anchor,
+line range and PDF page against the live source.
 
-- A pointer must name a **place inside** its source, not just the source.
-- Deep links are **composed** — `src/data/library.ts` owns the URL, a lesson supplies
-  only the fragment or path. One fix repairs a rotted link across all 36 lessons.
-- Anchors are **looked up, never guessed** (`node scripts/anchors.mjs <id>`), because a
-  wrong anchor silently drops the reader at the top of the page instead of erroring.
-- `npm run check:pointers` re-verifies each one on its own terms — the anchor id must
-  be in the HTML, the line range must fit the file, the PDF page must exist. It is not
-  part of `npm run check` because it needs the network.
-- A pointer renders as **one line and nothing else** — no source title, byline or
-  blurb — so its `at` value names both the source and the place. There is no
-  bibliography at the foot of a lesson to duplicate it.
+Each lesson also carries a panel of hand-written notes, deliberately left outside all of
+that machinery.
 
-### Notes
-
-Everything below a lesson's frontmatter is **hand-written notes**, rendered in a panel
-at the foot of the page under "My notes". Ordinary Markdown, meant to be rough. The
-heading is the only framing; the panel says the rest.
-
-They are deliberately outside the machinery: not counted towards the five-minute
-reading budget, and not linted by `check:style`, since holding rough bullet points to
-a prose style guide would defeat the point of keeping them. `check:lessons` still
-reports their length (`+40w notes`) so nothing on the page goes unmeasured, and still
-checks any links in them.
-
-The one or two sentences of orientation above the points live in frontmatter as
-`intro`, which is what leaves the body free.
-
-**[LESSONS.md](LESSONS.md) is the process** — outline, review, notes, publish.
-[STYLE.md](STYLE.md) is how the prose is written, and [SOURCES.md](SOURCES.md) is how the
-source library works.
+**[LESSONS.md](LESSONS.md)** specifies the format and the four-step process that produces
+it. [STYLE.md](STYLE.md) is the prose guide, [SOURCES.md](SOURCES.md) covers the source
+library, and [CURRICULUM.md](CURRICULUM.md) is the list of 36 lessons.
 
 ## How progress works
 
@@ -152,7 +131,7 @@ markers so a quote can cite a page.
 
 **[SOURCES.md](SOURCES.md) is the guide to curating the library** — adding URL
 sources, dropping in PDFs, what to do when something can't be fetched, and how
-lessons cite. Mechanics of the file cache are in [`sources/README.md`](sources/README.md).
+lessons cite. Mechanics of the file cache are in [SOURCES.md](SOURCES.md).
 
 The script declares its dependencies inline (PEP 723), so there is no install step —
 `uv` provisions them in an ephemeral environment.

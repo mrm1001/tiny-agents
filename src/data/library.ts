@@ -15,7 +15,7 @@
  * see SOURCES.md at the repo root for how to curate it.
  *
  * Sources that exist as a file are cached at `sources/raw/<id>.<ext>` with their
- * extracted text alongside — see `sources/README.md`. Run
+ * extracted text alongside — see SOURCES.md at the repo root. Run
  * `uv run scripts/ingest-source.py --list` to see what is cached.
  *
  * PREFERRED HUNTING GROUNDS, when looking for a source for a new lesson:

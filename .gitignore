@@ -25,9 +25,8 @@ pnpm-debug.log*
 
 # cached source files (PDFs etc.) and their extracted text
 # raw files are third-party material we can't redistribute; text is a rebuildable
-# cache. See sources/README.md — which IS tracked, so the convention is documented.
-sources/*
-!sources/README.md
+# cache. The convention and the rebuild commands are in SOURCES.md.
+sources/
 
 # Secrets. The key lives in .env; .env.example is the tracked template.
 .env
