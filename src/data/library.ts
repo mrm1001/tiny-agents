@@ -394,6 +394,37 @@ export const LIBRARY: Source[] = [
     note: 'A production terminal coding agent to compare architectures against, from lesson 7 onward.',
   },
   {
+    id: 'openai-codex-agent-loop',
+    title: 'Unrolling the Codex agent loop',
+    url: 'https://openai.com/index/unrolling-the-codex-agent-loop/',
+    author: 'Michael Bolin',
+    site: 'OpenAI',
+    date: '2026-01-23',
+    kind: 'post',
+    // Verified against an archived copy of the page: the h1, four h2s and three
+    // h3s all render without an `id`, so there is nothing to link to.
+    noAnchors: true,
+    topics: ['loop', 'context', 'tools', 'model'],
+    core: true,
+    note:
+      'The companion post to the openai-codex repo, and the third first-party account of the loop ' +
+      'alongside anthropic-tool-use-loop and claude-code-large-codebases. Defines the loop in one ' +
+      'sentence — "the core logic in Codex CLI that is responsible for orchestrating the interaction ' +
+      'between the user, the model, and the tools the model invokes" — and uses the word this course ' +
+      'uses in lesson 5: "the role our agent (or \'harness\') plays in making use of an LLM". The ' +
+      'section that earns it a place is § Performance considerations, which supplies the missing half ' +
+      'of lesson 2\'s cost argument: resending the whole conversation is quadratic, but "when we get ' +
+      'cache hits, sampling the model is linear rather than quadratic", and cache hits need an exact ' +
+      'prefix match, so Codex appends a new message rather than editing an earlier one when the ' +
+      'sandbox or approval mode changes mid-conversation. Its list of what breaks the cache is ' +
+      'lesson-30 material too: MCP servers may revise their tool list mid-conversation via ' +
+      'notifications/tools/list_changed, and honouring that costs a cache miss. Sections: The agent ' +
+      'loop · Model inference · Building the initial prompt · The first turn · Performance ' +
+      'considerations · Coming next. Prompt structure is Responses-API-shaped, not Anthropic-shaped. ' +
+      'Maria captured the page as a PDF because openai.com/index/* 403s every automated fetch; that ' +
+      'file is the ONLY copy and `--scan` cannot rebuild it, so keep any quote you need in this note.',
+  },
+  {
     id: 'openhands-sdk',
     title: 'OpenHands software-agent-sdk',
     url: 'https://github.com/OpenHands/software-agent-sdk',
@@ -489,6 +520,33 @@ export const LIBRARY: Source[] = [
       'philz.dev/blog/agent-loop/.',
   },
   {
+    id: 'ljw1004-mini-agent',
+    title: 'Mini-agent',
+    url: 'https://github.com/ljw1004/mini_agent',
+    author: 'Lucian Wischik',
+    site: 'GitHub',
+    kind: 'repo',
+    topics: ['loop', 'tools', 'retrieval', 'edit', 'context', 'orchestration', 'tracing', 'guardrails'],
+    core: true,
+    note:
+      'A deliberate reimplementation of Claude Code\'s mechanics, and the most quotable claim in the ' +
+      'library for lesson 5: "The behavior of an AI agent is completely characterized by only five ' +
+      'things, the things that are sent to the LLM completion method: 1. system prompt 2. ' +
+      'tool-descriptions 3. user prompt 4. tool-results 5. system-reminders" — with the corollary ' +
+      'that "if Claude\'s version of these things were plugged into this agent, then it would give ' +
+      'byte-for-byte identical output". For lesson 2, it names the structure this course calls the ' +
+      'loop as TWO loops: an inner "agentic" loop that runs tools "until the assistant no longer ' +
+      'requests tools", inside an outer "user interaction" loop. Also carries specific material for ' +
+      'lesson 31 (transcripts are written in Claude Code\'s own jsonl format, so a conversation can ' +
+      'be migrated between the two), lesson 32 (UserPromptSubmit, PreToolUse and PostToolUse hooks), ' +
+      'lesson 24 (subagents) and lesson 30 (all of the above routed through MCP). Explicitly has ' +
+      '"none of the permissions/safety", so it is not a source for lesson 17. NB the line counts: the ' +
+      'Show HN headline of 280 lines is the author\'s count of the agent alone — "280 loc for the ' +
+      'agent, 400 loc for tools, 1200 [loc] for prompts" — and the files as committed are larger ' +
+      '(mini_agent.py 370 lines, core_tools.py 1,758). Quote the split, not the headline. MIT, ' +
+      'Python, model-agnostic via litellm; last pushed 2025-09-04, so no date.',
+  },
+  {
     id: 'hn-280-line-agent',
     title: "Show HN: Recreated Claude Code's behavior in 280 lines of Python",
     url: 'https://news.ycombinator.com/item?id=45128754',
@@ -501,8 +559,8 @@ export const LIBRARY: Source[] = [
       'zahlman (permalink #45131054) says why a working agent turns out to be unremarkable: "Once ' +
       'you\'ve identified an entire LLM as a single \'moving part\', and have the idea of allowing its ' +
       'output to be interpreted as commands … the rest pretty much writes itself." The submission ' +
-      'itself links github.com/ljw1004/mini_agent, which is NOT in this library — add it as its own ' +
-      'entry if a lesson wants the code rather than the comment.',
+      'itself links the repo, which is in this library as ljw1004-mini-agent — cite that for the code ' +
+      'and this thread only for the comment.',
   },
 
   // ------------------------------------------------ other courses on this subject
@@ -647,29 +705,6 @@ export const LIBRARY: Source[] = [
   // `blocked` is NOT for metadata problems. An ambiguous or missing publication
   // date is a gap in the entry (omit the `date` field and say so in `note`), never
   // a reason to exclude an otherwise good source — see `kinney-agent-loops`.
-  {
-    id: 'openai-codex-agent-loop',
-    title: 'Unrolling the Codex agent loop',
-    url: 'https://openai.com/index/unrolling-the-codex-agent-loop/',
-    author: 'Michael Bolin',
-    site: 'OpenAI',
-    // Month only. The Hacker News submission (2026-01-23) bounds the publication
-    // date without fixing the day, and the page itself cannot be read to check.
-    date: '2026-01',
-    kind: 'post',
-    topics: ['loop', 'context', 'tools'],
-    blocked: {
-      reason:
-        'The same wall as openai-agents-sdk-evolution below: openai.com/index/* returns HTTP 403 to ' +
-        'plain curl, to a full browser header set, and to WebFetch, and the /mt-MT/ locale prefix is ' +
-        'blocked too. Title and byline are confirmed from OpenAI\'s own developer forum and from the ' +
-        'Hacker News submission (item?id=46737630, 456 points, 208 comments) — only the body text is ' +
-        'missing. Worth retrieving: it is Codex CLI\'s agent loop described by an engineer who works ' +
-        'on it, which would be the third first-party loop account alongside anthropic-tool-use-loop ' +
-        'and claude-code-large-codebases. Paste the text and it can be quoted and attributed.',
-      tried: '2026-09-03',
-    },
-  },
   {
     id: 'openai-agents-sdk-evolution',
     title: 'The next evolution of the Agents SDK',

@@ -58,3 +58,10 @@ Page markers in `<id>.txt` mean a quote can cite a page. Keep the quote itself i
 the source's `note` field in `library.ts`, or in the lesson prose — not only here,
 since this directory is not pushed and a fresh clone starts empty. Rebuild it with
 `--scan`, or re-fetch from the URLs in `library.ts`.
+
+One case where that promise does not hold: a page whose URL blocks automated
+fetching, captured by printing it to a PDF by hand. `openai-codex-agent-loop` is
+one — `openai.com/index/*` returns 403 to everything, so the raw file in
+`sources/raw/` is the only copy there will be and `--scan` cannot recreate it. For
+these, the `note` in `library.ts` is not a convenience but the actual archive: put
+every quote a lesson relies on there.
