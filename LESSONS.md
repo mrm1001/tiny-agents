@@ -43,11 +43,12 @@ extraReading:
   - hn-building-effective-agents
 ---
 
-Everything below here is Maria's notes.
+<!-- YOUR NOTES GO HERE — type below this comment. -->
 ```
 
-**The Markdown body belongs to Maria.** Claude does not write in it. Anything left there
-publishes as-is, comments included.
+**Everything below the closing `---` is Maria's notes, and belongs to her.** Claude does
+not write there. The one thing Claude puts in that space is the placeholder comment
+described in step 3, which renders nothing.
 
 ---
 
@@ -118,7 +119,7 @@ npm run check:lessons
 
 ### Then say what is uncertain
 
-Open questions go **in the conversation**, not in the file — the body is Maria's. List the
+Open questions go **in the conversation**, not in the file — that space is Maria's. List the
 calls you are unsure about, and make a recommendation for each rather than only asking.
 
 ---
@@ -131,8 +132,8 @@ Review happens on **localhost**, not on the deployed site:
 astro dev --background     # http://localhost:4321/tiny-agents/
 ```
 
-Feedback can go anywhere convenient, including the lesson body, since that is hers and
-gets replaced in step 3. Claude applies it and reruns the checks — and re-reads the
+Feedback can go anywhere convenient, including the notes space at the foot of the lesson
+file, since that is hers and gets replaced in step 3. Claude applies it and reruns the checks — and re-reads the
 CURRICULUM.md entry if the feedback moved the lesson's title, part, component or
 takeaway.
 
@@ -157,15 +158,39 @@ and the build will say so if a point is still a placeholder.
 
 ## Step 3 — Maria writes the notes
 
-Everything below the frontmatter, rendered in a panel at the foot of the page under
-**My notes**. Ordinary Markdown: bullets, nested lists, `code`, tables, links.
+If a lesson page shows no **My notes** panel at the foot, the notes are missing. They are
+the last thing a lesson needs before step 4.
 
-They are outside the machinery on purpose — not counted towards the five-minute budget,
+### Where to type them
+
+Open the lesson's own file. It is named after the lesson number, so lesson 2 is:
+
+```
+src/content/lessons/02-the-agent-loop.md
+```
+
+Scroll to the very bottom. Below the second `---` there is a comment block beginning:
+
+```
+<!-- ────────────────────────────────────────────
+  YOUR NOTES GO HERE — type below this comment.
+```
+
+**Type under it.** Everything above the `---` is the lesson itself and is written for you;
+everything from the comment down is yours and is never edited or overwritten.
+
+The comment renders nothing, so a lesson with no notes yet shows no panel and leaks
+nothing into the page. Once the notes are written the comment can be deleted, because from
+that point it would ship in the page source — `check:lessons` warns if it is still there.
+
+### What they are for
+
+Ordinary Markdown: bullets, nested lists, `code`, tables, links. Rough is the point.
+
+They sit outside the machinery deliberately — not counted towards the five-minute budget,
 and not linted by `check:style`, because holding rough bullet points to a prose style
 guide is how you end up not keeping notes. They are still measured (`check:lessons` prints
 `+40w notes`) and their links are still checked.
-
-An empty body renders nothing, so a lesson without notes shows no panel.
 
 ---
 

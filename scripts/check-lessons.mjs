@@ -158,6 +158,13 @@ for (const file of files) {
     if (!ROUTES.has(path)) fail(`${file}: links to ${target}, which is not a page`);
   }
 
+  // The placeholder comment renders nothing while the notes are missing, but once
+  // they exist the notes panel renders the whole slot and the comment ships in the
+  // page source. Nothing breaks; it is just scaffolding left in a published page.
+  if (noteWords && /YOUR NOTES GO HERE/.test(body)) {
+    warn(`${file}: notes are written, so the "YOUR NOTES GO HERE" comment can be deleted`);
+  }
+
   const flags = [];
   if (isOutline) flags.push('outline');
   if (isLocked) flags.push('locked');

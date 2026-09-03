@@ -7,7 +7,7 @@ import { COMPONENTS } from '../data/architecture';
 import { STATUS_LABEL } from '../data/progress';
 import { href } from '../lib/href';
 import { inlineCode } from '../lib/inline-code';
-import { lessonMinutes } from '../lib/reading-time.mjs';
+import { lessonMinutes, hasNotes } from '../lib/reading-time.mjs';
 
 interface Props {
   lesson: CollectionEntry<'lessons'>;
@@ -24,10 +24,12 @@ const comp = COMPONENTS.find((c) => c.id === component)!;
 // never disagree. Outlines and stubs have no read to time.
 const minutes = outline || status === 'locked' ? null : lessonMinutes({ intro, points });
 
-// The Markdown body is hand-written notes, not lesson prose, so it renders below
-// the points under its own heading and is left out of the reading time. An empty
-// body must render nothing rather than an empty box.
-const hasNotes = Boolean(lesson.body?.trim());
+// Everything below a lesson's frontmatter is Maria's hand-written notes, not
+// lesson prose, so it renders below the points under its own heading and is left
+// out of the reading time. When the notes are missing the panel must not render
+// at all — see `hasNotes`, which also keeps the placeholder comment every lesson
+// ships with out of the built page.
+const showNotes = hasNotes(lesson.body);
 
 ---
 
@@ -72,7 +74,7 @@ const hasNotes = Boolean(lesson.body?.trim());
     {points.map((point, i) => <KeyPoint n={i + 1} {...point} />)}
 
     {
-      hasNotes && (
+      showNotes && (
         <section class="notes" aria-labelledby="h-notes">
           <h2 id="h-notes">My notes</h2>
           <div class="lesson-body">

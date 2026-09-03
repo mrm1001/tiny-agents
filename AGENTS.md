@@ -10,8 +10,9 @@ draft of lessons 1 and 2 was rejected for style and rewritten against it.
 Three rules from those documents are repeated here, because breaking any of them is
 expensive and nothing catches it:
 
-- **The Markdown body of a lesson belongs to Maria.** Do not write in it. Anything left
-  there publishes as-is, HTML comments included.
+- **Everything below a lesson's closing `---` is Maria's notes.** Do not write there. The
+  only exception is the placeholder comment every lesson ships with, which renders
+  nothing. Anything else left there publishes as-is.
 - **Never guess an anchor** for a reading pointer. Use `node scripts/anchors.mjs <id>`,
   then `npm run check:pointers`. A wrong anchor does not error — it silently drops the
   reader at the top of the page.

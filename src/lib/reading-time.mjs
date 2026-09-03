@@ -102,6 +102,20 @@ export function lessonText({ intro = '', points = [] }) {
   return [intro, ...fromPoints].join('\n\n');
 }
 
+/**
+ * Whether a lesson's notes have been written yet.
+ *
+ * Deliberately not `body.trim()`. Every lesson ships with an HTML comment in the
+ * notes space saying where to type, and a comment is not a note: without
+ * stripping it first the page would show an empty "My notes" panel, and the
+ * comment itself would end up in the built HTML. Anything else counts, including
+ * notes that are only a code block, which `proseWords` would score as zero.
+ *
+ * @param {string | undefined} body raw Markdown below the frontmatter
+ */
+export const hasNotes = (body) =>
+  (body ?? '').replace(/<!--[\s\S]*?-->/g, '').trim().length > 0;
+
 /** Prose words on a whole lesson page. */
 export const lessonWords = (lesson) => proseWords(lessonText(lesson));
 
