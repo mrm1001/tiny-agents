@@ -5,6 +5,7 @@ import Base from './Base.astro';
 import SourceList from '../components/SourceList.astro';
 import KeyPoint from '../components/KeyPoint.astro';
 import TraceViewer from '../components/TraceViewer';
+import MeasureChart from '../components/MeasureChart.astro';
 import { COMPONENTS } from '../data/architecture';
 import { STATUS_LABEL } from '../data/progress';
 import { href } from '../lib/href';
@@ -18,9 +19,20 @@ interface Props {
 }
 
 const { lesson, prev, next } = Astro.props;
-const { n, title, part, component, status, takeaway, intro, points, extraReading, outline, exercise, build } =
+const { n, title, part, component, status, takeaway, intro, points, extraReading, outline, exercise, build, measure } =
   lesson.data;
 const comp = COMPONENTS.find((c) => c.id === component)!;
+
+// The Measure chart reads its committed series at build time. One experiment per
+// file under experiments/; look it up by the path in `measure.results`.
+const RESULTS = import.meta.glob('/experiments/*/results.json', { eager: true }) as Record<string, { default: any }>;
+const measureData = measure ? RESULTS['/' + measure.results]?.default ?? null : null;
+if (measure && !measureData) {
+  throw new Error(
+    `Lesson ${n}: measure.results "${measure.results}" was not found. Commit the series there, ` +
+      `or fix the path.`,
+  );
+}
 
 // Base for "see the code" links into the public repo.
 const GITHUB = 'https://github.com/mrm1001/tiny-agents/tree/main/';
@@ -129,6 +141,57 @@ const showNotes = hasNotes(lesson.body);
             <a href={GITHUB + build.repoPath} rel="noopener">See the code on GitHub &rarr;</a>
           </p>
           {trace && <TraceViewer trace={trace} client:load />}
+        </section>
+      )
+    }
+
+    {
+      measure && measureData && (
+        <section class="measure" aria-labelledby="h-measure">
+          <h2 id="h-measure">Measure — the cost of the loop</h2>
+          <p class="measure-q"><strong>Question.</strong> {measure.question}</p>
+          <dl class="measure-writeup">
+            <dt>Hypothesis</dt>
+            <dd>{measure.hypothesis}</dd>
+            {measure.variants.length > 0 && (
+              <>
+                <dt>Variants</dt>
+                <dd>{measure.variants.join('; ')}</dd>
+              </>
+            )}
+            {measure.controlledVariables.length > 0 && (
+              <>
+                <dt>Held constant</dt>
+                <dd>{measure.controlledVariables.join('; ')}</dd>
+              </>
+            )}
+            <dt>Metric</dt>
+            <dd>{measure.metric}</dd>
+          </dl>
+
+          <MeasureChart data={measureData} />
+          {measureData.placeholder && (
+            <p class="measure-note">
+              These numbers are illustrative, so the chart renders before the run. The real recording
+              replaces them.
+            </p>
+          )}
+
+          {measure.result && (
+            <>
+              <h3>Result</h3>
+              <p>{measure.result}</p>
+            </>
+          )}
+          {measure.learned && (
+            <>
+              <h3>What I learned</h3>
+              <p>{measure.learned}</p>
+            </>
+          )}
+          <p>
+            <a href={GITHUB + measure.repoPath} rel="noopener">See the experiment on GitHub &rarr;</a>
+          </p>
         </section>
       )
     }

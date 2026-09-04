@@ -1,0 +1,114 @@
+---
+/**
+ * Static SVG line chart for a Measure experiment — built at build time from the
+ * committed results, no client JS (the data is fixed). Theme-aware through CSS
+ * tokens.
+ *
+ * The four tasks are ordered by depth, so this is a SEQUENTIAL encoding: one hue
+ * (--accent) at four opacity steps, light → dark with depth. Identity is carried
+ * by a direct label at the end of each line, never by colour alone, and a data
+ * table below repeats the numbers for anyone who can't read the plot.
+ */
+interface Point { call: number; cumulative: number }
+interface Task { label: string; calls: number; points: Point[] }
+interface Props {
+  data: { placeholder?: boolean; metricLabel?: string; tasks: Task[] };
+}
+const { data } = Astro.props;
+const tasks = data.tasks;
+
+const W = 640;
+const H = 380;
+const m = { top: 16, right: 92, bottom: 40, left: 60 };
+const plotW = W - m.left - m.right;
+const plotH = H - m.top - m.bottom;
+
+const maxCall = Math.max(...tasks.flatMap((t) => t.points.map((p) => p.call)));
+const rawMaxY = Math.max(...tasks.flatMap((t) => t.points.map((p) => p.cumulative)));
+const step = 5000;
+const maxY = Math.ceil(rawMaxY / step) * step;
+
+const x = (call: number) => m.left + (maxCall === 1 ? plotW / 2 : ((call - 1) / (maxCall - 1)) * plotW);
+const y = (v: number) => m.top + plotH - (v / maxY) * plotH;
+
+// Sequential opacity ramp over --accent, ordered by task depth.
+const opacity = (i: number) => [0.5, 0.68, 0.84, 1][i] ?? 1;
+
+const yTicks = Array.from({ length: maxY / step + 1 }, (_, i) => i * step);
+const xTicks = Array.from({ length: maxCall }, (_, i) => i + 1);
+const kfmt = (v: number) => (v >= 1000 ? `${(v / 1000).toFixed(v % 1000 === 0 ? 0 : 1)}k` : `${v}`);
+---
+
+<figure class="measure-chart">
+  <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-labelledby="mc-title" preserveAspectRatio="xMidYMid meet">
+    <title id="mc-title">{data.metricLabel ?? 'cumulative input tokens'} against the number of tool calls, for four tasks</title>
+
+    {/* y grid + labels */}
+    {
+      yTicks.map((t) => (
+        <g>
+          <line x1={m.left} y1={y(t)} x2={m.left + plotW} y2={y(t)} class="mc-grid" />
+          <text x={m.left - 8} y={y(t)} class="mc-tick" text-anchor="end" dominant-baseline="middle">{kfmt(t)}</text>
+        </g>
+      ))
+    }
+    {/* x labels */}
+    {
+      xTicks.map((t) => (
+        <text x={x(t)} y={m.top + plotH + 20} class="mc-tick" text-anchor="middle">{t}</text>
+      ))
+    }
+    <text x={m.left + plotW / 2} y={H - 4} class="mc-axis-label" text-anchor="middle">tool call number</text>
+
+    {/* one line per task, plus an end marker and a direct label */}
+    {
+      tasks.map((task, i) => {
+        const pts = task.points.map((p) => `${x(p.call)},${y(p.cumulative)}`).join(' ');
+        const last = task.points[task.points.length - 1];
+        return (
+          <g style={`opacity:${opacity(i)}`}>
+            <polyline points={pts} class="mc-line" />
+            <circle cx={x(last.call)} cy={y(last.cumulative)} r="4" class="mc-dot" />
+            <text x={x(last.call) + 8} y={y(last.cumulative)} class="mc-series-label" dominant-baseline="middle">
+              {task.label} ({task.calls} {task.calls === 1 ? 'call' : 'calls'})
+            </text>
+          </g>
+        );
+      })
+    }
+  </svg>
+
+  {/* Accessible table view of the same numbers */}
+  <details class="mc-table">
+    <summary>Show the numbers</summary>
+    <table>
+      <thead><tr><th>Task</th><th>Tool calls</th><th>Cumulative input tokens</th></tr></thead>
+      <tbody>
+        {
+          tasks.map((t) => (
+            <tr>
+              <td>{t.label}</td>
+              <td>{t.calls}</td>
+              <td>{t.points[t.points.length - 1].cumulative.toLocaleString()}</td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </details>
+</figure>
+
+<style>
+  .measure-chart { margin: 0.5rem 0; }
+  .measure-chart svg { width: 100%; height: auto; }
+  .mc-grid { stroke: var(--accent-dim); stroke-opacity: 0.35; stroke-width: 1; }
+  .mc-tick { fill: var(--fg-muted, var(--fg)); font-size: 12px; }
+  .mc-axis-label { fill: var(--fg-muted, var(--fg)); font-size: 12px; }
+  .mc-line { fill: none; stroke: var(--accent); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+  .mc-dot { fill: var(--accent); }
+  .mc-series-label { fill: var(--fg-strong, var(--fg)); font-size: 12px; font-weight: 600; }
+  .mc-table { margin-top: 0.5rem; font-size: 0.9em; }
+  .mc-table summary { cursor: pointer; color: var(--accent); }
+  .mc-table table { border-collapse: collapse; margin-top: 0.4rem; }
+  .mc-table th, .mc-table td { text-align: left; padding: 2px 14px 2px 0; }
+</style>

@@ -145,6 +145,25 @@ build:
   success: "A trace appears at `src/content/traces/02-agent-loop.json`, and the demo below replays your run."
   repoPath: agent/v0
 
+measure:
+  question: >
+    How does the number of input tokens grow as a task needs more sequential tool calls?
+  hypothesis: >
+    Because every step resends the whole conversation, the cumulative input tokens grow faster
+    than the number of steps — roughly with its square.
+  variants:
+    - "Task A — a task that needs 1 tool call"
+    - "Task B — a task that needs 3"
+    - "Task C — a task that needs 5"
+    - "Task D — a task that needs 10"
+  controlledVariables:
+    - "the same model and tools"
+    - "the same turn limit"
+    - "the same fixture shape — a chain of tiny files, each naming the next"
+  metric: "cumulative input tokens across the whole run"
+  results: experiments/token-growth/results.json
+  repoPath: experiments/token-growth
+
 extraReading:
   - willison-agents
   - ptacek-write-an-agent

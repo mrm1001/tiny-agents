@@ -1,0 +1,11 @@
+{
+  "placeholder": true,
+  "note": "Illustrative numbers so the chart renders before recording. Replace with a real run: uv run --env-file .env python -m experiments.token_growth (Maria writes the rig).",
+  "metricLabel": "cumulative input tokens",
+  "tasks": [
+    { "label": "A", "calls": 1, "points": [ { "call": 1, "cumulative": 950 } ] },
+    { "label": "B", "calls": 3, "points": [ { "call": 1, "cumulative": 950 }, { "call": 2, "cumulative": 2130 }, { "call": 3, "cumulative": 3540 } ] },
+    { "label": "C", "calls": 5, "points": [ { "call": 1, "cumulative": 950 }, { "call": 2, "cumulative": 2130 }, { "call": 3, "cumulative": 3540 }, { "call": 4, "cumulative": 5180 }, { "call": 5, "cumulative": 7050 } ] },
+    { "label": "D", "calls": 10, "points": [ { "call": 1, "cumulative": 950 }, { "call": 2, "cumulative": 2130 }, { "call": 3, "cumulative": 3540 }, { "call": 4, "cumulative": 5180 }, { "call": 5, "cumulative": 7050 }, { "call": 6, "cumulative": 9150 }, { "call": 7, "cumulative": 11480 }, { "call": 8, "cumulative": 14040 }, { "call": 9, "cumulative": 16830 }, { "call": 10, "cumulative": 19850 } ] }
+  ]
+}
