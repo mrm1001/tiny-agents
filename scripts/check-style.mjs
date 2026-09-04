@@ -82,21 +82,47 @@ for (const file of files) {
   const where = file.replace(/\.md$/, '');
   // The Markdown body is hand-written notes. STYLE.md governs lesson prose, and
   // holding rough bullet points to it would make the notes not worth keeping.
-  const prose = [data.intro ?? '', ...points.map((p) => p.summary ?? '')].join('\n');
+  // The Build and Measure tracks ARE lesson prose (Claude drafts them), so their
+  // flowing fields join the scan. Their list items (files, variants) get the
+  // banned-phrase scan too, but not the em-dash density one — a "path — what it
+  // is" label uses a dash the way a definition does, not as a stacked aside.
+  const prose = [
+    data.intro ?? '',
+    ...points.map((p) => p.summary ?? ''),
+    data.build?.goal ?? '',
+    data.build?.success ?? '',
+    data.measure?.question ?? '',
+    data.measure?.hypothesis ?? '',
+    data.measure?.metric ?? '',
+    data.measure?.result ?? '',
+    data.measure?.learned ?? '',
+  ].join('\n');
+  const listItems = [
+    ...(data.build?.provided ?? []),
+    ...(data.build?.yourJob ?? []),
+    ...(data.measure?.variants ?? []),
+    ...(data.measure?.controlledVariables ?? []),
+  ];
 
   // --- banned phrases ---------------------------------------------------------
   // Quotations and code are exempt: STYLE.md governs our prose, and a source is
   // allowed to write however it likes. Without this, quoting mini-swe-agent's
   // "every step of the agent just appends to the messages" failed the check on
   // the word "just", which we would have had to fix by misquoting it.
-  const ours = prose
-    .replace(/`[^`]*`/g, ' ')
-    .replace(/"[^"]*"/g, ' ')
-    .replace(/[“][^”]*[”]/g, ' ');
+  const strip = (s) =>
+    s.replace(/`[^`]*`/g, ' ').replace(/"[^"]*"/g, ' ').replace(/[“][^”]*[”]/g, ' ');
+  const ours = strip(prose);
 
   for (const [pattern, why] of BANNED) {
     const m = ours.match(pattern);
     if (m) fail(`${where}: "${m[0]}" — ${why}`);
+  }
+  for (const item of listItems) {
+    const clean = strip(item);
+    for (const [pattern, why] of BANNED) {
+      const m = clean.match(pattern);
+      if (m) fail(`${where}: "${m[0]}" in a build/measure item — ${why}`);
+    }
   }
 
   // --- headings ---------------------------------------------------------------
