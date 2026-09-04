@@ -144,6 +144,42 @@ const lessons = defineCollection({
           trace: z.string().optional(),
         })
         .optional(),
+
+      /**
+       * The Build track: what the reader implements, rendered above the trace
+       * viewer. Claude drafts this (it is lesson prose — STYLE.md applies); the
+       * reader writes the code it describes.
+       */
+      build: z
+        .object({
+          goal: z.string(),
+          provided: z.array(z.string()).default([]),
+          yourJob: z.array(z.string()).default([]),
+          run: z.string(),
+          success: z.string(),
+          repoPath: z.string(),
+        })
+        .optional(),
+
+      /**
+       * The Measure track: one experiment written up in the Question → hypothesis
+       * → … → what-I-learned shape. `results` points at the committed JSON series
+       * the chart reads. `result` and `learned` come from the real run, so they
+       * may be empty until then.
+       */
+      measure: z
+        .object({
+          question: z.string(),
+          hypothesis: z.string(),
+          variants: z.array(z.string()).default([]),
+          controlledVariables: z.array(z.string()).default([]),
+          metric: z.string(),
+          result: z.string().default(''),
+          learned: z.string().default(''),
+          results: z.string(),
+          repoPath: z.string(),
+        })
+        .optional(),
     })
     // Issues MUST carry a `path`. Astro derives the reported line from
     // `issue.path[0]`; with an empty path it prints "**:" and points at line 0.
@@ -202,4 +238,123 @@ const lessons = defineCollection({
     }),
 });
 
-export const collections = { lessons };
+/**
+ * Recorded agent runs, replayed by TraceViewer. One JSON file per run, emitted by
+ * the recorder in agent/harness/trace.py. The shape here MUST match what the
+ * recorder writes; it is shared and frozen across every lesson's agent version.
+ *
+ * `.strict()` at the top level: a field the recorder emits but this schema does
+ * not know about is a build error, not a silent drop — the opposite of the
+ * lessons collection, and the safer default when Python and TypeScript must agree.
+ */
+const STEP_KINDS = ['user', 'thinking', 'tool_use', 'text', 'tool_result', 'end'] as const;
+
+const traceStep = z
+  .object({
+    i: z.number().int(),
+    mi: z.number().int().nullable(),
+    ri: z.number().int().nullable(),
+    kind: z.enum(STEP_KINDS),
+  })
+  // kind-specific fields (text, toolUseId, name, input, output, reason, …) vary
+  // by kind and are read by the viewer, not validated individually here.
+  .loose();
+
+const traceSchema = z
+  .object({
+    id: z.string(),
+    lesson: z.string(),
+    version: z.string(),
+    recordedAt: z.string(),
+    model: z.string(),
+    agentSha: z.string(),
+    config: z.object({ tools: z.array(z.string()), maxTurns: z.number().int() }),
+    repo: z.record(z.string(), z.string()),
+    messages: z.array(
+      z.object({
+        mi: z.number().int(),
+        role: z.enum(['user', 'assistant', 'system']),
+        blocks: z.array(z.object({ type: z.string() }).loose()),
+      }),
+    ),
+    requests: z.array(
+      z.object({
+        ri: z.number().int(),
+        sentMessages: z.number().int(),
+        stopReason: z.string().nullable(),
+        usage: z.object({ inputTokens: z.number().int(), outputTokens: z.number().int() }),
+      }),
+    ),
+    steps: z.array(traceStep),
+    usage: z.object({
+      inputTokens: z.number().int(),
+      outputTokens: z.number().int(),
+      requests: z.number().int(),
+    }),
+  })
+  .strict()
+  // Referential integrity: the viewer does index arithmetic over these, so a
+  // malformed trace must fail the build rather than render wrong.
+  .superRefine((trace, ctx) => {
+    const steps = trace.steps;
+    steps.forEach((s, i) => {
+      if (s.i !== i) {
+        ctx.addIssue({ code: 'custom', path: ['steps', i, 'i'], input: s.i,
+          message: `step index must be contiguous from 0 — expected ${i}, got ${s.i}` });
+      }
+    });
+
+    const toolUseIds = steps.filter((s) => s.kind === 'tool_use').map((s) => (s as any).toolUseId);
+    const seen = new Set<string>();
+    toolUseIds.forEach((id, k) => {
+      if (seen.has(id)) {
+        ctx.addIssue({ code: 'custom', path: ['steps'], input: id,
+          message: `duplicate tool-use id "${id}"` });
+      }
+      seen.add(id);
+    });
+
+    const answered = new Set(
+      steps.filter((s) => s.kind === 'tool_result').map((s) => (s as any).toolUseId),
+    );
+    const end = steps.find((s) => s.kind === 'end') as any;
+    const truncated = Boolean(end?.truncated);
+    toolUseIds.forEach((id) => {
+      if (!answered.has(id) && !truncated) {
+        ctx.addIssue({ code: 'custom', path: ['steps'], input: id,
+          message: `tool_use "${id}" has no matching tool_result (and the run is not marked truncated)` });
+      }
+    });
+
+    steps
+      .filter((s) => s.kind === 'tool_use')
+      .forEach((s) => {
+        const name = (s as any).name;
+        if (!trace.config.tools.includes(name)) {
+          ctx.addIssue({ code: 'custom', path: ['steps'], input: name,
+            message: `tool_use names "${name}", which is not in config.tools` });
+        }
+      });
+
+    const mis = steps.map((s) => s.mi).filter((m): m is number => m !== null);
+    for (let k = 1; k < mis.length; k++) {
+      if (mis[k] < mis[k - 1]) {
+        ctx.addIssue({ code: 'custom', path: ['steps'], input: mis,
+          message: 'message index (mi) must be non-decreasing across steps' });
+        break;
+      }
+    }
+
+    const ends = steps.filter((s) => s.kind === 'end');
+    if (ends.length !== 1 || steps[steps.length - 1]?.kind !== 'end') {
+      ctx.addIssue({ code: 'custom', path: ['steps'], input: ends.length,
+        message: 'a trace must have exactly one terminal step (kind "end"), and it must be last' });
+    }
+  });
+
+const traces = defineCollection({
+  loader: glob({ pattern: '**/*.json', base: './src/content/traces' }),
+  schema: traceSchema,
+});
+
+export const collections = { lessons, traces };

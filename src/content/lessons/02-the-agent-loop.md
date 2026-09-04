@@ -124,6 +124,27 @@ points:
         at: "ReAct paper § 3.1 Setup (p. 4), the action space"
         href: "https://arxiv.org/pdf/2210.03629#page=4"
 
+exercise:
+  dir: agent/v0
+  command: "uv run --env-file .env python -m agent.v0"
+  trace: 02-agent-loop
+
+build:
+  goal: >
+    Tiny Agent v0 is the smallest agent that does real work: a loop, three tools, and a turn
+    limit. You write the loop and the tools; the recorder, fixtures and runner are provided.
+    Running it records the trace shown below.
+  provided:
+    - "`agent/harness/trace.py` — the recorder your loop calls; it writes the trace, so you never build the JSON by hand"
+    - "`agent/harness/repo.py` — the four-file greeting repository the agent works on"
+    - "`agent/v0/__main__.py` — the runner that wires everything together and saves the trace"
+  yourJob:
+    - "`agent/v0/loop.py` — the loop: send the conversation, read `stop_reason`, run tools while it is `tool_use`, append each result, and stop on any other reason or at the turn limit"
+    - "`agent/v0/tools.py` — the bodies of `list_files`, `read_file` and `edit_file`"
+  run: "uv run --env-file .env python -m agent.v0"
+  success: "A trace appears at `src/content/traces/02-agent-loop.json`, and the demo below replays your run."
+  repoPath: agent/v0
+
 extraReading:
   - willison-agents
   - ptacek-write-an-agent

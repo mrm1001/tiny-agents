@@ -1,0 +1,52 @@
+{
+  "id": "02-agent-loop",
+  "lesson": "02-the-agent-loop",
+  "version": "v0",
+  "recordedAt": "2026-09-04T00:00:00+00:00",
+  "model": "claude-opus-5",
+  "agentSha": "placeholder",
+  "config": { "tools": ["list_files", "read_file", "edit_file"], "maxTurns": 8 },
+  "repo": {
+    "greet_a.py": "def hi():\n    return 1  # no greeting here\n",
+    "greet_b.py": "TITLE = 'greetings module'\n",
+    "greet_c.py": "GREETING = \"Helo, world\"\n",
+    "greet_d.py": "# helpers for the greeting package\n"
+  },
+  "messages": [
+    { "mi": 0, "role": "user", "blocks": [{ "type": "text", "text": "The greeting printed by this package is misspelled. Find the file it lives in, fix the spelling, and tell me what you changed." }] },
+    { "mi": 1, "role": "assistant", "blocks": [
+      { "type": "thinking", "text": "I'll list the files first, then read each one until I find the greeting." },
+      { "type": "tool_use", "id": "t1", "name": "list_files", "input": {} }
+    ] },
+    { "mi": 2, "role": "user", "blocks": [{ "type": "tool_result", "tool_use_id": "t1", "content": "greet_a.py\ngreet_b.py\ngreet_c.py\ngreet_d.py" }] },
+    { "mi": 3, "role": "assistant", "blocks": [{ "type": "tool_use", "id": "t2", "name": "read_file", "input": { "path": "greet_a.py" } }] },
+    { "mi": 4, "role": "user", "blocks": [{ "type": "tool_result", "tool_use_id": "t2", "content": "def hi():\n    return 1  # no greeting here" }] },
+    { "mi": 5, "role": "assistant", "blocks": [{ "type": "tool_use", "id": "t3", "name": "read_file", "input": { "path": "greet_c.py" } }] },
+    { "mi": 6, "role": "user", "blocks": [{ "type": "tool_result", "tool_use_id": "t3", "content": "GREETING = \"Helo, world\"" }] },
+    { "mi": 7, "role": "assistant", "blocks": [{ "type": "tool_use", "id": "t4", "name": "edit_file", "input": { "path": "greet_c.py", "find": "Helo", "replace": "Hello" } }] },
+    { "mi": 8, "role": "user", "blocks": [{ "type": "tool_result", "tool_use_id": "t4", "content": "edited: 1 replacement" }] },
+    { "mi": 9, "role": "assistant", "blocks": [{ "type": "text", "text": "Fixed the typo in greet_c.py: the greeting was \"Helo, world\", now \"Hello, world\"." }] }
+  ],
+  "requests": [
+    { "ri": 1, "sentMessages": 1, "stopReason": "tool_use", "usage": { "inputTokens": 950, "outputTokens": 28 } },
+    { "ri": 2, "sentMessages": 3, "stopReason": "tool_use", "usage": { "inputTokens": 1180, "outputTokens": 22 } },
+    { "ri": 3, "sentMessages": 5, "stopReason": "tool_use", "usage": { "inputTokens": 1410, "outputTokens": 22 } },
+    { "ri": 4, "sentMessages": 7, "stopReason": "tool_use", "usage": { "inputTokens": 1650, "outputTokens": 34 } },
+    { "ri": 5, "sentMessages": 9, "stopReason": "end_turn", "usage": { "inputTokens": 1890, "outputTokens": 40 } }
+  ],
+  "steps": [
+    { "i": 0, "mi": 0, "ri": null, "kind": "user", "text": "The greeting printed by this package is misspelled. Find the file it lives in, fix the spelling, and tell me what you changed." },
+    { "i": 1, "mi": 1, "ri": 1, "kind": "thinking", "text": "I'll list the files first, then read each one until I find the greeting." },
+    { "i": 2, "mi": 1, "ri": 1, "kind": "tool_use", "toolUseId": "t1", "name": "list_files", "input": {} },
+    { "i": 3, "mi": 2, "ri": 1, "kind": "tool_result", "toolUseId": "t1", "name": "list_files", "output": "greet_a.py\ngreet_b.py\ngreet_c.py\ngreet_d.py", "isError": false, "truncated": false },
+    { "i": 4, "mi": 3, "ri": 2, "kind": "tool_use", "toolUseId": "t2", "name": "read_file", "input": { "path": "greet_a.py" } },
+    { "i": 5, "mi": 4, "ri": 2, "kind": "tool_result", "toolUseId": "t2", "name": "read_file", "output": "def hi():\n    return 1  # no greeting here", "isError": false, "truncated": false },
+    { "i": 6, "mi": 5, "ri": 3, "kind": "tool_use", "toolUseId": "t3", "name": "read_file", "input": { "path": "greet_c.py" } },
+    { "i": 7, "mi": 6, "ri": 3, "kind": "tool_result", "toolUseId": "t3", "name": "read_file", "output": "GREETING = \"Helo, world\"", "isError": false, "truncated": false },
+    { "i": 8, "mi": 7, "ri": 4, "kind": "tool_use", "toolUseId": "t4", "name": "edit_file", "input": { "path": "greet_c.py", "find": "Helo", "replace": "Hello" } },
+    { "i": 9, "mi": 8, "ri": 4, "kind": "tool_result", "toolUseId": "t4", "name": "edit_file", "output": "edited: 1 replacement", "isError": false, "truncated": false },
+    { "i": 10, "mi": 9, "ri": 5, "kind": "text", "text": "Fixed the typo in greet_c.py: the greeting was \"Helo, world\", now \"Hello, world\"." },
+    { "i": 11, "mi": 9, "ri": 5, "kind": "end", "reason": "stop_reason", "stopReason": "end_turn", "stopDetails": null, "truncated": false }
+  ],
+  "usage": { "inputTokens": 7080, "outputTokens": 146, "requests": 5 }
+}

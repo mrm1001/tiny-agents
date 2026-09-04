@@ -1,8 +1,10 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import { getEntry } from 'astro:content';
 import Base from './Base.astro';
 import SourceList from '../components/SourceList.astro';
 import KeyPoint from '../components/KeyPoint.astro';
+import TraceViewer from '../components/TraceViewer';
 import { COMPONENTS } from '../data/architecture';
 import { STATUS_LABEL } from '../data/progress';
 import { href } from '../lib/href';
@@ -16,9 +18,27 @@ interface Props {
 }
 
 const { lesson, prev, next } = Astro.props;
-const { n, title, part, component, status, takeaway, intro, points, extraReading, outline, exercise } =
+const { n, title, part, component, status, takeaway, intro, points, extraReading, outline, exercise, build } =
   lesson.data;
 const comp = COMPONENTS.find((c) => c.id === component)!;
+
+// Base for "see the code" links into the public repo.
+const GITHUB = 'https://github.com/mrm1001/tiny-agents/tree/main/';
+
+// Resolve the recorded run the Build viewer replays. A missing trace file only
+// WARNS at the collection loader and getEntry returns undefined, which would make
+// the viewer silently vanish on a green build — so throw instead.
+let trace: CollectionEntry<'traces'>['data'] | null = null;
+if (exercise?.trace) {
+  const entry = await getEntry('traces', exercise.trace);
+  if (!entry) {
+    throw new Error(
+      `Lesson ${n}: exercise.trace "${exercise.trace}" does not resolve to a file in ` +
+        `src/content/traces/. Record it (see the Build instructions) or fix the id.`,
+    );
+  }
+  trace = entry.data;
+}
 
 // The same function `check:lessons` uses, so the page and the budget check can
 // never disagree. Outlines and stubs have no read to time.
@@ -85,7 +105,36 @@ const showNotes = hasNotes(lesson.body);
     }
 
     {
-      exercise && (
+      build && (
+        <section class="build" aria-labelledby="h-build">
+          <h2 id="h-build">Build — write the agent</h2>
+          <p>{build.goal}</p>
+          {build.provided.length > 0 && (
+            <>
+              <h3>Provided for you — don&rsquo;t edit</h3>
+              <ul>{build.provided.map((x) => <li set:html={inlineCode(x)} />)}</ul>
+            </>
+          )}
+          {build.yourJob.length > 0 && (
+            <>
+              <h3>Your job</h3>
+              <ul>{build.yourJob.map((x) => <li set:html={inlineCode(x)} />)}</ul>
+            </>
+          )}
+          <p>
+            Run it: <code>{build.run}</code>
+          </p>
+          <p class="build-success" set:html={inlineCode(build.success)} />
+          <p>
+            <a href={GITHUB + build.repoPath} rel="noopener">See the code on GitHub &rarr;</a>
+          </p>
+          {trace && <TraceViewer trace={trace} client:load />}
+        </section>
+      )
+    }
+
+    {
+      exercise && !build && (
         <section class="exercise-callout">
           <span class="k">Exercise</span>
           <p>
