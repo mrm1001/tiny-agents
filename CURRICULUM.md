@@ -87,13 +87,13 @@ versions, each of which runs:
 
 | Version | Lessons | What exists at the end of it |
 | --- | --- | --- |
-| **v0** | 2 | A model, a loop, one trivial tool, a turn limit, and raw JSONL logging |
+| **v0** | 2 | A model, a loop, one trivial tool, a turn limit, and a typed trace with an interactive viewer |
 | **v0.2** | 4–5 | A generic tool registry and a real harness: `ModelClient`, `AgentLoop`, `ToolRegistry`, `AgentState`, `Executor` |
 | **v0.3** | 7–8 | A read-only coding agent: a workspace, a task, and enough tools to investigate a bug |
 | **v0.4** | 9–12 | Model-friendly tool interfaces, proper search, a repo map, and the ability to edit files |
 | **v1.0** | 14 | A self-debugging coding agent: edit → test → read the failure → edit again |
 | **v1.1** | 16–18 | Sandboxed, permission-controlled, and able to resume after being killed |
-| **v1.2** | 27–31 | Context budgeting, a pluggable context manager, and typed traces |
+| **v1.2** | 27–31 | Context budgeting, a pluggable context manager, and tracing as a first-class component |
 | **v1.3** | 32–36 | Guardrails, an eval runner, external benchmark results, and optional orchestration strategies |
 
 **Lesson 14 is the first milestone that stands on its own** — a coding agent that fixes a
@@ -105,16 +105,17 @@ rather than starting something new.
 | Lesson | Build | Measure |
 | --- | --- | --- |
 | **1.** Chatbot vs workflow vs agent | — | — |
-| **2.** The agent loop | **Tiny Agent v0.** The ten-line loop against a model API, one deliberately trivial tool, and a turn limit. Dump raw model calls, tool calls and results to JSONL from the first run. | How cumulative input tokens grow across tasks needing 1, 3, 5 and 10 sequential tool calls, which makes the cost of resending the conversation concrete. |
+| **2.** The agent loop | **Tiny Agent v0.** The ten-line loop against a model API, one deliberately trivial tool, and a turn limit. Record a typed trace from the first run and replay it in an interactive viewer. | How cumulative input tokens grow across tasks needing 1, 3, 5 and 10 sequential tool calls, which makes the cost of resending the conversation concrete. |
 | **3.** The augmented LLM | — | — |
 | **4.** Tools and function calling | Replace the hard-coded toy tool with a generic `Tool` interface and registry: schema → call → validate arguments → execute → return result. | **★ Tool descriptions.** Badly named and vaguely described tools against carefully designed ones, over ~30 synthetic tasks. Metrics: correct tool selected, arguments valid. |
 | **5.** What is the agent harness? | Refactor v0 into a harness proper: `ModelClient`, `AgentLoop`, `ToolRegistry`, `AgentState`, `Executor`. No new capability — the point is the separation. | — |
 | **6.** Where does planning live? | No planner yet. | Design the no-plan against plan-first comparison here, but run it at lesson 14, once there is a coding agent to run it on. |
 
-Logging from lesson 2 is deliberate. The agent records JSONL because debugging without it
-is painful, and lesson 31 later replaces that crude logger with typed traces once tracing
-is understood as an architectural component. That ordering is stronger than logging
-nothing until lesson 31.
+Lesson 2 records a typed trace from its first run, so there is something to debug with and the
+interactive viewer has something to replay. Lesson 31 returns to tracing and deepens it into a
+first-class component — timing, token counts, state changes — rather than introducing it. A
+working viewer early, with tracing given its own lesson later, is stronger than logging nothing
+until lesson 31.
 
 ### Part II — Take apart a coding agent
 
@@ -163,7 +164,7 @@ than embarrassing.
 | **28.** Context engineering | A pluggable `ContextManager` that decides which history, tool results and repository information enter each model call. | **★ Full history against sliding window against summary plus targeted retrieval**, on longer tasks. Metrics: success, cost. |
 | **29.** Memory isn't one thing | No vector database merely because the lesson says memory. The agent already has task state and checkpoints; keep the kinds of memory distinct. | Optional: a summary of a previous attempt on the same repository, against starting fresh. Does episodic memory help, or anchor the agent to its earlier mistakes? |
 | **30.** MCP | An MCP adapter, so MCP tools appear in the same `ToolRegistry` as native ones. Demonstrate with one reproducible server rather than restructuring the agent around MCP. Then a second adapter for **code mode**: render the same tools as a typed API and let the model write code that calls it, which needs the lesson-16 sandbox to run. | **★ Tool calls against code mode.** The same tasks with tools exposed as tool calls, then as an API the model writes code against. Cloudflare report handling "many more tools, and more complex tools" the second way, without publishing numbers, so this is a claim to test rather than repeat. Metrics: success, tokens, and how each degrades as the number of tools grows. |
-| **31.** Tracing | Replace lesson 2's JSONL with typed traces: model call, tool call, observation, token count, timing, state change. Build the trace viewer on the site. | —. The traces are the instrumentation every other Measure task depends on. |
+| **31.** Tracing | Deepen lesson 2's trace into the full tracing component: timing, token counts, state changes. The viewer already exists from lesson 2. | —. The traces are the instrumentation every other Measure task depends on. |
 | **32.** Human-in-the-loop and guardrails | Wire the lesson-17 policy engine to real approval hooks and deterministic checks. | **★ Unguarded against policy-controlled**, on tasks and repositories containing instructions that conflict with policy. |
 
 ### Part V — Why some agents are much better than others
