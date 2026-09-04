@@ -32,3 +32,11 @@ sources/
 .env
 .env.*
 !.env.example
+
+# Python (the agent/ and experiments/ code). uv.lock IS committed — a reproducible
+# recording needs a pinned SDK — but the virtualenv and caches are not.
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
