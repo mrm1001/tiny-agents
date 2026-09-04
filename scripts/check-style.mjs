@@ -90,7 +90,7 @@ for (const file of files) {
     data.intro ?? '',
     ...points.map((p) => p.summary ?? ''),
     data.build?.goal ?? '',
-    data.build?.success ?? '',
+    data.build?.outcome ?? '',
     data.measure?.question ?? '',
     data.measure?.hypothesis ?? '',
     data.measure?.metric ?? '',
@@ -99,9 +99,10 @@ for (const file of files) {
   ].join('\n');
   const listItems = [
     ...(data.build?.provided ?? []),
-    ...(data.build?.yourJob ?? []),
+    ...(data.build?.todo ?? []),
     ...(data.measure?.variants ?? []),
     ...(data.measure?.controlledVariables ?? []),
+    ...(data.measure?.todo ?? []),
   ];
 
   // --- banned phrases ---------------------------------------------------------
@@ -117,6 +118,15 @@ for (const file of files) {
     const m = ours.match(pattern);
     if (m) fail(`${where}: "${m[0]}" — ${why}`);
   }
+
+  // A sentence that opens with "Because" leads with the cause and makes the
+  // reader hold it until the payoff arrives. State the cause plainly and let
+  // "so" carry the consequence. Sentence-initial only — mid-sentence "because"
+  // is fine. Quotes/code already stripped in `ours`.
+  if (/(^|[.!?]\s+)Because\b/.test(ours)) {
+    fail(`${where}: a sentence opens with "Because" — state the cause plainly, let "so" carry the result`);
+  }
+
   for (const item of listItems) {
     const clean = strip(item);
     for (const [pattern, why] of BANNED) {

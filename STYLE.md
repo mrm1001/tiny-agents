@@ -98,6 +98,17 @@ problem; the problem was that the sentences asserted instead of explaining.
 place, such as `Anthropic docs § Stop reason values`. Anything the reader needs to know
 before following it belongs in the summary above.
 
+**Name the mechanism and the outcome; don't imply them.** When something is produced,
+say what it is and what happens to it. Not "the demo below replays your run" but "your
+code writes the trace to `src/content/traces/02-agent-loop.json`, and the demo below reads
+that file." When you introduce a named thing — "Tiny Agent v0", "the harness" — say what it
+is and how it fits before you lean on the name. This is failure 3 applied to nouns: a name
+the reader can't unpack is a conclusion asserted without the mechanism.
+
+**Enumerate with bullet points, not semicolons.** Three or more items belong in a list a
+reader can scan, not strung through one sentence with semicolons. Prose reserves the
+semicolon for joining two whole clauses, not for itemising.
+
 ## Avoid
 
 | Don't | Because |
@@ -108,6 +119,8 @@ before following it belongs in the summary above.
 | Stacked em-dash asides | Two asides in one sentence means the sentence needed to be two. |
 | Rhetorical questions as headings | See failure 2. |
 | Undefined API field names, acronyms, or jargon | See "Who the reader is". |
+| Opening a sentence with *Because* | It leads with the cause and makes the reader hold it. State the cause plainly, let *so* carry the result. `check:style` flags it. |
+| A run of items joined by semicolons | Use bullet points — a reader scans a list faster than a sentence of clauses. |
 
 ## What this guide does not cover
 

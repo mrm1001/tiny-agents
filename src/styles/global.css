@@ -709,6 +709,48 @@ a.lesson-row:hover { background: var(--surface); border-left-color: var(--accent
 .exercise-callout p { margin: 0 0 0.6rem; color: var(--fg); }
 .exercise-callout pre { margin: 0; }
 
+/* Lesson tracks — Learn / Build / Measure on one page, with a sticky jump-nav.
+   Only lessons that have a Build or Measure track render the nav and the borders;
+   a Learn-only lesson is unchanged. */
+.jump-nav {
+  position: sticky;
+  /* Sits just below the sticky .site-header (~3rem: 0.9rem padding-block + a line). */
+  top: 3rem;
+  z-index: 5;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.9rem;
+  margin: 1.25rem 0 0;
+  padding: 0.55rem 0.25rem;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+.jump-nav .jump-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--fg);
+  opacity: 0.65;
+}
+.jump-nav a { font-weight: 600; text-decoration: none; }
+.jump-nav a:hover { text-decoration: underline; }
+
+.track-build,
+.track-measure {
+  border-top: 2px solid var(--accent-dim);
+  margin-top: 2.75rem;
+  padding-top: 1.25rem;
+}
+
+/* Anchor jumps land below the header + the sticky jump-nav, not under them. */
+#learn,
+#build,
+#measure { scroll-margin-top: 6rem; }
+
+.track ul.todo { margin: 0.4rem 0 1rem; }
+.track ul.todo li { margin: 0.35rem 0; }
+
 /* --- sources and extra reading ------------------------------------------- */
 
 .sources { margin-top: 2.75rem; }

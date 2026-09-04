@@ -63,6 +63,10 @@ const minutes = outline || status === 'locked' ? null : lessonMinutes({ intro, p
 // ships with out of the built page.
 const showNotes = hasNotes(lesson.body);
 
+// A lesson with a Build or Measure track gets a jump-nav and visible section
+// separation; the other 35 (Learn only) render exactly as before.
+const hasTracks = Boolean(build || (measure && measureData));
+
 ---
 
 <Base title={`${n}. ${title} — Tiny Agents`} description={takeaway} section="learn">
@@ -101,45 +105,61 @@ const showNotes = hasNotes(lesson.body);
       )
     }
 
-    {intro && <p class="lesson-intro">{intro}</p>}
-
-    {points.map((point, i) => <KeyPoint n={i + 1} {...point} />)}
-
     {
-      showNotes && (
-        <section class="notes" aria-labelledby="h-notes">
-          <h2 id="h-notes">My notes</h2>
-          <div class="lesson-body">
-            <slot />
-          </div>
-        </section>
+      hasTracks && (
+        <nav class="jump-nav" aria-label="On this page">
+          <span class="jump-label">On this page</span>
+          <a href="#learn">Learn</a>
+          {build && <a href="#build">Build</a>}
+          {measure && measureData && <a href="#measure">Measure</a>}
+        </nav>
       )
     }
 
+    <section id="learn" class="track track-learn">
+      {intro && <p class="lesson-intro">{intro}</p>}
+
+      {points.map((point, i) => <KeyPoint n={i + 1} {...point} />)}
+
+      {
+        showNotes && (
+          <section class="notes" aria-labelledby="h-notes">
+            <h2 id="h-notes">My notes</h2>
+            <div class="lesson-body">
+              <slot />
+            </div>
+          </section>
+        )
+      }
+    </section>
+
     {
       build && (
-        <section class="build" aria-labelledby="h-build">
+        <section id="build" class="track track-build" aria-labelledby="h-build">
           <h2 id="h-build">Build — write the agent</h2>
           <p>{build.goal}</p>
+
           {build.provided.length > 0 && (
             <>
-              <h3>Provided for you — don&rsquo;t edit</h3>
+              <h3>Provided for you — don&rsquo;t edit these</h3>
               <ul>{build.provided.map((x) => <li set:html={inlineCode(x)} />)}</ul>
             </>
           )}
-          {build.yourJob.length > 0 && (
+
+          {build.todo.length > 0 && (
             <>
-              <h3>Your job</h3>
-              <ul>{build.yourJob.map((x) => <li set:html={inlineCode(x)} />)}</ul>
+              <h3>To do</h3>
+              <ul class="todo">{build.todo.map((x) => <li set:html={inlineCode(x)} />)}</ul>
             </>
           )}
-          <p>
-            Run it: <code>{build.run}</code>
-          </p>
-          <p class="build-success" set:html={inlineCode(build.success)} />
+
+          <h3>Run it</h3>
+          <pre><code>{build.run}</code></pre>
+          <p set:html={inlineCode(build.outcome)} />
           <p>
             <a href={GITHUB + build.repoPath} rel="noopener">See the code on GitHub &rarr;</a>
           </p>
+
           {trace && <TraceViewer trace={trace} client:load />}
         </section>
       )
@@ -147,7 +167,7 @@ const showNotes = hasNotes(lesson.body);
 
     {
       measure && measureData && (
-        <section class="measure" aria-labelledby="h-measure">
+        <section id="measure" class="track track-measure" aria-labelledby="h-measure">
           <h2 id="h-measure">Measure — the cost of the loop</h2>
           <p class="measure-q"><strong>Question.</strong> {measure.question}</p>
           <dl class="measure-writeup">
@@ -156,18 +176,29 @@ const showNotes = hasNotes(lesson.body);
             {measure.variants.length > 0 && (
               <>
                 <dt>Variants</dt>
-                <dd>{measure.variants.join('; ')}</dd>
+                <dd>
+                  <ul>{measure.variants.map((v) => <li>{v}</li>)}</ul>
+                </dd>
               </>
             )}
             {measure.controlledVariables.length > 0 && (
               <>
                 <dt>Held constant</dt>
-                <dd>{measure.controlledVariables.join('; ')}</dd>
+                <dd>
+                  <ul>{measure.controlledVariables.map((v) => <li>{v}</li>)}</ul>
+                </dd>
               </>
             )}
             <dt>Metric</dt>
             <dd>{measure.metric}</dd>
           </dl>
+
+          {measure.todo.length > 0 && (
+            <>
+              <h3>To do</h3>
+              <ul class="todo">{measure.todo.map((x) => <li set:html={inlineCode(x)} />)}</ul>
+            </>
+          )}
 
           <MeasureChart data={measureData} />
           {measureData.placeholder && (

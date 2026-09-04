@@ -131,26 +131,31 @@ exercise:
 
 build:
   goal: >
-    Tiny Agent v0 is the smallest agent that does real work: a loop, three tools, and a turn
-    limit. You write the loop and the tools; the recorder, fixtures and runner are provided.
-    Running it records the trace shown below.
+    Tiny Agent v0 is the first version of the agent you build across this course: a model, a
+    loop, three tools, and a turn limit, in a few dozen lines. In this lesson it fixes a
+    misspelled greeting — it lists the files in a small repository, reads them to find the
+    greeting, and edits the file to correct it. You write the loop and the tools; the recorder,
+    the fixture files, and the runner are provided.
   provided:
-    - "`agent/harness/trace.py` — the recorder your loop calls; it writes the trace, so you never build the JSON by hand"
-    - "`agent/harness/repo.py` — the four-file greeting repository the agent works on"
-    - "`agent/v0/__main__.py` — the runner that wires everything together and saves the trace"
-  yourJob:
-    - "`agent/v0/loop.py` — the loop: send the conversation, read `stop_reason`, run tools while it is `tool_use`, append each result, and stop on any other reason or at the turn limit"
-    - "`agent/v0/tools.py` — the bodies of `list_files`, `read_file` and `edit_file`"
+    - "`agent/harness/trace.py` — the recorder your loop calls. It writes the trace, so you never build the JSON by hand."
+    - "`agent/harness/repo.py` — the four-file greeting repository the agent works on."
+    - "`agent/v0/__main__.py` — the runner that wires everything together and saves the trace."
+  todo:
+    - "`agent/v0/loop.py` — the loop. Send the conversation to the model, run any tool it asks for, add the result, and repeat until the model stops or the turn limit is reached. The full recipe is in the file's docstring."
+    - "`agent/v0/tools.py` — the three tool bodies: `list_files`, `read_file`, and `edit_file`."
   run: "uv run --env-file .env python -m agent.v0"
-  success: "A trace appears at `src/content/traces/02-agent-loop.json`, and the demo below replays your run."
+  outcome: >
+    After you run your code, the trace is saved to `src/content/traces/02-agent-loop.json`. The
+    interactive demo below reads that file, so you can step through your own run one message at a
+    time.
   repoPath: agent/v0
 
 measure:
   question: >
     How does the number of input tokens grow as a task needs more sequential tool calls?
   hypothesis: >
-    Because every step resends the whole conversation, the cumulative input tokens grow faster
-    than the number of steps — roughly with its square.
+    Every step resends the whole conversation, so the cumulative input tokens grow faster than the
+    number of steps — roughly with its square.
   variants:
     - "Task A — a task that needs 1 tool call"
     - "Task B — a task that needs 3"
@@ -161,6 +166,9 @@ measure:
     - "the same turn limit"
     - "the same fixture shape — a chain of tiny files, each naming the next"
   metric: "cumulative input tokens across the whole run"
+  todo:
+    - "Write the experiment in `experiments/token-growth/`: run the agent on the four tasks and record the input tokens for each request."
+    - "Run it with your key, and commit the numbers to `experiments/token-growth/results.json`, which the chart below reads."
   results: experiments/token-growth/results.json
   repoPath: experiments/token-growth
 

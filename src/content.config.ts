@@ -154,9 +154,9 @@ const lessons = defineCollection({
         .object({
           goal: z.string(),
           provided: z.array(z.string()).default([]),
-          yourJob: z.array(z.string()).default([]),
+          todo: z.array(z.string()).default([]),
           run: z.string(),
-          success: z.string(),
+          outcome: z.string(),
           repoPath: z.string(),
         })
         .optional(),
@@ -174,6 +174,7 @@ const lessons = defineCollection({
           variants: z.array(z.string()).default([]),
           controlledVariables: z.array(z.string()).default([]),
           metric: z.string(),
+          todo: z.array(z.string()).default([]),
           result: z.string().default(''),
           learned: z.string().default(''),
           results: z.string(),
