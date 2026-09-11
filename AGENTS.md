@@ -25,6 +25,12 @@ Run `npm run check` before committing. It catches the countable part of the styl
 whether a term was really defined and a mechanism really explained is editorial, so
 reread the draft as someone seeing the vocabulary for the first time.
 
+The Build/Measure code ships as first-class **solutions** (`agent/v*/`, `experiments/*/`) plus
+**generated blank exercises** under `learn/`. After editing a solution's signature, docstring, or
+file set, regenerate: `uv run scripts/make_exercises.py`. `npm run check` runs `check:exercises`,
+which fails if `learn/` is stale. Files the reader implements are marked `# tiny-agents:exercise`;
+see the "Solutions and exercises" section of [LESSONS.md](LESSONS.md).
+
 ## Development
 
 The commands are in [README.md](README.md). Two things that are specific to working here

@@ -44,4 +44,4 @@ from typing import Any
 
 
 def run(task: str, *, client: Any, rec: Any, tools: list[dict], dispatch: Any, max_turns: int = 8) -> None:
-    raise NotImplementedError("Implement the agent loop — the recipe is in this module's docstring.")
+    raise NotImplementedError('TODO: implement run')

@@ -222,6 +222,30 @@ Two things to expect and not mistake for bugs:
 
 ---
 
+## Solutions and exercises (the Build and Measure code)
+
+A lesson's Build and Measure code ships in two tiers, both public:
+
+- **Solutions** are the real, runnable code, first-class at the repo root: `agent/v*/` and
+  `experiments/*/`. They are imported (`agent.v0`), run to record the site's traces and results,
+  and are what the page's "See the solution" links point at. Maria writes them.
+- **Blank exercises** are the same files with the bodies removed — a starting point for anyone who
+  wants to do them — under `learn/`, mirroring the structure (`learn/agent/v0/`, `learn/experiments/…`).
+
+The blanks are **generated from the solutions**, never hand-edited:
+
+```sh
+uv run scripts/make_exercises.py          # (re)write learn/ from the solutions
+npm run check:exercises                    # fails if learn/ is stale (part of npm run check)
+```
+
+A file the reader implements carries `# tiny-agents:exercise` as its first line; the generator
+blanks its function bodies (keeping decorators, signatures and docstrings) and copies everything
+else verbatim. Recorded answers (`results.json`) are excluded from `learn/`. So: put the reader's
+work in marked files, keep the recipe in docstrings (they survive), and regenerate `learn/` after
+any change to a signature, a docstring, or the set of files — a body-only edit doesn't change the
+blank and needs no regeneration.
+
 ## Definition of done
 
 - [ ] Four or five points, each with at least one pointer

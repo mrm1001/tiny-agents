@@ -156,8 +156,9 @@ const hasTracks = Boolean(build || (measure && measureData));
           <h3>Run it</h3>
           <pre><code>{build.run}</code></pre>
           <p set:html={inlineCode(build.outcome)} />
-          <p>
-            <a href={GITHUB + build.repoPath} rel="noopener">See the code on GitHub &rarr;</a>
+          <p class="repo-links">
+            <a href={GITHUB + build.repoPath} rel="noopener">See the solution on GitHub &rarr;</a>
+            <a href={`${GITHUB}learn/${build.repoPath}`} rel="noopener">Start from the blank exercise &rarr;</a>
           </p>
 
           {trace && <TraceViewer trace={trace} client:load />}
@@ -220,8 +221,9 @@ const hasTracks = Boolean(build || (measure && measureData));
               <p>{measure.learned}</p>
             </>
           )}
-          <p>
+          <p class="repo-links">
             <a href={GITHUB + measure.repoPath} rel="noopener">See the experiment on GitHub &rarr;</a>
+            <a href={`${GITHUB}learn/${measure.repoPath}`} rel="noopener">Start from the blank exercise &rarr;</a>
           </p>
         </section>
       )

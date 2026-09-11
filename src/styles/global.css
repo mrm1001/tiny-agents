@@ -751,6 +751,8 @@ a.lesson-row:hover { background: var(--surface); border-left-color: var(--accent
 .track ul.todo { margin: 0.4rem 0 1rem; }
 .track ul.todo li { margin: 0.35rem 0; }
 
+.repo-links { display: flex; flex-wrap: wrap; gap: 0.4rem 1.5rem; }
+
 /* --- sources and extra reading ------------------------------------------- */
 
 .sources { margin-top: 2.75rem; }
