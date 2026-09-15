@@ -246,6 +246,15 @@ work in marked files, keep the recipe in docstrings (they survive), and regenera
 any change to a signature, a docstring, or the set of files — a body-only edit doesn't change the
 blank and needs no regeneration.
 
+**The instructions inside a reader's file must be a prose recipe, never code or pseudo-code.**
+Because docstrings survive into the generated blank, any code or pseudo-code written there is the
+answer, sitting right above the `raise NotImplementedError` — the "exercise" then reduces to copying
+the docstring into the body, which is no exercise at all. So a marked file's docstring describes
+what the function must do in words (the steps, and conceptual notes worth knowing), and states the
+contract for its arguments — but shows no implementation, not even a sketch. The worked code is the
+solution's *body*; it lives only there and is stripped from `learn/`. `agent/v0/loop.py` is the
+model to copy: a prose "what it has to do" list, a short `Notes:` block, and a `Parameters` section.
+
 ## Definition of done
 
 - [ ] Four or five points, each with at least one pointer

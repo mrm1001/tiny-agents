@@ -2,10 +2,17 @@
   "id": "02-agent-loop",
   "lesson": "02-the-agent-loop",
   "version": "v0",
-  "recordedAt": "2026-09-04T00:00:00+00:00",
+  "recordedAt": "2026-09-11T16:12:57.553253+00:00",
   "model": "claude-opus-5",
-  "agentSha": "placeholder",
-  "config": { "tools": ["list_files", "read_file", "edit_file"], "maxTurns": 8 },
+  "agentSha": "f6e40d0",
+  "config": {
+    "tools": [
+      "list_files",
+      "read_file",
+      "edit_file"
+    ],
+    "maxTurns": 8
+  },
   "repo": {
     "greet_a.py": "def hi():\n    return 1  # no greeting here\n",
     "greet_b.py": "TITLE = 'greetings module'\n",
@@ -13,40 +20,451 @@
     "greet_d.py": "# helpers for the greeting package\n"
   },
   "messages": [
-    { "mi": 0, "role": "user", "blocks": [{ "type": "text", "text": "The greeting printed by this package is misspelled. Find the file it lives in, fix the spelling, and tell me what you changed." }] },
-    { "mi": 1, "role": "assistant", "blocks": [
-      { "type": "thinking", "text": "I'll list the files first, then read each one until I find the greeting." },
-      { "type": "tool_use", "id": "t1", "name": "list_files", "input": {} }
-    ] },
-    { "mi": 2, "role": "user", "blocks": [{ "type": "tool_result", "tool_use_id": "t1", "content": "greet_a.py\ngreet_b.py\ngreet_c.py\ngreet_d.py" }] },
-    { "mi": 3, "role": "assistant", "blocks": [{ "type": "tool_use", "id": "t2", "name": "read_file", "input": { "path": "greet_a.py" } }] },
-    { "mi": 4, "role": "user", "blocks": [{ "type": "tool_result", "tool_use_id": "t2", "content": "def hi():\n    return 1  # no greeting here" }] },
-    { "mi": 5, "role": "assistant", "blocks": [{ "type": "tool_use", "id": "t3", "name": "read_file", "input": { "path": "greet_c.py" } }] },
-    { "mi": 6, "role": "user", "blocks": [{ "type": "tool_result", "tool_use_id": "t3", "content": "GREETING = \"Helo, world\"" }] },
-    { "mi": 7, "role": "assistant", "blocks": [{ "type": "tool_use", "id": "t4", "name": "edit_file", "input": { "path": "greet_c.py", "find": "Helo", "replace": "Hello" } }] },
-    { "mi": 8, "role": "user", "blocks": [{ "type": "tool_result", "tool_use_id": "t4", "content": "edited: 1 replacement" }] },
-    { "mi": 9, "role": "assistant", "blocks": [{ "type": "text", "text": "Fixed the typo in greet_c.py: the greeting was \"Helo, world\", now \"Hello, world\"." }] }
+    {
+      "mi": 0,
+      "role": "user",
+      "blocks": [
+        {
+          "type": "text",
+          "text": "The greeting printed by this package is misspelled. Find the file it lives in, fix the spelling, and tell me what you changed."
+        }
+      ]
+    },
+    {
+      "mi": 1,
+      "role": "assistant",
+      "blocks": [
+        {
+          "type": "text",
+          "text": "I'll start by exploring the repository structure."
+        },
+        {
+          "type": "tool_use",
+          "id": "toolu_017KxrfQedfBKHVwschPvF6q",
+          "name": "list_files",
+          "input": {}
+        }
+      ]
+    },
+    {
+      "mi": 2,
+      "role": "user",
+      "blocks": [
+        {
+          "type": "tool_result",
+          "tool_use_id": "toolu_017KxrfQedfBKHVwschPvF6q",
+          "content": "greet_d.py\ngreet_a.py\ngreet_b.py\ngreet_c.py"
+        }
+      ]
+    },
+    {
+      "mi": 3,
+      "role": "assistant",
+      "blocks": [
+        {
+          "type": "thinking",
+          "text": "I'll go ahead and read through all four files.\n\n"
+        },
+        {
+          "type": "text",
+          "text": "Four candidate files. Let me read them all."
+        },
+        {
+          "type": "tool_use",
+          "id": "toolu_01PBe8ase83jT3UbFzoB1PXx",
+          "name": "read_file",
+          "input": {
+            "path": "greet_a.py"
+          }
+        },
+        {
+          "type": "tool_use",
+          "id": "toolu_014Ay5pYDawv8NGMev4wvwkH",
+          "name": "read_file",
+          "input": {
+            "path": "greet_b.py"
+          }
+        },
+        {
+          "type": "tool_use",
+          "id": "toolu_01H9F8ruYE6kLTgXHcAm82R6",
+          "name": "read_file",
+          "input": {
+            "path": "greet_c.py"
+          }
+        },
+        {
+          "type": "tool_use",
+          "id": "toolu_01N5TyTMWSDK1CAMJYLr2tuh",
+          "name": "read_file",
+          "input": {
+            "path": "greet_d.py"
+          }
+        }
+      ]
+    },
+    {
+      "mi": 4,
+      "role": "user",
+      "blocks": [
+        {
+          "type": "tool_result",
+          "tool_use_id": "toolu_01PBe8ase83jT3UbFzoB1PXx",
+          "content": "def hi():\n    return 1  # no greeting here\n"
+        },
+        {
+          "type": "tool_result",
+          "tool_use_id": "toolu_014Ay5pYDawv8NGMev4wvwkH",
+          "content": "TITLE = 'greetings module'\n"
+        },
+        {
+          "type": "tool_result",
+          "tool_use_id": "toolu_01H9F8ruYE6kLTgXHcAm82R6",
+          "content": "GREETING = \"Helo, world\"\n"
+        },
+        {
+          "type": "tool_result",
+          "tool_use_id": "toolu_01N5TyTMWSDK1CAMJYLr2tuh",
+          "content": "# helpers for the greeting package\n"
+        }
+      ]
+    },
+    {
+      "mi": 5,
+      "role": "assistant",
+      "blocks": [
+        {
+          "type": "thinking",
+          "text": "I found the typo \"Helo, world\" in greet_c.py and just need to correct it to \"Hello, world\" \u2014 a minimal spelling fix without touching capitalization elsewhere.\n\n"
+        },
+        {
+          "type": "text",
+          "text": "Found it. `greet_c.py` holds the greeting string, and it reads `\"Helo, world\"` \u2014 \"Helo\" is missing an `l`."
+        },
+        {
+          "type": "tool_use",
+          "id": "toolu_01TaVXMwiHeBH86D3zVcTTig",
+          "name": "edit_file",
+          "input": {
+            "path": "greet_c.py",
+            "find": "GREETING = \"Helo, world\"",
+            "replace": "GREETING = \"Hello, world\""
+          }
+        }
+      ]
+    },
+    {
+      "mi": 6,
+      "role": "user",
+      "blocks": [
+        {
+          "type": "tool_result",
+          "tool_use_id": "toolu_01TaVXMwiHeBH86D3zVcTTig",
+          "content": "replaced 1 occurrence(s) of 'GREETING = \"Helo, world\"' with 'GREETING = \"Hello, world\"' in greet_c.py"
+        }
+      ]
+    },
+    {
+      "mi": 7,
+      "role": "assistant",
+      "blocks": [
+        {
+          "type": "tool_use",
+          "id": "toolu_01AAketKz8YA2nP1eAtSbrvw",
+          "name": "read_file",
+          "input": {
+            "path": "greet_c.py"
+          }
+        }
+      ]
+    },
+    {
+      "mi": 8,
+      "role": "user",
+      "blocks": [
+        {
+          "type": "tool_result",
+          "tool_use_id": "toolu_01AAketKz8YA2nP1eAtSbrvw",
+          "content": "GREETING = \"Hello, world\"\n"
+        }
+      ]
+    },
+    {
+      "mi": 9,
+      "role": "assistant",
+      "blocks": [
+        {
+          "type": "text",
+          "text": "Done.\n\n**What I changed:** one line in `greet_c.py`\n\n```diff\n-GREETING = \"Helo, world\"\n+GREETING = \"Hello, world\"\n```\n\n**How I found it:** I read all four files in the repo, since the names gave no hint which held the greeting:\n\n- `greet_a.py` \u2014 a `hi()` function that just returns `1`, with a comment saying there's no greeting\n- `greet_b.py` \u2014 `TITLE = 'greetings module'`, a title rather than a greeting, and spelled correctly\n- `greet_c.py` \u2014 `GREETING = \"Helo, world\"` \u2190 the only actual greeting text, and misspelled\n- `greet_d.py` \u2014 a bare comment, no code\n\nSo `greet_c.py` was the unambiguous match, and the fix was adding the missing `l` to \"Helo\".\n\nOne thing worth flagging: you described this as the greeting *printed* by the package, but nothing in these four files actually prints or imports anything \u2014 `greet_c.py` only defines the constant. Whatever does the printing must live outside this repo (or hasn't been written yet). If you expected a `print` call here too, it's missing, and you may want to check that the consumer of `GREETING` doesn't hardcode its own copy of the misspelled string."
+        }
+      ]
+    }
   ],
   "requests": [
-    { "ri": 1, "sentMessages": 1, "stopReason": "tool_use", "usage": { "inputTokens": 950, "outputTokens": 28 } },
-    { "ri": 2, "sentMessages": 3, "stopReason": "tool_use", "usage": { "inputTokens": 1180, "outputTokens": 22 } },
-    { "ri": 3, "sentMessages": 5, "stopReason": "tool_use", "usage": { "inputTokens": 1410, "outputTokens": 22 } },
-    { "ri": 4, "sentMessages": 7, "stopReason": "tool_use", "usage": { "inputTokens": 1650, "outputTokens": 34 } },
-    { "ri": 5, "sentMessages": 9, "stopReason": "end_turn", "usage": { "inputTokens": 1890, "outputTokens": 40 } }
+    {
+      "ri": 1,
+      "sentMessages": 1,
+      "stopReason": "tool_use",
+      "usage": {
+        "inputTokens": 569,
+        "outputTokens": 41
+      }
+    },
+    {
+      "ri": 2,
+      "sentMessages": 3,
+      "stopReason": "tool_use",
+      "usage": {
+        "inputTokens": 642,
+        "outputTokens": 224
+      }
+    },
+    {
+      "ri": 3,
+      "sentMessages": 5,
+      "stopReason": "tool_use",
+      "usage": {
+        "inputTokens": 1025,
+        "outputTokens": 290
+      }
+    },
+    {
+      "ri": 4,
+      "sentMessages": 7,
+      "stopReason": "tool_use",
+      "usage": {
+        "inputTokens": 1372,
+        "outputTokens": 52
+      }
+    },
+    {
+      "ri": 5,
+      "sentMessages": 9,
+      "stopReason": "end_turn",
+      "usage": {
+        "inputTokens": 1442,
+        "outputTokens": 410
+      }
+    }
   ],
   "steps": [
-    { "i": 0, "mi": 0, "ri": null, "kind": "user", "text": "The greeting printed by this package is misspelled. Find the file it lives in, fix the spelling, and tell me what you changed." },
-    { "i": 1, "mi": 1, "ri": 1, "kind": "thinking", "text": "I'll list the files first, then read each one until I find the greeting." },
-    { "i": 2, "mi": 1, "ri": 1, "kind": "tool_use", "toolUseId": "t1", "name": "list_files", "input": {} },
-    { "i": 3, "mi": 2, "ri": 1, "kind": "tool_result", "toolUseId": "t1", "name": "list_files", "output": "greet_a.py\ngreet_b.py\ngreet_c.py\ngreet_d.py", "isError": false, "truncated": false },
-    { "i": 4, "mi": 3, "ri": 2, "kind": "tool_use", "toolUseId": "t2", "name": "read_file", "input": { "path": "greet_a.py" } },
-    { "i": 5, "mi": 4, "ri": 2, "kind": "tool_result", "toolUseId": "t2", "name": "read_file", "output": "def hi():\n    return 1  # no greeting here", "isError": false, "truncated": false },
-    { "i": 6, "mi": 5, "ri": 3, "kind": "tool_use", "toolUseId": "t3", "name": "read_file", "input": { "path": "greet_c.py" } },
-    { "i": 7, "mi": 6, "ri": 3, "kind": "tool_result", "toolUseId": "t3", "name": "read_file", "output": "GREETING = \"Helo, world\"", "isError": false, "truncated": false },
-    { "i": 8, "mi": 7, "ri": 4, "kind": "tool_use", "toolUseId": "t4", "name": "edit_file", "input": { "path": "greet_c.py", "find": "Helo", "replace": "Hello" } },
-    { "i": 9, "mi": 8, "ri": 4, "kind": "tool_result", "toolUseId": "t4", "name": "edit_file", "output": "edited: 1 replacement", "isError": false, "truncated": false },
-    { "i": 10, "mi": 9, "ri": 5, "kind": "text", "text": "Fixed the typo in greet_c.py: the greeting was \"Helo, world\", now \"Hello, world\"." },
-    { "i": 11, "mi": 9, "ri": 5, "kind": "end", "reason": "stop_reason", "stopReason": "end_turn", "stopDetails": null, "truncated": false }
+    {
+      "i": 0,
+      "mi": 0,
+      "ri": null,
+      "kind": "user",
+      "text": "The greeting printed by this package is misspelled. Find the file it lives in, fix the spelling, and tell me what you changed."
+    },
+    {
+      "i": 1,
+      "mi": 1,
+      "ri": 1,
+      "kind": "text",
+      "text": "I'll start by exploring the repository structure."
+    },
+    {
+      "i": 2,
+      "mi": 1,
+      "ri": 1,
+      "kind": "tool_use",
+      "toolUseId": "toolu_017KxrfQedfBKHVwschPvF6q",
+      "name": "list_files",
+      "input": {}
+    },
+    {
+      "i": 3,
+      "mi": 2,
+      "ri": 1,
+      "kind": "tool_result",
+      "toolUseId": "toolu_017KxrfQedfBKHVwschPvF6q",
+      "name": "list_files",
+      "output": "greet_d.py\ngreet_a.py\ngreet_b.py\ngreet_c.py",
+      "isError": false,
+      "truncated": false
+    },
+    {
+      "i": 4,
+      "mi": 3,
+      "ri": 2,
+      "kind": "thinking",
+      "text": "I'll go ahead and read through all four files.\n\n"
+    },
+    {
+      "i": 5,
+      "mi": 3,
+      "ri": 2,
+      "kind": "text",
+      "text": "Four candidate files. Let me read them all."
+    },
+    {
+      "i": 6,
+      "mi": 3,
+      "ri": 2,
+      "kind": "tool_use",
+      "toolUseId": "toolu_01PBe8ase83jT3UbFzoB1PXx",
+      "name": "read_file",
+      "input": {
+        "path": "greet_a.py"
+      }
+    },
+    {
+      "i": 7,
+      "mi": 3,
+      "ri": 2,
+      "kind": "tool_use",
+      "toolUseId": "toolu_014Ay5pYDawv8NGMev4wvwkH",
+      "name": "read_file",
+      "input": {
+        "path": "greet_b.py"
+      }
+    },
+    {
+      "i": 8,
+      "mi": 3,
+      "ri": 2,
+      "kind": "tool_use",
+      "toolUseId": "toolu_01H9F8ruYE6kLTgXHcAm82R6",
+      "name": "read_file",
+      "input": {
+        "path": "greet_c.py"
+      }
+    },
+    {
+      "i": 9,
+      "mi": 3,
+      "ri": 2,
+      "kind": "tool_use",
+      "toolUseId": "toolu_01N5TyTMWSDK1CAMJYLr2tuh",
+      "name": "read_file",
+      "input": {
+        "path": "greet_d.py"
+      }
+    },
+    {
+      "i": 10,
+      "mi": 4,
+      "ri": 2,
+      "kind": "tool_result",
+      "toolUseId": "toolu_01PBe8ase83jT3UbFzoB1PXx",
+      "name": "read_file",
+      "output": "def hi():\n    return 1  # no greeting here\n",
+      "isError": false,
+      "truncated": false
+    },
+    {
+      "i": 11,
+      "mi": 4,
+      "ri": 2,
+      "kind": "tool_result",
+      "toolUseId": "toolu_014Ay5pYDawv8NGMev4wvwkH",
+      "name": "read_file",
+      "output": "TITLE = 'greetings module'\n",
+      "isError": false,
+      "truncated": false
+    },
+    {
+      "i": 12,
+      "mi": 4,
+      "ri": 2,
+      "kind": "tool_result",
+      "toolUseId": "toolu_01H9F8ruYE6kLTgXHcAm82R6",
+      "name": "read_file",
+      "output": "GREETING = \"Helo, world\"\n",
+      "isError": false,
+      "truncated": false
+    },
+    {
+      "i": 13,
+      "mi": 4,
+      "ri": 2,
+      "kind": "tool_result",
+      "toolUseId": "toolu_01N5TyTMWSDK1CAMJYLr2tuh",
+      "name": "read_file",
+      "output": "# helpers for the greeting package\n",
+      "isError": false,
+      "truncated": false
+    },
+    {
+      "i": 14,
+      "mi": 5,
+      "ri": 3,
+      "kind": "thinking",
+      "text": "I found the typo \"Helo, world\" in greet_c.py and just need to correct it to \"Hello, world\" \u2014 a minimal spelling fix without touching capitalization elsewhere.\n\n"
+    },
+    {
+      "i": 15,
+      "mi": 5,
+      "ri": 3,
+      "kind": "text",
+      "text": "Found it. `greet_c.py` holds the greeting string, and it reads `\"Helo, world\"` \u2014 \"Helo\" is missing an `l`."
+    },
+    {
+      "i": 16,
+      "mi": 5,
+      "ri": 3,
+      "kind": "tool_use",
+      "toolUseId": "toolu_01TaVXMwiHeBH86D3zVcTTig",
+      "name": "edit_file",
+      "input": {
+        "path": "greet_c.py",
+        "find": "GREETING = \"Helo, world\"",
+        "replace": "GREETING = \"Hello, world\""
+      }
+    },
+    {
+      "i": 17,
+      "mi": 6,
+      "ri": 3,
+      "kind": "tool_result",
+      "toolUseId": "toolu_01TaVXMwiHeBH86D3zVcTTig",
+      "name": "edit_file",
+      "output": "replaced 1 occurrence(s) of 'GREETING = \"Helo, world\"' with 'GREETING = \"Hello, world\"' in greet_c.py",
+      "isError": false,
+      "truncated": false
+    },
+    {
+      "i": 18,
+      "mi": 7,
+      "ri": 4,
+      "kind": "tool_use",
+      "toolUseId": "toolu_01AAketKz8YA2nP1eAtSbrvw",
+      "name": "read_file",
+      "input": {
+        "path": "greet_c.py"
+      }
+    },
+    {
+      "i": 19,
+      "mi": 8,
+      "ri": 4,
+      "kind": "tool_result",
+      "toolUseId": "toolu_01AAketKz8YA2nP1eAtSbrvw",
+      "name": "read_file",
+      "output": "GREETING = \"Hello, world\"\n",
+      "isError": false,
+      "truncated": false
+    },
+    {
+      "i": 20,
+      "mi": 9,
+      "ri": 5,
+      "kind": "text",
+      "text": "Done.\n\n**What I changed:** one line in `greet_c.py`\n\n```diff\n-GREETING = \"Helo, world\"\n+GREETING = \"Hello, world\"\n```\n\n**How I found it:** I read all four files in the repo, since the names gave no hint which held the greeting:\n\n- `greet_a.py` \u2014 a `hi()` function that just returns `1`, with a comment saying there's no greeting\n- `greet_b.py` \u2014 `TITLE = 'greetings module'`, a title rather than a greeting, and spelled correctly\n- `greet_c.py` \u2014 `GREETING = \"Helo, world\"` \u2190 the only actual greeting text, and misspelled\n- `greet_d.py` \u2014 a bare comment, no code\n\nSo `greet_c.py` was the unambiguous match, and the fix was adding the missing `l` to \"Helo\".\n\nOne thing worth flagging: you described this as the greeting *printed* by the package, but nothing in these four files actually prints or imports anything \u2014 `greet_c.py` only defines the constant. Whatever does the printing must live outside this repo (or hasn't been written yet). If you expected a `print` call here too, it's missing, and you may want to check that the consumer of `GREETING` doesn't hardcode its own copy of the misspelled string."
+    },
+    {
+      "i": 21,
+      "mi": 9,
+      "ri": 5,
+      "kind": "end",
+      "reason": "stop_reason",
+      "stopReason": "end_turn",
+      "stopDetails": null,
+      "truncated": false
+    }
   ],
-  "usage": { "inputTokens": 7080, "outputTokens": 146, "requests": 5 }
+  "usage": {
+    "inputTokens": 5050,
+    "outputTokens": 1017,
+    "requests": 5
+  }
 }

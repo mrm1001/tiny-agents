@@ -13,14 +13,19 @@ from pathlib import Path
 
 def list_files(repo: Path) -> str:
     """Return the names of the files in `repo`, one per line."""
-    raise NotImplementedError("TODO (lesson 2): list the files in the repo, one name per line")
+    return "\n".join([p.name for p in repo.iterdir()])
 
 
 def read_file(repo: Path, path: str) -> str:
     """Return the contents of `path` within `repo`."""
-    raise NotImplementedError("TODO (lesson 2): read `path` inside the repo and return its text")
+    return (repo / path).read_text()
 
 
 def edit_file(repo: Path, path: str, find: str, replace: str) -> str:
     """Replace `find` with `replace` in `path`; return a short confirmation."""
-    raise NotImplementedError("TODO (lesson 2): replace `find` with `replace` in the file and confirm")
+    file_content = read_file(repo, path)
+    replacements = file_content.count(find)
+    if replacements == 0:
+        return f"no occurrences of {find!r} in {path} — nothing changed"
+    (repo / path).write_text(file_content.replace(find, replace))
+    return f"replaced {replacements} occurrence(s) of {find!r} with {replace!r} in {path}"
