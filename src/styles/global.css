@@ -24,6 +24,13 @@
   --accent: #3564ca;
   --accent-dim: #9db4ea;
 
+  /* Trace-viewer speakers. The assistant reuses --accent; --muted is the "end"
+     grey. These two are the other voices: violet for you, amber for the tool.
+     Both are solved against white for the small speaker labels (4.5:1) and carry
+     a white glyph on the avatar (3:1). Checked in check:contrast. */
+  --spk-user: #5f3dc4;
+  --spk-tool: #8a5a0e;
+
   /* --c-locked is a *graphical* token (dot, padlock, dashed stroke, card edge).
      Locked *text* uses --muted, which clears 4.5:1; a grey dim enough to read as
      "locked" cannot also be legible as a label. */
@@ -833,6 +840,15 @@ a.lesson-row:hover { background: var(--surface); border-left-color: var(--accent
   .lesson-row { grid-template-columns: 2.25rem minmax(0, 1fr); }
   .lesson-row .tags { grid-row: 3; grid-column: 2; }
   .section-head .hint { display: none; }
+}
+
+/* Trace viewer — the chat bubble gets a small pop as you step. The rest of the
+   viewer is styled inline in TraceViewer.tsx; only the keyframe needs a sheet.
+   The global reduced-motion guard below already turns this off. */
+.trace-bubble-row { animation: trace-pop 0.18s ease-out both; }
+@keyframes trace-pop {
+  from { opacity: 0; transform: translateY(3px); }
+  to   { opacity: 1; transform: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {

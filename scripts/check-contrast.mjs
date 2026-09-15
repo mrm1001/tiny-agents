@@ -35,6 +35,7 @@ const P = {
   accent: tok('accent'), locked: tok('c-locked'), progress: tok('c-progress'), done: tok('c-done'),
   track: tok('c-track'),
   frameFill: tok('c-frame-fill'), nodeFill: tok('c-node-fill'), lockedFill: tok('c-locked-fill'),
+  spkUser: tok('spk-user'), spkTool: tok('spk-tool'), white: '#ffffff',
 };
 
 // [description, fg token, bg token, minimum]
@@ -61,6 +62,8 @@ const TEXT = [
   ['notes heading',        'fgStrong', 'surface', 4.5],
   ['notes link',           'accent', 'surface', 4.5],
   ['code lifted in notes', 'fg', 'bgRaised', 4.5],
+  ['trace label: you',     'spkUser', 'bgRaised', 4.5],
+  ['trace label: tool',    'spkTool', 'bgRaised', 4.5],
 ];
 
 const GRAPHICS = [
@@ -74,6 +77,9 @@ const GRAPHICS = [
   ['padlock',              'locked', 'lockedFill', 3],
   ['bar fill: done',       'done', 'track', 3],
   ['bar fill: in progress','progress', 'track', 3],
+  ['avatar glyph: you',    'white', 'spkUser', 3],
+  ['avatar glyph: bot',    'white', 'accent', 3],
+  ['avatar glyph: tool',   'white', 'spkTool', 3],
 ];
 
 const SEPARATIONS = [
