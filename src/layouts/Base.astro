@@ -14,13 +14,6 @@ const {
   description = 'Learn how AI agents work by progressively building a small coding agent, in 36 five-minute lessons.',
   section,
 } = Astro.props;
-
-const nav = [
-  { label: 'Learn', url: href('/lessons/'), key: 'learn' as const },
-  { label: 'Build', soon: true },
-  { label: 'Measure', soon: true },
-  { label: 'Journey', soon: true },
-];
 ---
 
 <!doctype html>
@@ -47,19 +40,6 @@ const nav = [
           aria-label="Tiny Agents — home"
           aria-current={section === 'home' ? 'page' : undefined}>tiny&#8209;agents</a
         >
-        <nav class="nav" aria-label="Sections">
-          {
-            nav.map((item) =>
-              item.soon ? (
-                <span class="soon" aria-disabled="true">{item.label}</span>
-              ) : (
-                <a href={item.url} aria-current={section === item.key ? 'page' : undefined}>
-                  {item.label}
-                </a>
-              )
-            )
-          }
-        </nav>
       </div>
     </header>
 

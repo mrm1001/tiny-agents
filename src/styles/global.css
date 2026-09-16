@@ -160,32 +160,6 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 2.5rem 0; }
   margin-right: 0.45rem;
 }
 
-.nav {
-  display: flex;
-  gap: 1.1rem;
-  margin-left: auto;
-  font-family: var(--mono);
-  font-size: 0.85rem;
-}
-
-.nav a { text-decoration: none; color: var(--muted); }
-.nav a:hover, .nav a[aria-current="page"] { color: var(--fg-strong); }
-
-.nav .soon {
-  color: var(--faint);
-  cursor: default;
-}
-
-.nav .soon::after {
-  content: "soon";
-  font-size: 0.7em;
-  margin-left: 0.3rem;
-  padding: 0.05em 0.3em;
-  border: 1px solid var(--border-hi);
-  border-radius: 3px;
-  vertical-align: 0.15em;
-}
-
 main { padding-block: 2.5rem 4rem; }
 
 .site-footer {
@@ -758,7 +732,40 @@ a.lesson-row:hover { background: var(--surface); border-left-color: var(--accent
 .track ul.todo { margin: 0.4rem 0 1rem; }
 .track ul.todo li { margin: 0.35rem 0; }
 
+/* Within a Build/Measure track, the reader's task and the worked solution each
+   get their own panel so the two never blur together: blue "Your task" (what
+   you write), green "The solution" (the recorded run and the answer code). */
+.track-task,
+.track-solution {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.15rem 1.15rem;
+  margin: 1.25rem 0 0;
+}
+.track-task { border-left: 3px solid var(--accent); background: var(--bg-raised); }
+.track-solution {
+  border-left: 3px solid var(--c-done);
+  background: var(--surface);
+  margin-top: 1.5rem;
+}
+.track-task > .k,
+.track-solution > .k {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.track-task > .k { color: var(--accent); }
+.track-solution > .k { color: var(--c-done); }
+/* The label carries the top spacing, so the first block sits flush under it. */
+.track-task > :is(h3, ul, p, pre):first-of-type,
+.track-solution > :is(h3, p):first-of-type { margin-top: 0; }
+
 .repo-links { display: flex; flex-wrap: wrap; gap: 0.4rem 1.5rem; }
+.track-task .repo-links,
+.track-solution .repo-links { margin-bottom: 0; }
 
 /* --- sources and extra reading ------------------------------------------- */
 

@@ -139,29 +139,38 @@ const hasTracks = Boolean(build || (measure && measureData));
           <h2 id="h-build">Build — write the agent</h2>
           <p>{build.goal}</p>
 
-          {build.provided.length > 0 && (
-            <>
-              <h3>Provided for you — don&rsquo;t edit these</h3>
-              <ul>{build.provided.map((x) => <li set:html={inlineCode(x)} />)}</ul>
-            </>
-          )}
+          <div class="track-task">
+            <span class="k">Your task</span>
 
-          {build.todo.length > 0 && (
-            <>
-              <h3>To do</h3>
-              <ul class="todo">{build.todo.map((x) => <li set:html={inlineCode(x)} />)}</ul>
-            </>
-          )}
+            {build.provided.length > 0 && (
+              <>
+                <h3>Provided for you — don&rsquo;t edit these</h3>
+                <ul>{build.provided.map((x) => <li set:html={inlineCode(x)} />)}</ul>
+              </>
+            )}
 
-          <h3>Run it</h3>
-          <pre><code>{build.run}</code></pre>
-          <p set:html={inlineCode(build.outcome)} />
-          <p class="repo-links">
-            <a href={GITHUB + build.repoPath} rel="noopener">See the solution on GitHub &rarr;</a>
-            <a href={`${GITHUB}learn/${build.repoPath}`} rel="noopener">Start from the blank exercise &rarr;</a>
-          </p>
+            {build.todo.length > 0 && (
+              <>
+                <h3>To do</h3>
+                <ul class="todo">{build.todo.map((x) => <li set:html={inlineCode(x)} />)}</ul>
+              </>
+            )}
 
-          {trace && <TraceViewer trace={trace} client:load />}
+            <h3>Run it</h3>
+            <pre><code>{build.run}</code></pre>
+            <p class="repo-links">
+              <a href={`${GITHUB}learn/${build.repoPath}`} rel="noopener">Start from the blank exercise &rarr;</a>
+            </p>
+          </div>
+
+          <div class="track-solution">
+            <span class="k">The solution</span>
+            <p set:html={inlineCode(build.outcome)} />
+            {trace && <TraceViewer trace={trace} client:load />}
+            <p class="repo-links">
+              <a href={GITHUB + build.repoPath} rel="noopener">See the solution on GitHub &rarr;</a>
+            </p>
+          </div>
         </section>
       )
     }
@@ -194,37 +203,45 @@ const hasTracks = Boolean(build || (measure && measureData));
             <dd>{measure.metric}</dd>
           </dl>
 
-          {measure.todo.length > 0 && (
-            <>
-              <h3>To do</h3>
-              <ul class="todo">{measure.todo.map((x) => <li set:html={inlineCode(x)} />)}</ul>
-            </>
-          )}
-
-          <MeasureChart data={measureData} />
-          {measureData.placeholder && (
-            <p class="measure-note">
-              These numbers are illustrative, so the chart renders before the run. The real recording
-              replaces them.
+          <div class="track-task">
+            <span class="k">Your task</span>
+            {measure.todo.length > 0 && (
+              <>
+                <h3>To do</h3>
+                <ul class="todo">{measure.todo.map((x) => <li set:html={inlineCode(x)} />)}</ul>
+              </>
+            )}
+            <p class="repo-links">
+              <a href={`${GITHUB}learn/${measure.repoPath}`} rel="noopener">Start from the blank exercise &rarr;</a>
             </p>
-          )}
+          </div>
 
-          {measure.result && (
-            <>
-              <h3>Result</h3>
-              <p>{measure.result}</p>
-            </>
-          )}
-          {measure.learned && (
-            <>
-              <h3>What I learned</h3>
-              <p>{measure.learned}</p>
-            </>
-          )}
-          <p class="repo-links">
-            <a href={GITHUB + measure.repoPath} rel="noopener">See the experiment on GitHub &rarr;</a>
-            <a href={`${GITHUB}learn/${measure.repoPath}`} rel="noopener">Start from the blank exercise &rarr;</a>
-          </p>
+          <div class="track-solution">
+            <span class="k">The solution</span>
+            <MeasureChart data={measureData} />
+            {measureData.placeholder && (
+              <p class="measure-note">
+                These numbers are illustrative, so the chart renders before the run. The real recording
+                replaces them.
+              </p>
+            )}
+
+            {measure.result && (
+              <>
+                <h3>Result</h3>
+                <p>{measure.result}</p>
+              </>
+            )}
+            {measure.learned && (
+              <>
+                <h3>What I learned</h3>
+                <p>{measure.learned}</p>
+              </>
+            )}
+            <p class="repo-links">
+              <a href={GITHUB + measure.repoPath} rel="noopener">See the experiment on GitHub &rarr;</a>
+            </p>
+          </div>
         </section>
       )
     }

@@ -64,6 +64,7 @@ const TEXT = [
   ['code lifted in notes', 'fg', 'bgRaised', 4.5],
   ['trace label: you',     'spkUser', 'bgRaised', 4.5],
   ['trace label: tool',    'spkTool', 'bgRaised', 4.5],
+  ['solution panel label', 'done', 'surface', 4.5],
 ];
 
 const GRAPHICS = [
