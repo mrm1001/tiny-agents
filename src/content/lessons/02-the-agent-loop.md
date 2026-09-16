@@ -3,7 +3,7 @@ n: 2
 title: "The agent loop"
 part: "I — What actually is an agent?"
 component: loop
-status: in-progress
+status: done
 takeaway: "`observe → decide → act → observe → … → stop`. This is the central concept for everything else."
 
 intro: >
@@ -179,23 +179,9 @@ extraReading:
   - anthropic-build-tool-agent
 ---
 
-<!-- ────────────────────────────────────────────────────────────────────────────
-  YOUR NOTES GO HERE — type below this comment.
-
-  Everything above the `---` line is the lesson itself and is written for you.
-  Everything from here down is yours, and is never edited or overwritten.
-
-  Rough is the point: bullets, half-thoughts, a link, something to come back to.
-  They render at the foot of the lesson page under the heading "My notes".
-  Nothing here is style-checked, and none of it counts towards the lesson's
-  five-minute reading budget.
-
-  Until you type something, the notes panel does not appear on the page at all,
-  and nothing in this comment reaches the published HTML.
-
-  Once you have written your notes, delete this comment: from that point it would
-  ship in the page source. `npm run check:lessons` reminds you if you forget.
-
-  Writing them is step 3 of 4 in LESSONS.md, and the last thing a lesson needs
-  before it can be marked `status: done`.
-───────────────────────────────────────────────────────────────────────────── -->
+- Doing prompt caching can save tokens, but the prefix needs to be the same, if not this triggers cache misses.
+- When a user changes the permissions (e.g. auto mode or manual accept), then the LLM needs to be told too, usually with a message saying the permissions have changed.
+- Anthropic has a post about the different tools that can be used, some of them will be used and controlled/maintained by Anthropic's servers (e.g. web search), or tools that are in the client by also controlled by Anthropic (e.g. file editing). These tools will be trained-in. User-defined tools will not.
+- When building code for a tool, it's important to not only give the result back to the LLM, but also mention any other important context for the LLM (e.g. errors, any intermediate results).
+- When the history is just a list of all the messages that were passed to the LLM, then it is deemed to be linear, making it easier to debug. However, some operations might make this history non-linear, such as context compaction.
+- Agents are typically stateless, meaning the servers do not hold any history, the entire history is always passed each time a request is sent.
