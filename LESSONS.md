@@ -255,6 +255,37 @@ contract for its arguments — but shows no implementation, not even a sketch. T
 solution's *body*; it lives only there and is stripped from `learn/`. `agent/v0/loop.py` is the
 model to copy: a prose "what it has to do" list, a short `Notes:` block, and a `Parameters` section.
 
+**Scaffolding, and where shared helpers go.** The reader writes the substance — the agent
+(`agent/vX/loop.py`, `tools.py`) and the experiment rig (`experiments/<name>/run.py`). Everything
+that is *not* the lesson is scaffolding, and the shared, frozen scaffolding lives in
+**`agent/harness/`**: the trace `Recorder`, the fixtures (`greeting_repo`, `chain_repo`), and the
+results writer (`write_results`). Put shared helpers there, not under `experiments/` — only `agent/`
+is installed as a package (see `pyproject.toml`), so `from experiments.… import …` will not resolve
+when a rig runs.
+
+**Running the code.** A Build version is a real module: `uv run --env-file .env python -m agent.v0`.
+An experiment directory whose name has a hyphen (`token-growth`) is *not* an importable module name,
+so run its rig as a script instead: `uv run --env-file .env python experiments/token-growth/run.py`.
+
+**Measure: the results contract.** A rig collects, per task, `(label, calls, points)` — `points` a
+list of `(call, cumulative)` — and hands them to `write_results` (`agent/harness/results.py`), which
+writes `results.json` in the shape the chart reads, with `placeholder: false`. That file is a
+recorded answer: it is committed as the solution's output and excluded from `learn/`. Design the
+fixture *and* the task prompt so the number of recorded tool calls matches `calls` — `chain_repo(n)`
+forces `n` sequential reads, but a loose prompt can still make the model add a stray `list_files`,
+which puts more points on the chart than `calls` claims.
+
+**Re-recording is a cache trigger.** Re-recording a trace or `results.json` while the dev server is
+up leaves it serving the old file from the `.astro` content cache — you will see a stale step count,
+or the "illustrative" placeholder note lingering after the real run. Reset it the same way as after
+a dependency install; see [CLAUDE.md](CLAUDE.md).
+
+**On the page.** The `build` and `measure` frontmatter render as two panels per track: a blue *Your
+task* panel (provided files, to-do, run command, the "start from the blank exercise" link) and a
+green *The solution* panel (the recorded trace viewer or chart, the outcome, the "see the solution"
+link). Keep task-facing fields (`provided`, `todo`, `run`) distinct from result-facing ones
+(`outcome`, `result`, `learned`) so each lands in the right panel.
+
 ## Definition of done
 
 - [ ] Four or five points, each with at least one pointer
